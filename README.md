@@ -19,9 +19,9 @@ In this sense, we are eventually going to have some or all of the following for 
 - **Controller** for separating the route configuration from the code that finally (after any middleware) processes a route request, calls the above service functions if necessary, and gives a response to the client
 - **Views** for handling the templates for each UI
 
-## How to start`
+## How to start
 
-It's a common Node app, so, before start, make sure you install all dependencies `npm install``
+It's a common Node app, so, before start, make sure you install all dependencies `npm install`
 
 ### Development
 
@@ -45,8 +45,11 @@ We can mount a `.env` file alongside the `app.js` file. This can be done when bu
 # The default port. We don't need to set one to be 3000
 PORT=3000
 
-# Teh ability to communicate with GCP logs. Disabled by default
+# The ability to communicate with GCP logs. Disabled by default
 GCP_LOG=0
+
+# Link to be used to communicate with DRM server
+DRM_SERVER=
 ```
 
 
