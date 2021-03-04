@@ -1,9 +1,14 @@
+import dotenv from "dotenv";
 import {CommonRoutesConfig} from './common/common.routes.config';
 import {CertificatesRoutesConfig} from './certificates/routes/certificates.routes.config';
 import debug from 'debug';
 import {ServerUtils} from "./utils/server.utils";
 import express from "express";
 import http from "http";
+
+// Load into ENV Variables
+dotenv.config();
+console.log(process.env);
 
 // Variables needed to start the server
 export const app: express.Application = ServerUtils.configureApp(express(), parseInt(process.env?.GCP_LOG || '') === 1 || false);
