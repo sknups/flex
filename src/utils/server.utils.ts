@@ -7,7 +7,9 @@ import winston from "winston";
 import {LoggingWinston} from "@google-cloud/logging-winston";
 import expressWinston from "express-winston";
 import cookieParser from "cookie-parser";
-import * as path from 'path';
+import helmet from "helmet";
+import path from 'path';
+import compression from "compression";
 
 export class ServerUtils {
 
@@ -44,13 +46,24 @@ export class ServerUtils {
      * @param fromApp the express app
      * @param withGCPLogs boolean
      */
-    static configureApp(fromApp: express.Application, withGCPLogs = false): express.Application {
+    static configureApp(fromApp: express.Application, withGCPLogs = false, toProd = false): express.Application {
         const transports: Transport[] = [
             new winston.transports.Console()
         ];
 
+        // Good practice mentioned in https://expressjs.com/en/advanced/best-practice-security.html
+        fromApp.use(helmet());
+        fromApp.disable('x-powered-by');
+
         // view engine setup
-        fromApp.set('views', [path.join(__dirname, '../', '/views')]);
+        fromApp.set('views', [
+            // Common
+            path.join(__dirname, '../', '/views'),
+
+            // Certificates
+            path.join(__dirname, '../', 'certificates', 'views')
+        ]);
+        fromApp.use('/static', express.static(path.join(__dirname, '../', '/static')));
         fromApp.set('view engine', 'pug');
 
         // here we are adding middleware to parse all incoming requests as JSON
@@ -64,6 +77,10 @@ export class ServerUtils {
         // In case we want to use GCP Logs
         if (withGCPLogs) {
             transports.push(new LoggingWinston())
+        }
+
+        if(toProd) {
+            fromApp.use(compression())
         }
 
         // here we are configuring the expressWinston error-logging middleware,
