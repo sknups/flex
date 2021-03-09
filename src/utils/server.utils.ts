@@ -10,6 +10,7 @@ import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import path from 'path';
 import compression from "compression";
+import createError from 'http-errors';
 
 export class ServerUtils {
 
@@ -61,9 +62,13 @@ export class ServerUtils {
             path.join(__dirname, '../', '/views'),
 
             // Certificates
-            path.join(__dirname, '../', 'certificates', 'views')
+            path.join(__dirname, '../', 'certificates', 'views'),
+
+            // Images
+            path.join(__dirname, '../', 'images', 'views')
         ]);
-        fromApp.use('/static', express.static(path.join(__dirname, '../', '/static')));
+        fromApp.use(express.static(path.join(__dirname, '../../', 'public')));
+        fromApp.use('/static', express.static('static'));
         fromApp.set('view engine', 'pug');
 
         // here we are adding middleware to parse all incoming requests as JSON
@@ -93,6 +98,27 @@ export class ServerUtils {
             )
         }));
 
+        /*
+        // Error handling
+        // catch 404 and forward to error handler
+        fromApp.use( (req, res, next) => {
+            next(createError(404));
+        });
+
+        // error handler
+        // Seems that TS doesn't understand this info. Its documented in expressjs
+        // https://expressjs.com/en/guide/error-handling.html
+        // @ts-ignore
+        fromApp.use( (err, req, res, next) => {
+            // set locals, only providing error in development
+            res.locals.message = err.message;
+            res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+            // render the error page
+            res.status(err.status || 500);
+            res.render('error');
+        });
+         */
         return fromApp;
     }
 }
