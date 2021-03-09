@@ -5,6 +5,7 @@ import debug from 'debug';
 import {ServerUtils} from "./utils/server.utils";
 import express from "express";
 import http from "http";
+import {ImagesRoutesConfig} from "./images/routes/images.routes.config";
 
 // Load into ENV Variables
 dotenv.config();
@@ -26,7 +27,8 @@ const debugLog: debug.IDebugger = debug('flex-server-app');
 const routes: Array<CommonRoutesConfig> = [
     // here we are adding the UserRoutes to our array,
     // after sending the Express.js application object to have the routes added to our app!
-    new CertificatesRoutesConfig(app)
+    new CertificatesRoutesConfig(app),
+    new ImagesRoutesConfig(app)
 ];
 
 // this is a simple route to make sure everything is working properly
