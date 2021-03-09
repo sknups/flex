@@ -1,0 +1,34 @@
+doctype html
+html
+    head
+        meta(property='title', content="SKNUPS")
+        meta(property='og:title', content= data.handle + ' ' + data.skuname)
+        meta(property='og:description', content= data.description)
+        meta(property='og:image', content=  host + '/id/' + data.id + '/img/og/cert.png')
+        meta(property='og:url', content= host + '/id/' + data.id + '/img/no/cert.html')
+        meta(property='og:type', content='website')
+        //Twitter will fall back to the og title, etc
+        meta(name='twitter:card', content='summary_large_image')
+        meta(name='twitter:image', content= host + '/id/' + data.id + '/img/twitter/cert.png')
+
+        link(rel="stylesheet", type='text/css', href='https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css')
+        title= title
+
+        style.
+            html {
+                background-color: rgba(0,0,0,.1);
+            }
+    body
+        .container
+            .row
+                .col
+                    .card
+                        .card-image
+                            img(src='http://localhost:3000/img/' + data.id + '/img/default/cert', width= width, height= height)
+                            span.card-title This is your card title
+                        .card-content
+                            p This is something
+                        .card-action
+                            p This is where the actions will be
+
+        script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js')
