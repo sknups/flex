@@ -1,43 +1,9 @@
 import {CertificateDTO} from "../../certificates/services/certificates.service";
 import logger from "winston";
-import { fabric } from "fabric";
 import {ImagesConfigs} from "../images.configs";
 import {createCanvas, loadImage, registerFont} from "canvas";
 
 export class ImagesService {
-    generateImageCanvas(fromCertificate: CertificateDTO, andType: string) {
-        logger.info(`ImagesService.generateImageCanvas from certificate with ID: ${fromCertificate.id}`);
-
-        let scale = 1;
-        if (andType == "og") {
-            scale = ImagesConfigs.SIZES.og / ImagesConfigs.SIZES.default;
-        } else if (andType == "twitter") {
-            scale = ImagesConfigs.SIZES.twitter / ImagesConfigs.SIZES.default;
-        }
-
-        const canvas: fabric.StaticCanvas = new fabric.StaticCanvas(null, {
-            width: ImagesConfigs.SIZES.default,
-            height: ImagesConfigs.SIZES.default / ImagesConfigs.LANDSCAPE_RATIO,
-        });
-
-        canvas.setBackgroundImage('http://localhost:3000/static/backgrounds/SKNUPS_cert_bg.jpg', (img: any) => {
-            console.log(img);
-        });
-
-        const text = new fabric.Text('Hello world', {
-            left: 100,
-            top: 100,
-            fill: '#f55',
-            angle: 15
-        });
-        canvas.add(text);
-        canvas.renderAll();
-
-        // @ts-ignore
-        console.log('Stream', canvas.createPNGStream());
-
-        return canvas;
-    }
 
     legacyGenerateCanvas(fromCertificate: CertificateDTO, use: string, callback: Function) {
         const platformImages = {
