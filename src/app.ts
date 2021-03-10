@@ -34,7 +34,7 @@ const routes: Array<CommonRoutesConfig> = [
 // this is a simple route to make sure everything is working properly
 // Adding just a default rout
 app.get('/', (req: express.Request, res: express.Response) => {
-    res.render('index', { title: 'Flex Web App', message: 'Server up and running!' })
+    res.render('index', { title: 'SKNUPS'})
 });
 
 // Start server and listen on port
