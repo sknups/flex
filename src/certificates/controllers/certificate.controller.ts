@@ -38,8 +38,10 @@ export class CertificateController {
                 });
             })
             .catch((error: AxiosError) => {
-                logger.error(`CertificateController.certificate.catch response:${error}`);
-                res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
+                logger.error(`CertificateController.certificate.catch response:${error} and data: ${JSON.stringify(error.response?.data || {})}`);
+                const statusCode = error.response?.status || 500;
+
+                res.status(statusCode).render(statusCode.toString(10), {layout: 'missing-certificate'});
             })
     }
 }
