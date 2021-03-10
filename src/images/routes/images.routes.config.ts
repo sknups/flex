@@ -18,14 +18,6 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
         this.getApp().route(`/img`)
             .get((req, res) => this.imagesController.index(req, res));
 
-        //app.get('/id/:id/img/:img/*', imgRouter);
-        /**
-        this.getApp()
-            .route('/img/:id/**')
-            .get((req, res) => this.handleImageRequest(req, res));
-         **/
-
-        // src='http://localhost:3000/img/' + data.id + '/img/default/cert'
         this.getApp()
             .route('/img/:itemId/img/:imageType/**')
             .get((req, res) => this.handleImageRequest(req, res));
