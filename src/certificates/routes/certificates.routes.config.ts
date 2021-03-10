@@ -1,24 +1,28 @@
 import {CommonRoutesConfig} from "../../common/common.routes.config";
-import {Application, Request, Response} from "express";
+import {Application} from "express";
+import {CertificateController} from "../controllers/certificate.controller";
 
 export class CertificatesRoutesConfig extends CommonRoutesConfig {
 
     private static readonly ROUTE_NEEDLE = 'certificate';
+    private readonly certificateController: CertificateController;
 
     constructor(app: Application) {
         super(app, 'CertificatesRoutesConfig');
+
+        // Init the certificate controller
+        this.certificateController = new CertificateController();
     }
 
     configureRoutes(): Application {
+        // Root of Request
         this.getApp().route(`/${CertificatesRoutesConfig.ROUTE_NEEDLE}`)
-            .get((req: Request, res: Response) => {
-                res.status(200).send({message: `Get from ${this.getName()}`});
-            });
+            .get((req, res) => this.certificateController.index(req, res))
 
-        this.getApp().route(`/${CertificatesRoutesConfig.ROUTE_NEEDLE}/:id`)
-            .get((req: Request, res: Response) => {
-                res.status(200).send(`Get from ${this.getName()} with :id=${req.params.id}`);
-            });
+        // Get a certificate with ID
+        this.getApp()
+            .route(`/${CertificatesRoutesConfig.ROUTE_NEEDLE}/:id`)
+            .get((req, res, next) => this.certificateController.certificate(req, res));
 
         return this.getApp();
     }

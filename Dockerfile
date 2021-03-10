@@ -13,12 +13,25 @@ RUN npm run build
 
 ## Now, as soon as we have the dist ready we build the final slim image
 ## Keep the same original image from builder but the slim one
-FROM node:12.21.0-alpine3.12
+FROM node:12-alpine
+
+RUN apk add --update --no-cache \
+        make \
+        g++ \
+        jpeg-dev \
+        cairo-dev \
+        giflib-dev \
+        pango-dev
 
 # Create app directory
 WORKDIR /usr/src/app
 
-COPY --from=builder /usr/src/app/dist .
+COPY --from=builder /usr/src/app/public ./public
+COPY --from=builder /usr/src/app/static ./static
+COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/src/views ./dist/views
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 
-ENTRYPOINT ["node", "./app.js" ]
+RUN npm install canvas
+
+ENTRYPOINT ["node", "./dist/app.js" ]
