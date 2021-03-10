@@ -79,8 +79,6 @@ export class ImagesService {
             logger.info("Inter: " + error);
         }
 
-        console.log(' I was able to get the fonts');
-
         const context = canvas.getContext('2d');
         context.patternQuality = 'bilinear';
         context.quality = 'bilinear';
@@ -91,6 +89,7 @@ export class ImagesService {
         const gamePromise = loadImage('./static/games/' + this.legacyGetKeyByValue(platformImages, fromCertificate.platform) + ".png"); //TODO - Ugly, need gamecode
         const skuPromise = loadImage(fromCertificate.image);
 
+        //@ts-ignore
         Promise.allSettled([backgroundPromise, brandPromise, gamePromise, skuPromise]).then((images) => {
             //draw the images first
             const backgroundImage = images[0];

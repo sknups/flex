@@ -52,5 +52,13 @@ GCP_LOG=0
 DRM_SERVER=
 ```
 
+Example on how to start a docker image with env variables from the command line or defining a file:
+
+```bash
+# We can use the -e, --env and set to = something or use a .env file (I recommend this one)
+# More info here https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file
+docker run -e MYVAR1 --env MYVAR2=foo --env-file ./env.list IMAGE_NAME:VERSION
+```
+
 
 

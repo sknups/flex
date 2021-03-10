@@ -1,0 +1,38 @@
+<style>
+    .logo {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .main_div {
+        padding: 50px 0;
+        text-align: center;
+        width: 100%;
+        font-family: "OCR A";
+        font-size: 3vh;
+    }
+
+    body {
+        align-content: center;
+    }
+
+</style>
+<div class="logo"><img src="/static/backgrounds/SKNUPS_BOX.jpg" width="500px"></div>
+
+<div class="main_div">
+    <p>Enter your certificate ID below to flex:</p>
+
+    <form onsubmit="return process()">
+        <input type="text" name="id" id="id" required>
+        <input type="submit" value="Flex!">
+    </form>
+</div>
+
+<script type="text/javascript">
+    function process() {
+        var url = window.location + "certificate/" + document.getElementById("id").value;
+        location.href = url;
+        return false;
+    }
+</script>
