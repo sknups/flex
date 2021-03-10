@@ -10,7 +10,8 @@ import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import path from 'path';
 import compression from "compression";
-import createError from 'http-errors';
+import exphbs from 'express-handlebars';
+import {StatusCodes} from "http-status-codes";
 
 export class ServerUtils {
 
@@ -52,8 +53,13 @@ export class ServerUtils {
             new winston.transports.Console()
         ];
 
+        const hbs = exphbs.create();
+
         // Good practice mentioned in https://expressjs.com/en/advanced/best-practice-security.html
-        fromApp.use(helmet());
+        fromApp.use(helmet({
+            // Or I won't be able to load the socializer plugin
+            contentSecurityPolicy: false,
+        }));
         fromApp.disable('x-powered-by');
 
         // view engine setup
@@ -69,11 +75,13 @@ export class ServerUtils {
         ]);
         fromApp.use(express.static(path.join(__dirname, '../../', 'public')));
         fromApp.use('/static', express.static('static'));
-        fromApp.set('view engine', 'pug');
+
+        fromApp.engine('handlebars', hbs.engine);
+        fromApp.set('view engine', 'handlebars');
 
         // here we are adding middleware to parse all incoming requests as JSON
         fromApp.use(bodyparser.json());
-        fromApp.use(express.urlencoded({ extended: false }));
+        fromApp.use(express.urlencoded({extended: false}));
         fromApp.use(cookieParser());
 
         // here we are adding middleware to allow cross-origin requests
@@ -84,8 +92,9 @@ export class ServerUtils {
             transports.push(new LoggingWinston())
         }
 
-        if(toProd) {
-            fromApp.use(compression())
+        if (toProd) {
+            fromApp.use(compression());
+            fromApp.enable('view cache');
         }
 
         // here we are configuring the expressWinston error-logging middleware,
@@ -98,27 +107,25 @@ export class ServerUtils {
             )
         }));
 
-        /*
-        // Error handling
-        // catch 404 and forward to error handler
-        fromApp.use( (req, res, next) => {
-            next(createError(404));
-        });
-
-        // error handler
-        // Seems that TS doesn't understand this info. Its documented in expressjs
-        // https://expressjs.com/en/guide/error-handling.html
-        // @ts-ignore
-        fromApp.use( (err, req, res, next) => {
+        //@ts-ignore
+        fromApp.use(function (err, req, res, next) {
             // set locals, only providing error in development
             res.locals.message = err.message;
             res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-            // render the error page
-            res.status(err.status || 500);
-            res.render('error');
+            console.log('Error???', err);
+
+            switch (err.statusCode) {
+                case StatusCodes.NOT_FOUND:
+                    res.status(StatusCodes.NOT_FOUND);
+                    res.render('404', {layout: 'missing-certificate'});
+                    break;
+                default:
+                    res.status(err.status || 500);
+                    res.render('500');
+            }
         });
-         */
+
         return fromApp;
     }
 }

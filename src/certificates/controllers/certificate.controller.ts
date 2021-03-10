@@ -28,12 +28,13 @@ export class CertificateController {
             .then((response) => {
                 logger.info(`CertificateController.certificate.then response:${JSON.stringify(response.data)}`);
 
-                res.status(StatusCodes.OK).render('legacy-cert', {
+                res.status(StatusCodes.OK).render('certificate', {
                     title: 'Certificate',
                     data: response.data,
                     jsonString: JSON.stringify(response.data),
                     host: req.protocol + '://' + req.hostname,
-                    width: ImagesConfigs.SIZES.default, 'height': 380
+                    width: ImagesConfigs.SIZES.default, 'height': 380,
+                    layout: 'certificate'
                 });
             })
             .catch((error: AxiosError) => {
