@@ -16,7 +16,6 @@
     body {
         align-content: center;
     }
-
 </style>
 <div class="logo"><img src="/static/backgrounds/SKNUPS_BOX.jpg" width="500px"></div>
 
@@ -31,8 +30,17 @@
 
 <script type="text/javascript">
     function process() {
-        var url = window.location + "certificate/" + document.getElementById("id").value;
+        const certificateId = document.getElementById("id").value;
+        const url = window.location + "certificate/" + certificateId;
+
+        gtag('event', 'search_certificate', {
+            'for': certificateId,
+        });
+
         location.href = url;
+
+        // Prevent regular form behaviour
         return false;
     }
+
 </script>
