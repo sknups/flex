@@ -19,9 +19,13 @@ export class CertificatesRoutesConfig extends CommonRoutesConfig {
         this.getApp().route(`/${CertificatesRoutesConfig.ROUTE_NEEDLE}`)
             .get((req, res) => this.certificateController.index(req, res))
 
-        // Get a certificate with ID
+        // Get a certificate with ID or ID + more stuff (any stuff)
         this.getApp()
-            .route(`/${CertificatesRoutesConfig.ROUTE_NEEDLE}/:id`)
+            .route([
+                    `/${CertificatesRoutesConfig.ROUTE_NEEDLE}/:id`,
+                    `/${CertificatesRoutesConfig.ROUTE_NEEDLE}/:id/**`
+                ]
+            )
             .get((req, res, next) => this.certificateController.certificate(req, res));
 
         return this.getApp();
