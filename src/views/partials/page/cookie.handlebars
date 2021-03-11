@@ -1,0 +1,87 @@
+<style>
+    .hidden {
+        display: none !important;
+    }
+
+    #cookie-warning {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: #000;
+        color: #fff;
+
+        /* Just making sure it will be on top */
+        z-index: 100;
+
+        padding: 0.5rem;
+
+        display: flex;
+        flex-flow: column;
+    }
+
+    #cookie-warning #message-container p {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    #cookie-warning #actions-container {
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        justify-content: flex-end;
+
+        padding: 0 1rem 0;
+    }
+</style>
+
+<!-- Cookie Warning -->
+<div id="cookie-warning" class="hidden">
+    <div id="message-container">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent cursus sapien at ligula mattis semper.
+            Sed aliquam eget nisi nec ultricies. Vestibulum enim lacus, imperdiet ac commodo vitae, accumsan eget est.
+            Maecenas semper nunc nec ornare ultrices. Vivamus vehicula in dolor a aliquam. Mauris nec mollis dolor.
+            Nunc sed sem porta, sodales sem eu, elementum est.
+        </p>
+    </div>
+    <div id="actions-container">
+        <button onclick="didPressAcceptButton()">Accept</button>
+        <button onclick="didPresMoreInformation()">More information</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    const hideCookieInfoKey = 'hideCookieInfo';
+
+    function didPressAcceptButton() {
+        shouldHideCookieWarning();
+        try {
+            window.localStorage.setItem(hideCookieInfoKey, '1');
+        } catch (e) {
+            console.error('Unable to save state. Error: ', e.message);
+        }
+    }
+
+    function shouldDisplayCookiesWarnings() {
+        document.querySelector('#cookie-warning').classList.remove('hidden');
+    }
+
+    function shouldHideCookieWarning() {
+        if (!document.querySelector('#cookie-warning').classList.contains('hidden'))
+            document.querySelector('#cookie-warning').classList.add('hidden');
+    }
+
+    function didPresMoreInformation() {
+        window.open(
+                `${window.location.origin}/privacy`,
+                '_blank'
+        )
+    }
+
+    // Lets make sure we need to show the alert
+    if (window.localStorage) {
+        window.localStorage.getItem('hideCookieInfo') === '1' ? shouldHideCookieWarning() : shouldDisplayCookiesWarnings();
+    } else {
+        console.warn('Unable to use localstorage');
+    }
+
+</script>
