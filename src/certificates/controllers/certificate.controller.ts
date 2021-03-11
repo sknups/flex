@@ -41,7 +41,7 @@ export class CertificateController {
                 logger.error(`CertificateController.certificate.catch response:${error} and data: ${JSON.stringify(error.response?.data || {})}`);
                 const statusCode = error.response?.status || 500;
 
-                res.status(statusCode).render(statusCode.toString(10), {layout: 'missing-certificate'});
+                res.status(statusCode).render(statusCode.toString(10), {layout: 'missing-certificate', id: req.params.id});
             })
     }
 }
