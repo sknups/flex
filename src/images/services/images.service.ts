@@ -50,7 +50,7 @@ export class ImagesService {
         context.quality = 'bilinear';
 
         //Load all required images in parallel before drawing them on the canvas
-        const backgroundPromise = loadImage('./static/SKNUPS_cert_bg.jpg'); //Change name - cert might confuse
+        const backgroundPromise = loadImage('./static/backgrounds/SKNUPS_cert_bg.jpg'); //Change name - cert might confuse
         const brandPromise = loadImage('./static/brands/' + fromCertificate.brandcode + ".png");
         const gamePromise = loadImage('./static/games/' + this.legacyGetKeyByValue(platformImages, fromCertificate.platform) + ".png"); //TODO - Ugly, need gamecode
         const skuPromise = loadImage(fromCertificate.image);
@@ -60,10 +60,13 @@ export class ImagesService {
             //draw the images first
             const backgroundImage = images[0];
             if (backgroundImage.status == 'fulfilled') { context.drawImage(backgroundImage.value, 0, 0); } else { logger.info('Failed to load background image image:'); }
+
             const brandImage = images[1];
             if (brandImage.status == 'fulfilled') { context.drawImage(brandImage.value, 325, 250, 150, 100); } else { logger.info('Failed to load brand image: ' + fromCertificate.brand); }
+
             const gameImage = images[2];
             if (gameImage.status == 'fulfilled') { context.drawImage(gameImage.value, 550, 250); } else { logger.info('Failed to load game image: ' + fromCertificate.platform); }
+
             const skuImage = images[3];
             if (skuImage.status == 'fulfilled') { context.drawImage(skuImage.value, 30, 30); } else { logger.info('Failed to load sku image: ' + fromCertificate.sku); }
 
