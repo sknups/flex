@@ -20,7 +20,7 @@ on:
 
 env:
   GOOGLE_PROJECT: dev-drm-admin-5548
-  IMAGE: flex_ui
+  IMAGE: flex-ui
 
 jobs:
   setup-build-publish:
