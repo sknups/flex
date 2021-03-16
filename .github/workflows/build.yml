@@ -54,3 +54,13 @@ jobs:
     - name: Publish
       run: |-
         docker push "eu.gcr.io/$GOOGLE_PROJECT/$IMAGE:$GITHUB_SHA"
+     
+    # Call the API to trigger the workflow that updates the version in DRM_Apps_Deply 
+    - name: Deploy
+      uses: sknups/deploy-action@v1.1
+      with:
+        image: ${{ env.IMAGE }}
+        tag: ${{ github.sha }}
+        auth: ${{ secrets.DEPLOY_TOKEN }}
+        url: ${{ secrets.DEPLOY_API_URL }}
+
