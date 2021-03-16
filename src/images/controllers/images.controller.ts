@@ -37,22 +37,24 @@ export class ImagesController {
             const axiosResponse = await this.certificateService.getCertificate(itemId);
 
             // Legacy Info for now
-            this.imagesService.legacyGenerateCanvas(axiosResponse.data, image, (error: any, data: any) => {
-                if (error) {
+            this.imagesService.generateCanvasImage(axiosResponse.data, image)
+                .then((buffer) => {
+                    logger.info(`ImagesController.getImage with buffer.length=${buffer.length}`);
+
+                    response.writeHead(StatusCodes.OK, {
+                        'Content-Type': 'image/png',
+                        'Content-Length': buffer.length
+                    });
+                    response.write(buffer);
+                    response.end(null, 'binary');
+                })
+                .catch((err) => {
                     logger.error(`ImagesController.getImage ERROR. Failed to draw image`);
+
                     response.writeHead(StatusCodes.NOT_FOUND);
                     response.write('Failed to draw image');
                     response.end();
-                } else {
-                    logger.info(`ImagesController.getImage with buffer.length=${data.length}`);
-                    response.writeHead(StatusCodes.OK, {
-                        'Content-Type': 'image/png',
-                        'Content-Length': data.length
-                    });
-                    response.write(data);
-                    response.end(null, 'binary');
-                };
-            });
+                });
         } catch (error) {
             response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
         }
