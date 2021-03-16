@@ -17,8 +17,6 @@ export class ImagesService {
 
             return brandTemplateController.renderTemplate(fromCertificate, use);
         } catch (error) {
-            console.error(error);
-
             logger.info(`ImagesService.generateCanvasImage Unable to get the Brand Template for ${brandcode}:${brandCodeToClassName}`)
 
             const defaultTemplateModule = await import('../../templates/default/DefaultTemplate');

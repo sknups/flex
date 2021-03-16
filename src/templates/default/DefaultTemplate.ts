@@ -41,7 +41,7 @@ export class DefaultTemplate extends BrandTemplate {
 
             //Load all required images in parallel before drawing them on the canvas
             this.loadImages([
-                './static/SKNUPS_cert_bg.jpg',
+                './static/backgrounds/SKNUPS_cert_bg.jpg',
                 `./static/brands/${fromCertificate.brandcode}.png`,
                 `./static/games/${this.getKeyByValue(platformImages, fromCertificate.platform)}.png`,
                 fromCertificate.image
