@@ -113,8 +113,6 @@ export class ServerUtils {
             res.locals.message = err.message;
             res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-            console.log('Error???', err);
-
             switch (err.statusCode) {
                 case StatusCodes.NOT_FOUND:
                     res.status(StatusCodes.NOT_FOUND);
