@@ -1,7 +1,7 @@
 import {CertificateDTO} from "../../certificates/services/certificates.service";
 import {StringUtils} from "../../utils/string.utils";
 import logger from "winston";
-import {ITemplate} from "../../templates/ITemplate";
+import {BrandTemplate} from "../../templates/BrandTemplate";
 
 export class ImagesService {
 
@@ -13,7 +13,7 @@ export class ImagesService {
 
         try {
             const brandModule = await import(`../../templates/brands/${brandCodeToClassName}`);
-            const brandTemplateController: ITemplate = new brandModule[brandCodeToClassName];
+            const brandTemplateController: BrandTemplate = new brandModule[brandCodeToClassName];
 
             return brandTemplateController.renderTemplate(fromCertificate, use);
         } catch (error) {
