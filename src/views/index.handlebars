@@ -31,7 +31,7 @@
 <script type="text/javascript">
     function process() {
         const certificateId = document.getElementById("id").value;
-        const url = window.location + "certificate/" + certificateId;
+        const url = `${window.location}certificate/${certificateId}/flex.html`;
 
         gtag('event', 'search_certificate', {
             'for': certificateId,

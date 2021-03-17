@@ -1,17 +1,17 @@
 <div class="wrapper">
     <div class="empty">
         <div class="img">
-            <img src="/img/{{data.id}}/img/default/cert.png" width="{{width}}"
-                 alt="{{data.handle}} {{data.skuname}}"/>
+            <img src="/img/{{data.thumbprint}}/img/default/cert.png" width="{{width}}"
+                 alt="{{data.stockKeepingUnitName}}"/>
         </div>
     </div>
 </div>
 
 <script>
     gtag('event', 'show_certificate', {
-        'brand': "{{data.brandcode}}",
-        'id': "{{data.id}}",
-        'sku': "{{data.skuname}}",
-        'game': "{{data.platform}}"
+        'brand': "{{data.brandCode}}",
+        'id': "{{data.thumbprint}}",
+        'sku': "{{data.stockKeepingUnitCode}}",
+        'game': "{{data.platformCode}}"
     })
 </script>
