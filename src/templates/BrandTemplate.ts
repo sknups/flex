@@ -18,7 +18,7 @@ export abstract class BrandTemplate {
      * @param imagesPaths
      */
     loadImages(imagesPaths: string[]): Promise<PromiseSettledResult<Image>[]> {
-        logger.info(`Will load images with paths: ${imagesPaths}`);
+        logger.info(`BrandTemplate.loadImages: Will load images with paths: ${imagesPaths}`);
 
         const imagesPromises = imagesPaths.map((imagePath) => loadImage(imagePath));
         return Promise.allSettled(imagesPromises);
