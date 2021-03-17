@@ -3,13 +3,13 @@ import logger from "winston";
 
 export interface CertificateDTO {
     id: string;
-    gamer_tag: string;
-    sale_qty: number;
-    sku: string;
-    brandcode: string;
+    gamerTag: string;
+    saleQty: number;
+    stockKeepingUnitCode: string;
+    brandCode: string;
     brand: string;
     description: string;
-    platform: string;
+    platformCode: string;
     image: string;
     max_qty: number;
     cur_qty: number;

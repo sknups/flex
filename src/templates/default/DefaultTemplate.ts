@@ -8,14 +8,6 @@ export class DefaultTemplate extends BrandTemplate {
 
     renderTemplate(fromCertificate: CertificateDTO, use: string): Promise<Buffer> {
         return new Promise<Buffer>((accept, reject) => {
-            const platformImages = {
-                nba2k: "NBA2K",
-                gta: "GTA5",
-                fortnite: "Fortnite",
-                sims: "The Sims",
-                valorant: "Valorant"
-            };
-
             //find out if we're going to scale the image
             let scale = 1;
             if (use == "og") {
@@ -39,12 +31,17 @@ export class DefaultTemplate extends BrandTemplate {
             context.patternQuality = 'bilinear';
             context.quality = 'bilinear';
 
+            const brandFolder = fromCertificate.brandCode.replace('BRAND-', '');
+            const skuFolder = fromCertificate.stockKeepingUnitCode.replace('SKU-', '');
+            const platformFolder = fromCertificate.platformCode.replace('PLATFORM-', '');
+
             //Load all required images in parallel before drawing them on the canvas
             this.loadImages([
                 './static/backgrounds/SKNUPS_cert_bg.jpg',
-                `./static/brands/${fromCertificate.brandcode}.png`,
-                `./static/games/${this.getKeyByValue(platformImages, fromCertificate.platform)}.png`,
-                fromCertificate.image
+                `./static/assets/brands/${brandFolder}/brand.png`,
+                `./static/assets/platforms/${platformFolder}/platform.png`,
+                // 99999999 will be replaced soon with the designItemCode
+                `./static/assets/brands/${brandFolder}/99999999/${skuFolder}/v1/${fromCertificate.image}.png`,
             ]).then((images) => {
                 //draw the images first
                 const backgroundImage = images[0];
@@ -64,13 +61,13 @@ export class DefaultTemplate extends BrandTemplate {
                 if (gameImage.status == 'fulfilled') {
                     context.drawImage(gameImage.value, 550, 250);
                 } else {
-                    logger.info('Failed to load game image: ' + fromCertificate.platform);
+                    logger.info('Failed to load game image: ' + fromCertificate.platformCode);
                 }
                 const skuImage = images[3];
                 if (skuImage.status == 'fulfilled') {
                     context.drawImage(skuImage.value, 30, 30);
                 } else {
-                    logger.info('Failed to load sku image: ' + fromCertificate.sku);
+                    logger.info('Failed to load sku image: ' + fromCertificate.stockKeepingUnitCode);
                 }
 
                 //write the text
@@ -78,11 +75,12 @@ export class DefaultTemplate extends BrandTemplate {
                 context.font = '10pt Inter';
                 this.wrapText(context, fromCertificate.description, 325, 100, 500, 30);
                 context.font = '16pt OCR-A';
-                context.fillText('ITEM ' + fromCertificate.sale_qty + ' OF ' + fromCertificate.max_qty + ' SERIAL NUMBER ' + fromCertificate.id, 325, 50);
+                context.fillText('ITEM ' + fromCertificate.saleQty + ' OF ' + fromCertificate.max_qty + ' SERIAL NUMBER ' + fromCertificate.thumbprint, 325, 50);
                 context.font = '12pt OCR-A';
                 context.fillStyle = 'rgb(248,34,41)';
-                this.wrapText(context, 'SOLD TO ' + fromCertificate.gamer_tag.toUpperCase() + ' FOR UNLIMITED USE IN ' + fromCertificate.platform.toUpperCase(), 325, 75, 500, 30);
-                if (fromCertificate?.test) {
+                this.wrapText(context, 'SOLD TO ' + fromCertificate.gamerTag.toUpperCase() + ' FOR UNLIMITED USE IN ' + fromCertificate.platformCode.toUpperCase(), 325, 75, 500, 30);
+
+                if (process.env.NODE_ENV !== 'production') {
                     context.fillStyle = 'rgb(118,188,127)';
                     context.font = '42pt OCR-A';
                     context.fillText('TEST CERTIFICATE ONLY', 200, 175);
