@@ -22,10 +22,6 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
             .route('/img/:itemId/img/:imageType/**')
             .get((req, res) => this.handleImageRequest(req, res));
 
-        this.getApp()
-            .route('/img/3e9ed9a1ce/img/:imageType/**')
-            .get((req, res) => this.handleImageRequest(req, res));
-
         return this.getApp();
     }
 
