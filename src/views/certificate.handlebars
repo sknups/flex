@@ -1,11 +1,25 @@
-<div class="wrapper">
-    <div class="empty">
-        <div class="img">
-            <img src="/img/{{data.thumbprint}}/img/default/cert.png" width="{{width}}"
-                 alt="{{data.stockKeepingUnitName}}"/>
-        </div>
-    </div>
-</div>
+<style>
+    .wrapper {
+        display: flex;
+        flex-flow: column;
+
+        align-items: center;
+        justify-content: center;
+        justify-items: center;
+    }
+
+    .opacity-0 {
+        opacity: 0;
+    }
+
+    .visible {
+        opacity: 1;
+    }
+
+    .certificate {
+        word-wrap: anywhere;
+    }
+</style>
 
 <script>
     gtag('event', 'show_certificate', {
@@ -13,5 +27,31 @@
         'id': "{{data.thumbprint}}",
         'sku': "{{data.stockKeepingUnitCode}}",
         'game': "{{data.platformCode}}"
-    })
+    });
+
+    function didLoadImage() {
+        const imageElement = document.querySelector('.img');
+        const certificateTextElement = document.querySelector('.certificate');
+
+        imageElement.classList.remove('hidden');
+        imageElement.classList.add('visible');
+
+        certificateTextElement.classList.add('hidden');
+    }
+
 </script>
+
+
+
+<div class="wrapper">
+    <div class="empty">
+        <div class="img opacity-0">
+            <img src="/img/{{data.thumbprint}}/img/default/cert.png"
+                 width="{{width}}"
+                 alt="{{data.stockKeepingUnitName}}" onload="didLoadImage()" />
+        </div>
+        <div class="certificate visible" style="max-width: {{width}}px">
+            {{data.certificate}}
+        </div>
+    </div>
+</div>
