@@ -6,10 +6,10 @@ import {BrandTemplate} from "../../templates/BrandTemplate";
 export class ImagesService {
 
     async generateCanvasImage(fromCertificate: CertificateDTO, use: string) {
-        const {brandcode} = fromCertificate;
-        const brandCodeToClassName = StringUtils.classify(brandcode.toLowerCase());
+        const {brandCode} = fromCertificate;
+        const brandCodeToClassName = StringUtils.classify(brandCode.toLowerCase());
 
-        logger.info(`ImagesService.generateCanvasImage Will try to load the brandeCode: ${brandcode} template with name ${brandCodeToClassName}`)
+        logger.info(`ImagesService.generateCanvasImage Will try to load the brandeCode: ${brandCode} template with name ${brandCodeToClassName}`)
 
         try {
             const brandModule = await import(`../../templates/brands/${brandCodeToClassName}`);
@@ -27,7 +27,4 @@ export class ImagesService {
             return templateController.renderTemplate(fromCertificate, use);
         }
     }
-
-
-
 }

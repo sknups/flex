@@ -2,7 +2,7 @@ import express from "express";
 import {StatusCodes} from "http-status-codes";
 import logger from "winston";
 import {ImagesService} from "../services/images.service";
-import {CertificatesService} from "../../certificates/services/certificates.service";
+import {CertificateDTO, CertificatesService} from "../../certificates/services/certificates.service";
 
 export class ImagesController {
 
@@ -34,10 +34,10 @@ export class ImagesController {
 
         try {
             // request the certificate information
-            const axiosResponse = await this.certificateService.getCertificate(itemId);
+            const certificateDTO = await this.getCertificate(itemId);
 
             // Legacy Info for now
-            this.imagesService.generateCanvasImage(axiosResponse.data, image)
+            this.imagesService.generateCanvasImage(certificateDTO, image)
                 .then((buffer) => {
                     logger.info(`ImagesController.getImage with buffer.length=${buffer.length}`);
 
@@ -55,8 +55,17 @@ export class ImagesController {
                     response.write('Failed to draw image');
                     response.end();
                 });
-        } catch (error) {
-            response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
+        } catch (err) {
+            this.handleCanvasImageError(response, err);
         }
+    }
+
+    async getCertificate(withId: string): Promise<CertificateDTO> {
+        const response = await this.certificateService.getCertificate(withId);
+        return response.data;
+    }
+
+    handleCanvasImageError(response: express.Response, err: any) {
+        response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR).send(err.message);
     }
 }

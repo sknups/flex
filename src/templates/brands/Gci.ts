@@ -1,13 +1,28 @@
 import {BrandTemplate} from "../BrandTemplate";
-import {ImagesConfigs} from "../../images/images.configs";
-import {createCanvas, loadImage, registerFont} from "canvas";
-import logger from "winston";
 import {CertificateDTO} from "../../certificates/services/certificates.service";
+import logger from "winston";
+import {createCanvas} from "canvas";
+import {StringUtils} from "../../utils/string.utils";
+import {IFlexCoordinates} from "../../models/IFlexCoordinates";
+import {ImagesConfigs} from "../../images/images.configs";
 
-export class DefaultTemplate extends BrandTemplate {
+/**
+ * Dynamic imported on ImagesService.ts
+ */
+export class Gci extends BrandTemplate {
 
     renderTemplate(fromCertificate: CertificateDTO, use: string): Promise<Buffer> {
+        logger.info(`Acx.renderTemplate for ${fromCertificate.brandCode} and will use ${use}`);
+
         return new Promise<Buffer>((accept, reject) => {
+            const platformImages = {
+                nba2k: "NBA2K",
+                gta: "GTA5",
+                fortnite: "Fortnite",
+                sims: "The Sims",
+                valorant: "Valorant"
+            };
+
             //find out if we're going to scale the image
             let scale = 1;
             if (use == "og") {
@@ -17,31 +32,29 @@ export class DefaultTemplate extends BrandTemplate {
             }
 
             //Lock ratio to golden section
+            const width = ImagesConfigs.SIZES.default;
             const height = ImagesConfigs.SIZES.default / ImagesConfigs.LANDSCAPE_RATIO;
-            const canvas = createCanvas(ImagesConfigs.SIZES.default, height);
 
-            // Load Fonts
+            // Load specific fonts
             this.loadFontsIntoCanvas([
                 {path: './static/fonts/Inter-Regular-slnt=0.ttf', fontFace: {family: "Inter"}},
                 {path: './static/fonts/InterstateMonoLight.otf', fontFace: {family: "Interstate"}},
                 {path: './static/fonts/OCR-A.ttf', fontFace: {family: "OCR-A"}},
             ]);
 
+            // Business card size in pixels
+            const canvas = createCanvas(width, height);
+
             const context = canvas.getContext('2d');
             context.patternQuality = 'bilinear';
             context.quality = 'bilinear';
 
-            const brandFolder = fromCertificate.brandCode.replace('BRAND-', '');
-            const skuFolder = fromCertificate.stockKeepingUnitCode.replace('SKU-', '');
-            const platformFolder = fromCertificate.platformCode.replace('PLATFORM-', '');
-
-            //Load all required images in parallel before drawing them on the canvas
             this.loadImages([
                 './static/backgrounds/SKNUPS_cert_bg.jpg',
-                `./static/assets/brands/${brandFolder}/brand.png`,
-                `./static/assets/platforms/${platformFolder}/platform.png`,
+                `./static/assets/brands/${fromCertificate.brandCode.replace('BRAND-', '')}/brand.png`,
+                `./static/assets/platforms/${fromCertificate.platformCode.replace('PLATFORM-', '')}/platform.png`,
                 // 99999999 will be replaced soon with the designItemCode
-                `./static/assets/brands/${brandFolder}/99999999/${skuFolder}/v1/${fromCertificate.image}.png`,
+                `./static/assets/brands/${fromCertificate.brandCode}/99999999/${fromCertificate.stockKeepingUnitCode.replace('SKU-', '')}/v1/${fromCertificate.image}.png`,
             ]).then((images) => {
                 //draw the images first
                 const backgroundImage = images[0];
@@ -75,12 +88,11 @@ export class DefaultTemplate extends BrandTemplate {
                 context.font = '10pt Inter';
                 this.wrapText(context, fromCertificate.description, 325, 100, 500, 30);
                 context.font = '16pt OCR-A';
-                context.fillText('ITEM ' + fromCertificate.saleQty + ' OF ' + fromCertificate.max_qty + ' SERIAL NUMBER ' + fromCertificate.thumbprint, 325, 50);
+                context.fillText('ITEM ' + fromCertificate.saleQty + ' OF ' + fromCertificate.max_qty + ' SERIAL NUMBER ' + fromCertificate.id, 325, 50);
                 context.font = '12pt OCR-A';
                 context.fillStyle = 'rgb(248,34,41)';
                 this.wrapText(context, 'SOLD TO ' + fromCertificate.gamerTag.toUpperCase() + ' FOR UNLIMITED USE IN ' + fromCertificate.platformCode.toUpperCase(), 325, 75, 500, 30);
-
-                if (process.env.NODE_ENV !== 'production') {
+                if (fromCertificate?.test) {
                     context.fillStyle = 'rgb(118,188,127)';
                     context.font = '42pt OCR-A';
                     context.fillText('TEST CERTIFICATE ONLY', 200, 175);
@@ -105,6 +117,7 @@ export class DefaultTemplate extends BrandTemplate {
                         reject(error);
                     }
                 }
+                ;
 
                 accept(canvas.toBuffer());
             });

@@ -14,7 +14,7 @@ export class Acx extends BrandTemplate {
     static HEIGHT: number = 600;
 
     renderTemplate(fromCertificate: CertificateDTO, use: string): Promise<Buffer> {
-        logger.info(`Acx.renderTemplate for ${fromCertificate.brandcode} and will use ${use}`);
+        logger.info(`Acx.renderTemplate for ${fromCertificate.brandCode} and will use ${use}`);
 
         return new Promise<Buffer>((accept, reject) => {
             //find out if we're going to scale the image
@@ -36,8 +36,8 @@ export class Acx extends BrandTemplate {
             context.quality = 'bilinear';
 
             this.loadImages([
-                `./static/backgrounds/${StringUtils.capitalize(fromCertificate.brandcode.toLowerCase())}/vanguar_background.jpg`,
-                `./static/brands/${fromCertificate.brandcode}.png`,
+                `./static/backgrounds/${StringUtils.capitalize(fromCertificate.brandCode.toLowerCase())}/vanguar_background.jpg`,
+                `./static/brands/${fromCertificate.brandCode}.png`,
                 `./static/sku/ACX-destiny.png`
             ]).then((imagePromisesResult) => {
                 //draw the images first
@@ -62,10 +62,10 @@ export class Acx extends BrandTemplate {
                 context.font = '10pt Permanent Marker';
                 this.wrapText(context, fromCertificate.description, 325, 100, 500, 30);
                 context.font = '16pt Permanent Marker';
-                context.fillText('ITEM ' + fromCertificate.sale_qty + ' OF ' + fromCertificate.max_qty + ' SERIAL NUMBER ' + fromCertificate.id, 325, 50);
+                context.fillText('ITEM ' + fromCertificate.saleQty + ' OF ' + fromCertificate.max_qty + ' SERIAL NUMBER ' + fromCertificate.id, 325, 50);
                 context.font = '12pt Permanent Marker';
                 context.fillStyle = 'rgb(248,34,41)';
-                this.wrapText(context, 'SOLD TO ' + fromCertificate.gamer_tag.toUpperCase() + ' FOR UNLIMITED USE IN ' + fromCertificate.platform.toUpperCase(), 325, 75, 500, 30);
+                this.wrapText(context, 'SOLD TO ' + fromCertificate.gamerTag.toUpperCase() + ' FOR UNLIMITED USE IN ' + fromCertificate.platformCode.toUpperCase(), 325, 75, 500, 30);
                 if (fromCertificate?.test) {
                     context.fillStyle = 'rgb(118,188,127)';
                     context.font = '42pt Permanent Marker';

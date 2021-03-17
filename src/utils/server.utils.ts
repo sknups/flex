@@ -45,8 +45,9 @@ export class ServerUtils {
 
     /**
      * Get the app configured a ready to be served
-     * @param fromApp the express app
-     * @param withGCPLogs boolean
+     * @param fromApp
+     * @param withGCPLogs
+     * @param toProd
      */
     static configureApp(fromApp: express.Application, withGCPLogs = false, toProd = false): express.Application {
         const transports: Transport[] = [
