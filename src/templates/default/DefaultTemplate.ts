@@ -79,7 +79,7 @@ export class DefaultTemplate extends BrandTemplate {
                 context.fillStyle = 'rgb(248,34,41)';
                 this.wrapText(context, 'SOLD TO ' + fromCertificate.gamerTag.toUpperCase() + ' FOR UNLIMITED USE IN ' + fromCertificate.platformCode.toUpperCase(), 325, 75, 500, 30);
 
-                if (process.env.NODE_ENV !== 'production') {
+                if (fromCertificate?.test) {
                     context.fillStyle = 'rgb(118,188,127)';
                     context.font = '42pt OCR-A';
                     context.fillText('TEST CERTIFICATE ONLY', 200, 175);
