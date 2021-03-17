@@ -75,12 +75,12 @@ export class DefaultTemplate extends BrandTemplate {
                 context.font = '10pt Inter';
                 this.wrapText(context, fromCertificate.description, 325, 100, 500, 30);
                 context.font = '16pt OCR-A';
-                context.fillText('ITEM ' + fromCertificate.saleQty + ' OF ' + fromCertificate.max_qty + ' SERIAL NUMBER ' + fromCertificate.thumbprint, 325, 50);
+                context.fillText('SERIAL NUMBER ' + fromCertificate.thumbprint, 325, 50);
                 context.font = '12pt OCR-A';
                 context.fillStyle = 'rgb(248,34,41)';
                 this.wrapText(context, 'SOLD TO ' + fromCertificate.gamerTag.toUpperCase() + ' FOR UNLIMITED USE IN ' + fromCertificate.platformCode.toUpperCase(), 325, 75, 500, 30);
 
-                if (process.env.NODE_ENV !== 'production') {
+                if (fromCertificate?.test) {
                     context.fillStyle = 'rgb(118,188,127)';
                     context.font = '42pt OCR-A';
                     context.fillText('TEST CERTIFICATE ONLY', 200, 175);
