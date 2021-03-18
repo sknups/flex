@@ -26,7 +26,10 @@ export class CertificatesRoutesConfig extends CommonRoutesConfig {
                     `/${CertificatesRoutesConfig.ROUTE_NEEDLE}/:id/**`
                 ]
             )
-            .get((req, res, next) => this.certificateController.certificate(req, res));
+            .get(
+                (req, res, next) =>
+                    this.certificateController.certificate(req, res)
+            );
 
         return this.getApp();
     }

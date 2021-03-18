@@ -28,10 +28,14 @@ body {
     flex: 1;
 }
 
-.footer-main {
-    padding: 1.25rem 1.875rem;
+footer {
+    position: fixed;
+    bottom: 0;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    width: 100%;
 }
 
 .footer-main-item {
@@ -62,4 +66,8 @@ a:hover {
 ul {
     list-style: none;
     padding-left: 0;
+}
+
+.w-100 {
+    width: 100%;
 }
