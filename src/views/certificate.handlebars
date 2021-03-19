@@ -42,13 +42,14 @@
 </script>
 
 
-
 <div class="wrapper">
     <div class="empty">
         <div class="img opacity-0">
             <img src="/img/{{data.thumbprint}}/img/default/cert.png"
-                 width="{{width}}"
-                 alt="{{data.stockKeepingUnitName}}" onload="didLoadImage()" />
+                 style="max-width: {{width}}px; width: 100%; height: auto;"
+                 alt="{{data.stockKeepingUnitName}}"
+                 onload="didLoadImage()"
+            />
         </div>
         <div class="certificate visible" style="max-width: {{width}}px">
             {{data.certificate}}
