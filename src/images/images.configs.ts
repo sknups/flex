@@ -1,8 +1,9 @@
 export class ImagesConfigs {
     static SIZES = {
-        "default": 1024,
-        "og": 550,
-        "twitter": 280
+        DEFAULT: 1024,
+        OG: 550,
+        TWITTER: 280,
+        SCALE: 1.1
     }
 
     static LANDSCAPE_RATIO = 2.69;
