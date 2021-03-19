@@ -4,6 +4,7 @@ import {AxiosError} from 'axios';
 import {StatusCodes} from "http-status-codes";
 import logger from "winston";
 import {ImagesConfigs} from "../../images/images.configs";
+import {CertificatesRoutesConfig} from "../routes/certificates.routes.config";
 
 export class CertificateController {
     private readonly certificateService: CertificatesService;
@@ -34,7 +35,8 @@ export class CertificateController {
                     jsonString: JSON.stringify(response.data),
                     host: req.protocol + '://' + req.hostname,
                     width: ImagesConfigs.SIZES.DEFAULT * ImagesConfigs.SIZES.SCALE,
-                    layout: 'certificate'
+                    layout: 'certificate',
+                    certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
                 });
             })
             .catch((error: AxiosError) => {
