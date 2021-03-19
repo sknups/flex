@@ -9,16 +9,16 @@ export class DefaultTemplate extends BrandTemplate {
     renderTemplate(fromCertificate: CertificateDTO, use: string): Promise<Buffer> {
         return new Promise<Buffer>((accept, reject) => {
             //find out if we're going to scale the image
-            let scale = 1;
+            let scale = ImagesConfigs.SIZES.SCALE;
             if (use == "og") {
-                scale = ImagesConfigs.SIZES.og / ImagesConfigs.SIZES.default;
+                scale = ImagesConfigs.SIZES.OG / ImagesConfigs.SIZES.DEFAULT;
             } else if (use == "twitter") {
-                scale = ImagesConfigs.SIZES.twitter / ImagesConfigs.SIZES.default;
+                scale = ImagesConfigs.SIZES.TWITTER / ImagesConfigs.SIZES.DEFAULT;
             }
 
             //Lock ratio to golden section
-            const height = ImagesConfigs.SIZES.default / ImagesConfigs.LANDSCAPE_RATIO;
-            const canvas = createCanvas(ImagesConfigs.SIZES.default, height);
+            const height = ImagesConfigs.SIZES.DEFAULT / ImagesConfigs.LANDSCAPE_RATIO;
+            const canvas = createCanvas(ImagesConfigs.SIZES.DEFAULT, height);
 
             // Load Fonts
             this.loadFontsIntoCanvas([
@@ -92,12 +92,12 @@ export class DefaultTemplate extends BrandTemplate {
                 if (scale != 1) {
                     try {
                         //cache the image on a temp canvas as resizing the canvas will
-                        const tempCanvas = createCanvas(ImagesConfigs.SIZES.default, height);
+                        const tempCanvas = createCanvas(ImagesConfigs.SIZES.DEFAULT, height);
                         tempCanvas.getContext("2d").drawImage(canvas, 0, 0);
                         canvas.width *= scale;
                         canvas.height *= scale;
                         const ctx = canvas.getContext('2d');
-                        ctx.drawImage(tempCanvas, 0, 0, ImagesConfigs.SIZES.default, height, 0, 0, ImagesConfigs.SIZES.default * scale, height * scale);
+                        ctx.drawImage(tempCanvas, 0, 0, ImagesConfigs.SIZES.DEFAULT, height, 0, 0, ImagesConfigs.SIZES.DEFAULT * scale, height * scale);
                         logger.info("Scaled to " + scale);
                     } catch (error) {
                         logger.info(error);

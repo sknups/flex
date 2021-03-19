@@ -33,7 +33,7 @@ export class CertificateController {
                     data: response.data,
                     jsonString: JSON.stringify(response.data),
                     host: req.protocol + '://' + req.hostname,
-                    width: ImagesConfigs.SIZES.default, 'height': 380,
+                    width: ImagesConfigs.SIZES.DEFAULT * ImagesConfigs.SIZES.SCALE,
                     layout: 'certificate'
                 });
             })
