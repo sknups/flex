@@ -4,7 +4,7 @@ import {CertificateController} from "../controllers/certificate.controller";
 
 export class CertificatesRoutesConfig extends CommonRoutesConfig {
 
-    private static readonly ROUTE_NEEDLE = 'certificate';
+    static readonly ROUTE_NEEDLE = 'cert';
     private readonly certificateController: CertificateController;
 
     constructor(app: Application) {
