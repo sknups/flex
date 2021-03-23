@@ -7,6 +7,9 @@ import express from "express";
 import http from "http";
 import {ImagesRoutesConfig} from "./images/routes/images.routes.config";
 
+// Start Google Trace in general
+require('@google-cloud/trace-agent').start();
+
 // Load into ENV Variables
 dotenv.config();
 
