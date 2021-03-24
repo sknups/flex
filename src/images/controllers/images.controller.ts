@@ -60,6 +60,40 @@ export class ImagesController {
         }
     }
 
+    async getSkuImage(request: express.Request, response: express.Response) {
+        logger.info(`ImagesController.getSkuImage`);
+
+        const itemId = request.params.itemId;
+
+        try {
+            logger.info(`Item Id: ${itemId}`);
+
+            // request the certificate information
+            const certificateDTO = await this.getCertificate(itemId);
+
+            this.imagesService.getSkuImage(certificateDTO)
+                .then((buffer) => {
+                    logger.info(`ImagesController.getSkuImage with buffer.length=${buffer.length}`);
+
+                    response.writeHead(StatusCodes.OK, {
+                        'Content-Type': 'image/png',
+                        'Content-Length': buffer.length
+                    });
+                    response.write(buffer);
+                    response.end(null, 'binary');
+                })
+                .catch((err) => {
+                    logger.error(`ImagesController.getSkuImage ERROR. Failed to draw image`);
+
+                    response.writeHead(StatusCodes.NOT_FOUND);
+                    response.write('Failed to draw image');
+                    response.end();
+                });
+        } catch (err) {
+            this.handleCanvasImageError(response, err);
+        }
+    }
+
     async getCertificate(withId: string): Promise<CertificateDTO> {
         const response = await this.certificateService.getCertificate(withId);
         return response.data;
