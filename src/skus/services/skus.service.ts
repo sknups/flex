@@ -22,7 +22,6 @@ export class SkusService {
      */
     getSku(withCode: string) {
         logger.info(`SkusService.getSku withCode:${withCode} from ${this.serverUrl}/v1/api/skus/${withCode}`);
-        // return axios.get<CertificateDTO>(`${this.serverUrl}/v1/api/assets/${withId}`);
-        return axios.get<SkuDTO>(`http://localhost:8081/v1/api/skus/${withCode}`);
+        return axios.get<SkuDTO>(`${this.serverUrl}/v1/api/assets/${withCode}`);
     }
 }
