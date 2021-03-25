@@ -2,15 +2,19 @@ import axios from "axios";
 import logger from "winston";
 
 export interface CertificateDTO {
+    // FIX DTO
     id: string;
     gamerTag: string;
     saleQty: number;
     stockKeepingUnitCode: string;
+    stockKeepingUnit: string;
     brandCode: string;
     brand: string;
     description: string;
     platformCode: string;
-    image: string;
+    designItemCode: string;
+    skuImageUrl: string;
+    certImageUrl: string;
     max_qty: number;
     cur_qty: number;
     thumbprint: string;

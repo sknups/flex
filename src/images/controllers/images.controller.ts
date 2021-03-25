@@ -3,15 +3,18 @@ import {StatusCodes} from "http-status-codes";
 import logger from "winston";
 import {ImagesService} from "../services/images.service";
 import {CertificateDTO, CertificatesService} from "../../certificates/services/certificates.service";
+import {SkuDTO, SkusService} from "../../skus/services/skus.service";
 
 export class ImagesController {
 
     private readonly imagesService: ImagesService;
     private readonly certificateService: CertificatesService;
+    private readonly skuService: SkusService;
 
     constructor() {
         this.imagesService = new ImagesService();
         this.certificateService = new CertificatesService();
+        this.skuService = new SkusService();
     }
 
     index(request: express.Request, response: express.Response) {
@@ -24,20 +27,21 @@ export class ImagesController {
         });
     }
 
-    async getImage(request: express.Request, response: express.Response) {
+    async getCertImage(request: express.Request, response: express.Response) {
         logger.info(`ImagesController.getImage`);
-
-        const itemId = request.params.itemId;
-        const image = request.params.imageType;
-
-        logger.info(`ImagesController.getImage from: ${itemId} with image: ${image}`);
 
         try {
             // request the certificate information
-            const certificateDTO = await this.getCertificate(itemId);
+            const certCode = request.params.certCode;
+
+            const certificateDTO = await this.getCertificate(certCode);
+
+            const brandCode = certificateDTO.brandCode;
+
+            logger.info(`ImagesController.getCertImage from brand: ${brandCode} with certCode: ${certCode}`);
 
             // Legacy Info for now
-            this.imagesService.generateCanvasImage(certificateDTO, image)
+            this.imagesService.generateCanvasImage(certificateDTO)
                 .then((buffer) => {
                     logger.info(`ImagesController.getImage with buffer.length=${buffer.length}`);
 
@@ -63,15 +67,15 @@ export class ImagesController {
     async getSkuImage(request: express.Request, response: express.Response) {
         logger.info(`ImagesController.getSkuImage`);
 
-        const itemId = request.params.itemId;
+        const skuCode = request.params.skuCode;
 
         try {
-            logger.info(`Item Id: ${itemId}`);
+            logger.info(`SkuCode: ${skuCode}`);
 
             // request the certificate information
-            const certificateDTO = await this.getCertificate(itemId);
+            const skuDto = await this.getSku(skuCode);
 
-            this.imagesService.getSkuImage(certificateDTO)
+            this.imagesService.getSkuImage(skuDto)
                 .then((buffer) => {
                     logger.info(`ImagesController.getSkuImage with buffer.length=${buffer.length}`);
 
@@ -96,6 +100,11 @@ export class ImagesController {
 
     async getCertificate(withId: string): Promise<CertificateDTO> {
         const response = await this.certificateService.getCertificate(withId);
+        return response.data;
+    }
+
+    async getSku(withCode: string): Promise<SkuDTO> {
+        const response = await this.skuService.getSku(withCode);
         return response.data;
     }
 
