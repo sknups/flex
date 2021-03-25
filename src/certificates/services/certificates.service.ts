@@ -7,7 +7,8 @@ export interface CertificateDTO {
     gamerTag: string;
     saleQty: number;
     stockKeepingUnitCode: string;
-    stockKeepingUnit: string;
+    stockKeepingUnitName: string;
+    stockKeepingUnitImageName: string;
     brandCode: string;
     brand: string;
     description: string;
