@@ -32,6 +32,9 @@ export class DefaultTemplate extends BrandTemplate {
             context.quality = 'bilinear';
 
             const brandFolder = fromCertificate.brandCode.replace('BRAND-', '');
+            // to be replaced
+            // const designItemFolder = fromCertificate.designItemCode.replace('DESIGN-ITEM-', '');
+            const designItemFolder = '99999999';
             const skuFolder = fromCertificate.stockKeepingUnitCode.replace('SKU-', '');
             const platformFolder = fromCertificate.platformCode.replace('PLATFORM-', '');
 
@@ -40,8 +43,7 @@ export class DefaultTemplate extends BrandTemplate {
                 './static/backgrounds/SKNUPS_cert_bg.jpg',
                 `./static/assets/brands/${brandFolder}/brand.png`,
                 `./static/assets/platforms/${platformFolder}/platform.png`,
-                // 99999999 will be replaced soon with the designItemCode
-                `./static/assets/brands/${brandFolder}/99999999/${skuFolder}/v1/${fromCertificate.image}.png`,
+                `./static/assets/brands/${brandFolder}/${designItemFolder}/${skuFolder}/v1/${fromCertificate.stockKeepingUnitImageName}.png`,
             ]).then((images) => {
                 //draw the images first
                 const backgroundImage = images[0];

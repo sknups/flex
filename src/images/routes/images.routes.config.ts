@@ -19,11 +19,11 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
             .get((req, res) => this.imagesController.index(req, res));
 
         this.getApp()
-            .route('/img/:itemId/img/:imageType/**')
-            .get((req, res) => this.handleImageRequest(req, res));
+            .route('/img/cert/:certCode')
+            .get((req, res) => this.handleCertImageRequest(req, res));
 
         this.getApp()
-            .route('/img/:itemId')
+            .route('/img/sku/:skuCode')
             .get((req, res) => this.handleSkuImageRequest(req, res));
 
         return this.getApp();
@@ -35,13 +35,13 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
      * @param response
      * @private
      */
-    private handleImageRequest(request: express.Request, response: express.Response) {
-        logger.info(`ImagesRoutesConfig.handleImageRequest from: ${request.params.itemId} with image: ${request.params.imageType}`);
-        this.imagesController.getImage(request, response);
+    private handleCertImageRequest(request: express.Request, response: express.Response) {
+        logger.info(`ImagesRoutesConfig.handleImageRequest from: ${request.params.certCode}`);
+        this.imagesController.getCertImage(request, response);
     }
 
     private handleSkuImageRequest(request: express.Request, response: express.Response) {
-        logger.info(`ImagesRoutesConfig.handleSkuImageRequest from: ${request.params.itemId}`);
+        logger.info(`ImagesRoutesConfig.handleSkuImageRequest from: ${request.params.skuCode}`);
         this.imagesController.getSkuImage(request, response);
     }
 }
