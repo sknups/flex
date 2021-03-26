@@ -1,12 +1,40 @@
-<div class="wrapper">
+<style>
+    .toast-error {
+        background: #ee6e73;
+        color: white;
+        width: 100%;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .fade-out {
+        opacity: 1;
+        transition: opacity 0.5s ease-out;
+        -moz-transition: opacity 0.5s ease-out;
+        -webkit-transition: opacity 0.5s ease-out;
+    }
+
+    .no-opacity {
+        opacity: 0;
+    }
+</style>
+
+<script>
+    function hideToast() {
+        const toastElement = document.querySelector('.toast-error');
+        setTimeout(function () {
+            toastElement.classList.add('no-opacity');
+        }, 5000);
+    }
+</script>
+
+<div class="wrapper" style="padding: 10px">
+    <div class="toast-error fade-out">
+        <span>{{toast}}</span>
+    </div>
     <div class="empty">
-        <div class="cert">
-            <div class="text">
-                <h1>{{message}}</h1>
-            </div>
-        </div>
         <div class="img">
-            <img src="/static/backgrounds/SKNUPS_error_cert.png" alt="Invalid Certificate" />
+            <img onload="hideToast()" src="/static/backgrounds/SKNUPS_error_cert.png" alt="Invalid Certificate" />
         </div>
     </div>
 </div>
