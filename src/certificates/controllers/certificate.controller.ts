@@ -32,6 +32,8 @@ export class CertificateController {
                 res.status(StatusCodes.OK).render('certificate', {
                     title: 'Certificate',
                     data: response.data,
+                    toast: 'Congratulations on your new Skin! Check your email for details.',
+                    showToast: req.query.redirect ? 'visible' : 'opacity-0',
                     jsonString: JSON.stringify(response.data),
                     host: req.protocol + '://' + req.hostname,
                     width: ImagesConfigs.SIZES.DEFAULT * ImagesConfigs.SIZES.SCALE,
@@ -43,7 +45,10 @@ export class CertificateController {
                 logger.error(`CertificateController.certificate.catch response:${error} and data: ${JSON.stringify(error.response?.data || {})}`);
                 const statusCode = error.response?.status || 500;
 
-                res.status(statusCode).render(statusCode.toString(10), {layout: 'missing-certificate', id: req.params.id});
+                res.status(statusCode).render(statusCode.toString(10), {
+                    layout: 'missing-certificate', id: req.params.id,
+                    toast: 'Something went wrong. Please try again later.',
+                });
             })
     }
 }
