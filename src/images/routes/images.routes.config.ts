@@ -37,11 +37,19 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
      */
     private handleCertImageRequest(request: express.Request, response: express.Response) {
         logger.info(`ImagesRoutesConfig.handleImageRequest from: ${request.params.certCode}`);
-        this.imagesController.getCertImage(request, response);
+        this.imagesController.getCertImage(request, response).then(() => {
+            logger.info(`imagesController.getCertImage success`);
+        }).catch((err) => {
+            logger.info(`imagesController.getCertImage error: ${err}`);
+        });
     }
 
     private handleSkuImageRequest(request: express.Request, response: express.Response) {
         logger.info(`ImagesRoutesConfig.handleSkuImageRequest from: ${request.params.skuCode}`);
-        this.imagesController.getSkuImage(request, response);
+        this.imagesController.getSkuImage(request, response).then(() => {
+            logger.info(`imagesController.getSkuImage success`);
+        }).catch((err) => {
+            logger.info(`imagesController.getSkuImage error: ${err}`);
+        });
     }
 }

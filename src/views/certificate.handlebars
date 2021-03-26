@@ -1,6 +1,6 @@
 <style>
     .wrapper {
-        display: flex;
+        display: flex !important;
         flex-flow: column;
 
         align-items: center;
@@ -19,6 +19,20 @@
     .certificate {
         word-wrap: anywhere;
     }
+
+    .toast-success {
+        background: #267e26;
+        color: white;
+        width: 100%;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .fade-out {
+        transition: opacity 0.5s ease-out;
+        -moz-transition: opacity 0.5s ease-out;
+        -webkit-transition: opacity 0.5s ease-out;
+    }
 </style>
 
 <script>
@@ -31,18 +45,24 @@
 
     function didLoadImage() {
         const imageElement = document.querySelector('.img');
-        const certificateTextElement = document.querySelector('.certificate');
+        const toastElement = document.querySelector('.toast-success');
 
         imageElement.classList.remove('hidden');
         imageElement.classList.add('visible');
 
-        certificateTextElement.classList.add('hidden');
+        setTimeout(function () {
+            toastElement.classList.remove('visible');
+            toastElement.classList.add('opacity-0');
+        }, 5000);
     }
 
 </script>
 
 
-<div class="wrapper">
+<div class="wrapper" style="padding: 10px">
+    <div class="toast-success fade-out {{showToast}}">
+        <span>{{toast}}</span>
+    </div>
     <div class="empty">
         <div class="img opacity-0">
             <img src="/img/cert/{{data.thumbprint}}"
@@ -50,9 +70,6 @@
                  alt="{{data.stockKeepingUnitName}}"
                  onload="didLoadImage()"
             />
-        </div>
-        <div class="certificate visible" style="max-width: {{width}}px">
-            {{data.certificate}}
         </div>
     </div>
 </div>
