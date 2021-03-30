@@ -62,7 +62,8 @@ export class Acx extends BrandTemplate {
                 context.font = '10pt Permanent Marker';
                 this.wrapText(context, fromCertificate.description, 325, 100, 500, 30);
                 context.font = '16pt Permanent Marker';
-                context.fillText('ITEM ' + fromCertificate.saleQty + ' OF ' + fromCertificate.max_qty + ' SERIAL NUMBER ' + fromCertificate.id, 325, 50);
+                context.fillText('SERIAL NUMBER ' + fromCertificate.thumbprint, 325, 50);
+                context.fillText('ITEM ' + fromCertificate.saleQty + ' OF ' + fromCertificate.maxQty, 325, 75);
                 context.font = '12pt Permanent Marker';
                 context.fillStyle = 'rgb(248,34,41)';
                 this.wrapText(context, 'SOLD TO ' + fromCertificate.gamerTag.toUpperCase() + ' FOR UNLIMITED USE IN ' + fromCertificate.platformCode.toUpperCase(), 325, 75, 500, 30);

@@ -6,6 +6,7 @@ export interface CertificateDTO {
     id: string;
     gamerTag: string;
     saleQty: number;
+    maxQty: number;
     stockKeepingUnitCode: string;
     stockKeepingUnitName: string;
     stockKeepingUnitImageName: string;
@@ -16,11 +17,9 @@ export interface CertificateDTO {
     designItemCode: string;
     skuImageUrl: string;
     certImageUrl: string;
-    max_qty: number;
-    cur_qty: number;
     thumbprint: string;
-    flex_url: string;
-    cert_url: string;
+    flexUrl: string;
+    certUrl: string;
     certificate: string;
     created: Date;
     test?: boolean;
