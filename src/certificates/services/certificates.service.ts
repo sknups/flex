@@ -45,23 +45,17 @@ export class CertificatesService {
      * Get a certificate from ID
      * @param withId
      */
-    getCertificate(withId: string): Promise<AxiosResponse<CertificateDTO>> {
+    async getCertificate(withId: string): Promise<AxiosResponse<CertificateDTO>> {
         logger.info(`CertificatesService.getCertificate withId:${withId} from ${this.serverUrl}/v1/api/assets/${withId}`);
         const url = `${this.serverUrl}/v1/api/assets/${withId}`;
-        const bearerToken = AuthenticationUtils.getServiceBearerToken(url);
+        const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
 
-        return bearerToken.then((token: any) => {
-            const drmOptions = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            };
-            return axios.get<CertificateDTO>(url, drmOptions);
-        }).catch(error => {
-            logger.error(error);
-            throw new Error(error);
-        });
+        const drmOptions = {
+            headers: {
+                Authorization: `Bearer ${bearerToken}`,
+            }
+        };
 
-
+        return axios.get<CertificateDTO>(url, drmOptions);
     }
 }
