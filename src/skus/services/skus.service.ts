@@ -1,5 +1,6 @@
 import axios, {AxiosResponse} from "axios";
 import logger from "winston";
+import {AuthenticationUtils} from "../../utils/authentication.utils";
 
 export interface SkuDTO {
     // FIX DTO
@@ -24,21 +25,7 @@ export class SkusService {
         logger.info(`SkusService.getSku withCode:${withCode} from ${this.serverUrl}/v1/api/skus/${withCode}`);
 
         const url = `${this.serverUrl}/v1/api/skus/${withCode}`;
-        const metadataUrl = `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`;
-        const options = {
-            headers: {
-                'Metadata-Flavor': 'Google'
-            }
-        };
-
-        const bearerToken = axios.get(metadataUrl, options)
-            .then((res: any) => {
-                logger.info(res.data);
-                return res.data;
-            }).catch((error: any) => {
-                logger.error(error);
-                throw new Error(error);
-            });
+        const bearerToken = AuthenticationUtils.getServiceBearerToken(url);
 
         return bearerToken.then((token: any) => {
             const drmOptions = {
