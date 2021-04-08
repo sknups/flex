@@ -21,22 +21,17 @@ export class SkusService {
      * Get a sku from skuCode
      * @param withCode
      */
-    getSku(withCode: string): Promise<AxiosResponse<SkuDTO>> {
+    async getSku(withCode: string): Promise<AxiosResponse<SkuDTO>> {
         logger.info(`SkusService.getSku withCode:${withCode} from ${this.serverUrl}/v1/api/skus/${withCode}`);
-
         const url = `${this.serverUrl}/v1/api/skus/${withCode}`;
-        const bearerToken = AuthenticationUtils.getServiceBearerToken(url);
+        const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
 
-        return bearerToken.then((token: any) => {
-            const drmOptions = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            };
-            return axios.get<SkuDTO>(url, drmOptions);
-        }).catch(error => {
-            logger.error(error);
-            throw new Error(error);
-        });
+        const drmOptions = {
+            headers: {
+                Authorization: `Bearer ${bearerToken}`,
+            }
+        };
+
+        return axios.get<SkuDTO>(url, drmOptions);
     }
 }
