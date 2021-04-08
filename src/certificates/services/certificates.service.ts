@@ -1,5 +1,6 @@
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import logger from "winston";
+import {AuthenticationUtils} from "../../utils/authentication.utils";
 
 export interface CertificateDTO {
     // FIX DTO
@@ -44,8 +45,23 @@ export class CertificatesService {
      * Get a certificate from ID
      * @param withId
      */
-    getCertificate(withId: string) {
+    getCertificate(withId: string): Promise<AxiosResponse<CertificateDTO>> {
         logger.info(`CertificatesService.getCertificate withId:${withId} from ${this.serverUrl}/v1/api/assets/${withId}`);
-        return axios.get<CertificateDTO>(`${this.serverUrl}/v1/api/assets/${withId}`);
+        const url = `${this.serverUrl}/v1/api/assets/${withId}`;
+        const bearerToken = AuthenticationUtils.getServiceBearerToken(url);
+
+        return bearerToken.then((token: any) => {
+            const drmOptions = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            };
+            return axios.get<CertificateDTO>(url, drmOptions);
+        }).catch(error => {
+            logger.error(error);
+            throw new Error(error);
+        });
+
+
     }
 }
