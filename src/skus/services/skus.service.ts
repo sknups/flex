@@ -1,5 +1,6 @@
 import axios, {AxiosResponse} from "axios";
 import logger from "winston";
+import {AuthenticationUtils} from "../../utils/authentication.utils";
 
 export interface SkuDTO {
     // FIX DTO
@@ -20,36 +21,18 @@ export class SkusService {
      * Get a sku from skuCode
      * @param withCode
      */
-    getSku(withCode: string): Promise<AxiosResponse<SkuDTO>> {
+    async getSku(withCode: string): Promise<AxiosResponse<SkuDTO>> {
         logger.info(`SkusService.getSku withCode:${withCode} from ${this.serverUrl}/v1/api/skus/${withCode}`);
-
         const url = `${this.serverUrl}/v1/api/skus/${withCode}`;
-        const metadataUrl = `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${url}`;
-        const options = {
+        const bearerToken = AuthenticationUtils.getServiceBearerToken(this.serverUrl);
+
+        const drmOptions = {
             headers: {
-                'Metadata-Flavor': 'Google'
+                Authorization: `Bearer ${bearerToken}`,
             }
         };
 
-        const bearerToken = axios.get(metadataUrl, options)
-            .then((res: any) => {
-                logger.info(res.data);
-                return res.data;
-            }).catch((error: any) => {
-                logger.error(error);
-                throw new Error(error);
-            });
+        return axios.get<SkuDTO>(url, drmOptions);
 
-        return bearerToken.then((token: any) => {
-            const drmOptions = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            };
-            return axios.get<SkuDTO>(url, drmOptions);
-        }).catch(error => {
-            logger.error(error);
-            throw new Error(error);
-        });
     }
 }
