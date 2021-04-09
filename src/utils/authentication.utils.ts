@@ -10,6 +10,7 @@ export class AuthenticationUtils {
             }
         };
 
+        logger.debug(`AuthenticationUtils.getServiceBearerToken  metadataUrl=${metadataUrl}`);
         return axios.get(metadataUrl, options)
             .then((res: any) => {
                 logger.debug(res.data);
