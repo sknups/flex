@@ -94,16 +94,7 @@ export class ImagesController {
                     response.end();
                 });
         } catch (err) {
-            if (err.response) {
-              // Request made and server responded
-              logger.error(`ImagesController.getSkuImage ERROR. response data=${err.response.data}`);
-              logger.error(`ImagesController.getSkuImage ERROR. response status=${err.response.status}`);
-              logger.error(`ImagesController.getSkuImage ERROR. response header=${err.response.headers}`);                        
-            } else if (err.request) {
-              // The request was made but no response was received                        
-              logger.error(`ImagesController.getSkuImage ERROR. request error=${err.request}`);
-            }
-            logger.info(`ImagesController.getSkuImage ERROR. Failed to get err=${err}`);            
+            logger.info(`ImagesController.getSkuImage ERROR. Failed to get`);            
             this.handleCanvasImageError(response, err);
         }
     }
