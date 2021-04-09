@@ -3,7 +3,7 @@ import logger from "winston";
 
 export class AuthenticationUtils {
     static getServiceBearerToken(serviceUrl: string): Promise<string> {
-        const metadataUrl = `http://metadata/computeMetadata/v1/instance/service-accounts/flex-ui/identity?audience=${serviceUrl}`;
+        const metadataUrl = `http://metadata/computeMetadata/v1/instance/service-accounts/flex-ui@drm-apps-01-43b0.iam.gserviceaccount.com/identity?audience=${serviceUrl}`;
         const options = {
             headers: {
                 'Metadata-Flavor': 'Google'
