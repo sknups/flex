@@ -24,7 +24,7 @@ export class SkusService {
     async getSku(withCode: string): Promise<AxiosResponse<SkuDTO>> {
         logger.info(`SkusService.getSku withCode:${withCode} from ${this.serverUrl}/v1/api/skus/${withCode}`);
         const url = `${this.serverUrl}/v1/api/skus/${withCode}`;
-        const bearerToken = AuthenticationUtils.getServiceBearerToken(url);
+        const bearerToken = AuthenticationUtils.getServiceBearerToken(this.serverUrl);
 
         const drmOptions = {
             headers: {
