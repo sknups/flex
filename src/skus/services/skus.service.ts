@@ -32,7 +32,19 @@ export class SkusService {
             }
         };
 
-        return axios.get<SkuDTO>(url, drmOptions);
+        const api = axios.create();
+
+        api.interceptors.request.use(request => {
+          logger.info(`SkusService.getSku DRM request :${JSON.stringify(request, null, 2)}`);
+          return request
+        })
+          
+        api.interceptors.response.use(response => {          
+          logger.info(`SkusService.getSku DRM response :${JSON.stringify(response, null, 2)}`);
+          return response
+        })
+
+        return api.get<SkuDTO>(url, drmOptions);
 
     }
 }
