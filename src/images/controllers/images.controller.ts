@@ -103,7 +103,7 @@ export class ImagesController {
               // The request was made but no response was received                        
               logger.error(`ImagesController.getSkuImage ERROR. request error=${err.request}`);
             }
-            logger.info(`ImagesController.getSkuImage ERROR. Failed to get `);
+            logger.info(`ImagesController.getSkuImage ERROR. Failed to get err=${err}`);            
             this.handleCanvasImageError(response, err);
         }
     }
