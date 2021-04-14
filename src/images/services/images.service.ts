@@ -47,16 +47,19 @@ export class ImagesService {
      * Will load any image whose name includes 'static' from the filesystem, and all others from the asset bucket
      * @param name The name or path of the file to load
      */
-    getCanvasImage(name: string): Promise<Image> | void {
+    getCanvasImage(name: string): Promise<Image> {
         if (name.includes('static')) {
             return loadImage(name);
         } else {
             this.getImage(name).then((res: string | Buffer) => {
                 return loadImage(res);
             }).catch((err : Error) =>{
-                return;
+                logger.error(`ImagesService.getCanvasImage name ="${name}" error="${err}"`);
             });
         }
+        return new Promise<Image>((resolve, reject) => {
+            reject();
+        });
     }
 
     getSkuImage(skuCode: string): Promise<Buffer> {
