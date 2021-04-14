@@ -3,13 +3,14 @@ import logger from "winston";
 
 export class AuthenticationUtils {
     static getServiceBearerToken(serviceUrl: string): Promise<string> {
+        if (false) return Promise.resolve('<your token here>');
         const metadataUrl = `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${serviceUrl}`;
         const options = {
             headers: {
                 'Metadata-Flavor': 'Google'
             }
         };
-        
+
         return axios.get(metadataUrl, options)
             .then((res: any) => {
                 logger.debug(res.data);
