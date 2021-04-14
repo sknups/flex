@@ -9,7 +9,7 @@ import { Image, loadImage } from "canvas";
 
 export class ImagesService {
 
-    constructor(){
+    constructor() {
 
     }
 
@@ -47,19 +47,20 @@ export class ImagesService {
      * Will load any image whose name includes 'static' from the filesystem, and all others from the asset bucket
      * @param name The name or path of the file to load
      */
-    getCanvasImage(name: string): Promise<Image> {
+    async getCanvasImage(name: string): Promise<Image> {
         if (name.includes('static')) {
             return loadImage(name);
         } else {
-            this.getImage(name).then((res: string | Buffer) => {
+            try {
+                let res = await this.getImage(name);
                 return loadImage(res);
-            }).catch((err : Error) =>{
+            } catch (err) {
                 logger.error(`ImagesService.getCanvasImage name ="${name}" error="${err}"`);
-            });
+                return new Promise<Image>((resolve, reject) => {
+                    reject();
+                });
+            }
         }
-        return new Promise<Image>((resolve, reject) => {
-            reject();
-        });
     }
 
     getSkuImage(skuCode: string): Promise<Buffer> {
