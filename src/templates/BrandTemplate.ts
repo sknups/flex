@@ -29,7 +29,7 @@ export abstract class BrandTemplate {
         logger.info(`BrandTemplate.loadImages: Will load images with paths: ${imagesPaths}`);
 
         const imagesPromises = imagesPaths.map((imagePath) => {
-            this.imagesService.getCanvasImage(imagePath);
+            return this.imagesService.getCanvasImage(imagePath);
         });
         return Promise.allSettled(imagesPromises);
     }
