@@ -73,9 +73,10 @@ export class ImagesController {
             logger.info(`SkuCode: ${skuCode}`);
 
             // request the certificate information
-            const skuDto = await this.getSku(skuCode);
+            //const skuDto = await this.getSku(skuCode);
+            // We shouldn't need this read - very inefficient - we just look for the skuCode directly
 
-            this.imagesService.getSkuImage(skuDto)
+            this.imagesService.getSkuImage(skuCode)
                 .then((buffer) => {
                     logger.info(`ImagesController.getSkuImage with buffer.length=${buffer.length}`);
 
@@ -87,7 +88,7 @@ export class ImagesController {
                     response.end(null, 'binary');
                 })
                 .catch((err) => {
-                    logger.error(`ImagesController.getSkuImage ERROR. Failed to draw image`);
+                    logger.error(`ImagesController.getSkuImage ERROR. ${err}`);
 
                     response.writeHead(StatusCodes.NOT_FOUND);
                     response.write('Failed to draw image');

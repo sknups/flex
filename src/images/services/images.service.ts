@@ -4,6 +4,7 @@ import logger from "winston";
 import {BrandTemplate} from "../../templates/BrandTemplate";
 import * as fs from "fs";
 import {SkuDTO} from "../../skus/services/skus.service";
+import {Storage} from " ../../@google-cloud/storage";
 
 export class ImagesService {
 
@@ -28,23 +29,18 @@ export class ImagesService {
         }
     }
 
-    async getSkuImage(sku: SkuDTO): Promise<Buffer> {
-        return new Promise<Buffer>((accept, reject) => {
-            const brandCode = sku.brandCode;
-            // const designItemCode = sku.designItemCode;
-            const designItemCode = '99999999';
-            const skuCode = sku.code;
-            const image = sku.image;
-
-            logger.info(`ImagesService.getSkuImage: Will load image with brandCode: ${brandCode}, skuCode: ${skuCode}, imageName: ${image}`);
-
-            const imagePath = `./static/assets/brands/${brandCode}/${designItemCode}/${skuCode}/v1/${image}.png`;
-
-            logger.info(imagePath);
-            fs.readFile(imagePath, (err, data) => {
-                if (err) throw err; // Fail if the file can't be read.
-                accept(data);
-            });
-        });
+    async getImage(name: string): Promise<Buffer>{
+        const storage = new Storage();
+        const getRawBody = require('raw-body');
+        const bucket = await storage.bucket(`assets-dev.sknups.gg`);
+        logger.info(bucket.name);
+        const file = bucket.file(name);
+        return getRawBody(file.createReadStream());
     }
+
+    getSkuImage(skuCode: string): Promise<Buffer>{
+        return this.getImage(`sku.v1.default.${skuCode}.png`);
+    }
+
+ 
 }
