@@ -34,19 +34,19 @@ export class DefaultTemplate extends BrandTemplate {
             //Load all required images in parallel before drawing them on the canvas
             this.loadImages([
                 './static/backgrounds/SKNUPS_cert_bg.jpg',
-                `brand.v1.default.${fromCertificate.stockKeepingUnitCode}.png`,
+                `brand.v1.default.${fromCertificate.brandCode}.png`,
                 `platform.v1.default.${fromCertificate.platformCode}.png`,
                 `sku.v1.default.${fromCertificate.stockKeepingUnitCode}.png`,
             ]).then((images) => {
                 //draw the images first
                 const backgroundImage = images[0];
-
                 if (backgroundImage.status == 'fulfilled') {
                     context.drawImage(backgroundImage.value, 0, 0);
                 } else {
                     logger.info('Failed to load background image image:');
                 }
                 const brandImage = images[1];
+                logger.debug(brandImage.status);
                 if (brandImage.status == 'fulfilled') {
                     context.drawImage(brandImage.value, 325, 250, 150, 100);
                 } else {
