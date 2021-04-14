@@ -1,11 +1,16 @@
-import {CertificateDTO} from "../certificates/services/certificates.service";
-import {CanvasRenderingContext2D, Image, loadImage, registerFont} from "canvas";
+import { CertificateDTO } from "../certificates/services/certificates.service";
+import { CanvasRenderingContext2D, Image, loadImage, registerFont } from "canvas";
 import logger from "winston";
-import {IFont} from "../models/IFont";
-import {IFlexImage} from "../models/IFlexImage";
+import { IFont } from "../models/IFont";
+import { IFlexImage } from "../models/IFlexImage";
+import { ImagesService } from "../images/services/images.service";
 
 export abstract class BrandTemplate {
 
+    private readonly imagesService: ImagesService;
+    constructor() {
+        this.imagesService = new ImagesService();
+    }
     /**
      * Function responsible for render the template according to the requirements of each brand
      * @param fromCertificate
@@ -15,12 +20,17 @@ export abstract class BrandTemplate {
 
     /**
      * Try to load a "bunch" of images from a given design
+     * Images with 'static' in the name will be loaded locally
+     * All other images will be loaded from the bucket
+     * 
      * @param imagesPaths
      */
-    loadImages(imagesPaths: string[]): Promise<PromiseSettledResult<Image>[]> {
+    loadImages(imagesPaths: string[]): Promise<PromiseSettledResult<Image|void>[]> {
         logger.info(`BrandTemplate.loadImages: Will load images with paths: ${imagesPaths}`);
 
-        const imagesPromises = imagesPaths.map((imagePath) => loadImage(imagePath));
+        const imagesPromises = imagesPaths.map((imagePath) => {
+            this.imagesService.getCanvasImage(imagePath);
+        });
         return Promise.allSettled(imagesPromises);
     }
 
