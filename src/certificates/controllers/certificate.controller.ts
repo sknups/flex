@@ -9,6 +9,7 @@ import {CertificatesRoutesConfig} from "../routes/certificates.routes.config";
 export class CertificateController {
     private readonly certificateService: CertificatesService;
 
+
     constructor() {
         this.certificateService = new CertificatesService();
     }
