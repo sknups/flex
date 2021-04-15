@@ -4,13 +4,28 @@ import logger from "winston";
 import { BrandTemplate } from "../../templates/BrandTemplate";
 import * as fs from "fs";
 import { SkuDTO } from "../../skus/services/skus.service";
-import { Storage } from " ../../@google-cloud/storage";
+import { Bucket, Storage } from " ../../@google-cloud/storage";
 import { Image, loadImage } from "canvas";
 
 export class ImagesService {
 
-    constructor() {
+    private bucket;
 
+    constructor() {
+        let srv: String;
+        switch (process.env.ENVIRONMENT) {
+            case null:
+                logger.warn("Warn - no env var ENVIRONMENT - defaulting to DEV");
+                this.bucket = new Storage().bucket('assets-dev.sknups.gg');
+                break;
+            case 'live':
+                this.bucket = new Storage().bucket('assets.sknups.gg');
+                break;
+            default:
+                this.bucket = new Storage().bucket(`assets-${process.env.ENVIRONMENT}.sknups.gg`);
+                break;
+
+        }
     }
 
     async generateCanvasImage(fromCertificate: CertificateDTO) {
@@ -35,11 +50,9 @@ export class ImagesService {
     }
 
     async getImage(name: string): Promise<Buffer> {
-        const storage = new Storage();
-        const bucket = await storage.bucket(`assets-dev.sknups.gg`);
+        const bucket = await this.bucket;
         const getRawBody = require('raw-body');
-        logger.info(bucket.name);
-        const file = bucket.file(name);
+        const file = this.bucket.file(name);
         return getRawBody(file.createReadStream());
     }
 

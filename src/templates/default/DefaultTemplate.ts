@@ -46,7 +46,6 @@ export class DefaultTemplate extends BrandTemplate {
                     logger.info('Failed to load background image image:');
                 }
                 const brandImage = images[1];
-                logger.debug(brandImage.status);
                 if (brandImage.status == 'fulfilled') {
                     context.drawImage(brandImage.value, 325, 250, 150, 100);
                 } else {
@@ -75,7 +74,7 @@ export class DefaultTemplate extends BrandTemplate {
                 context.font = '12pt OCR-A';
                 context.fillStyle = 'rgb(248,34,41)';
                 this.wrapText(context, 'SOLD TO ' + fromCertificate.gamerTag.toUpperCase() + ' FOR UNLIMITED USE IN ' + fromCertificate.platformCode.toUpperCase(), 325, 100, 500, 30);
-
+                
                 if (fromCertificate?.test) {
                     context.fillStyle = 'rgb(118,188,127)';
                     context.font = '42pt OCR-A';

@@ -27,6 +27,17 @@ It's a common Node app, so, before start, make sure you install all dependencies
 
 To start in development mode just run: `npm run dev`
 
+If you want to run the flex server against dev DRM and Asset servers (which is the best way, as you'll be using proper authentication) then set environment variables before starting: for powershell,
+
+//Set the target API for retreiving the asset DTO
+$env:DRM_SERVER="https://drm-dev.sknups.gg"
+//Set the target bucket for retreiving the images, though it will default to dev
+$env:ENVIRONMENT="dev"
+//Set the auth token used when calling secured API: nb, this token will expire after an hour
+$env:GOOGLE_AUTH_TOKEN=(gcloud auth print-identity-token)
+//Set the JWT used when authenticating agaisnt 
+$env:GOOGLE_APPLICATION_CREDENTIALS="C:\Users\Alist\Documents\drm-apps-01-43b0-ce1a4533a7c6.json"
+
 ### Build
 
 To build run the command `npm run build`
