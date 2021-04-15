@@ -3,7 +3,11 @@ import logger from "winston";
 
 export class AuthenticationUtils {
     static getServiceBearerToken(serviceUrl: string): Promise<string> {
-        if (false) return Promise.resolve('<your token here>');
+        if (process.env.GOOGLE_AUTH_TOKEN){
+            logger.warn(`Using process.env.GOOGLE_AUTH_TOKEN for auth token`)
+            return Promise.resolve(process.env.GOOGLE_AUTH_TOKEN);
+            
+        }
         const metadataUrl = `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${serviceUrl}`;
         const options = {
             headers: {
