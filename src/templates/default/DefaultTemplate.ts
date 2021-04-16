@@ -34,13 +34,12 @@ export class DefaultTemplate extends BrandTemplate {
             //Load all required images in parallel before drawing them on the canvas
             this.loadImages([
                 './static/backgrounds/SKNUPS_cert_bg.jpg',
-                `brand.v1.default.${fromCertificate.stockKeepingUnitCode}.png`,
+                `brand.v1.default.${fromCertificate.brandCode}.png`,
                 `platform.v1.default.${fromCertificate.platformCode}.png`,
                 `sku.v1.default.${fromCertificate.stockKeepingUnitCode}.png`,
             ]).then((images) => {
                 //draw the images first
                 const backgroundImage = images[0];
-
                 if (backgroundImage.status == 'fulfilled') {
                     context.drawImage(backgroundImage.value, 0, 0);
                 } else {
@@ -75,7 +74,7 @@ export class DefaultTemplate extends BrandTemplate {
                 context.font = '12pt OCR-A';
                 context.fillStyle = 'rgb(248,34,41)';
                 this.wrapText(context, 'SOLD TO ' + fromCertificate.gamerTag.toUpperCase() + ' FOR UNLIMITED USE IN ' + fromCertificate.platformCode.toUpperCase(), 325, 100, 500, 30);
-
+                
                 if (fromCertificate?.test) {
                     context.fillStyle = 'rgb(118,188,127)';
                     context.font = '42pt OCR-A';

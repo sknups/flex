@@ -4,13 +4,28 @@ import logger from "winston";
 import { BrandTemplate } from "../../templates/BrandTemplate";
 import * as fs from "fs";
 import { SkuDTO } from "../../skus/services/skus.service";
-import { Storage } from " ../../@google-cloud/storage";
+import { Bucket, Storage } from " ../../@google-cloud/storage";
 import { Image, loadImage } from "canvas";
 
 export class ImagesService {
 
-    constructor(){
+    private bucket;
 
+    constructor() {
+        let srv: String;
+        switch (process.env.ENVIRONMENT) {
+            case null:
+                logger.warn("Warn - no env var ENVIRONMENT - defaulting to DEV");
+                this.bucket = new Storage().bucket('assets-dev.sknups.gg');
+                break;
+            case 'live':
+                this.bucket = new Storage().bucket('assets.sknups.gg');
+                break;
+            default:
+                this.bucket = new Storage().bucket(`assets-${process.env.ENVIRONMENT}.sknups.gg`);
+                break;
+
+        }
     }
 
     async generateCanvasImage(fromCertificate: CertificateDTO) {
@@ -35,11 +50,9 @@ export class ImagesService {
     }
 
     async getImage(name: string): Promise<Buffer> {
-        const storage = new Storage();
-        const bucket = await storage.bucket(`assets-dev.sknups.gg`);
+        const bucket = await this.bucket;
         const getRawBody = require('raw-body');
-        logger.info(bucket.name);
-        const file = bucket.file(name);
+        const file = this.bucket.file(name);
         return getRawBody(file.createReadStream());
     }
 
@@ -47,19 +60,20 @@ export class ImagesService {
      * Will load any image whose name includes 'static' from the filesystem, and all others from the asset bucket
      * @param name The name or path of the file to load
      */
-    getCanvasImage(name: string): Promise<Image> {
+    async getCanvasImage(name: string): Promise<Image> {
         if (name.includes('static')) {
             return loadImage(name);
         } else {
-            this.getImage(name).then((res: string | Buffer) => {
+            try {
+                let res = await this.getImage(name);
                 return loadImage(res);
-            }).catch((err : Error) =>{
+            } catch (err) {
                 logger.error(`ImagesService.getCanvasImage name ="${name}" error="${err}"`);
-            });
+                return new Promise<Image>((resolve, reject) => {
+                    reject();
+                });
+            }
         }
-        return new Promise<Image>((resolve, reject) => {
-            reject();
-        });
     }
 
     getSkuImage(skuCode: string): Promise<Buffer> {
