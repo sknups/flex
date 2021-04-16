@@ -68,7 +68,7 @@ export class DefaultTemplate extends BrandTemplate {
                 //write the text
                 context.fillStyle = 'rgb(29,29,27)';
                 context.font = '10pt Inter';
-                this.wrapText(context, fromCertificate.description, 325, 100, 500, 30);
+                this.wrapText(context, fromCertificate.description, 325, 125, 450, 30);
                 context.font = '16pt OCR-A';
                 context.fillText('SERIAL NUMBER ' + fromCertificate.thumbprint, 325, 50);
                 context.fillText('ITEM ' + fromCertificate.saleQty + ' OF ' + fromCertificate.maxQty, 325, 75);
