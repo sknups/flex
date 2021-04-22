@@ -11,7 +11,7 @@ export class DefaultTemplate extends BrandTemplate {
         const imageAspectRatio: number = image.width / image.height;
         const scaleFactor = boxAspectRatio >= imageAspectRatio ? maxHeight / image.height : maxWidth / image.width;
 
-        return [image.width * scaleFactor, image.heigth * scaleFactor];
+        return [image.width * scaleFactor, image.height * scaleFactor];
     }
 
     renderTemplate(fromCertificate: CertificateDTO, use: string): Promise<Buffer> {
