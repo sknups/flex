@@ -1,10 +1,18 @@
 import {BrandTemplate} from "../BrandTemplate";
 import {ImagesConfigs} from "../../images/images.configs";
-import {createCanvas, loadImage, registerFont} from "canvas";
+import {createCanvas, Image, loadImage, registerFont} from "canvas";
 import logger from "winston";
 import {CertificateDTO} from "../../certificates/services/certificates.service";
 
 export class DefaultTemplate extends BrandTemplate {
+
+    scaleToMax(maxWidth: number, maxHeight: number, image: any): number[] {
+        const boxAspectRatio: number = maxWidth / maxHeight;
+        const imageAspectRatio: number = image.width / image.height;
+        const scaleFactor = boxAspectRatio >= imageAspectRatio ? maxHeight / image.height : maxWidth / image.width;
+
+        return [image.width * scaleFactor, image.heigth * scaleFactor];
+    }
 
     renderTemplate(fromCertificate: CertificateDTO, use: string): Promise<Buffer> {
         return new Promise<Buffer>((accept, reject) => {
@@ -53,7 +61,8 @@ export class DefaultTemplate extends BrandTemplate {
                 }
                 const gameImage = images[2];
                 if (gameImage.status == 'fulfilled') {
-                    context.drawImage(gameImage.value, 550, 250, 150, 100);
+                    const imageDimensions = this.scaleToMax(170, 100, gameImage.value);
+                    context.drawImage(gameImage.value, 550, 250, imageDimensions[0], imageDimensions[1]);
                 } else {
                     logger.info('Failed to load game image: ' + fromCertificate.platformCode);
                 }
