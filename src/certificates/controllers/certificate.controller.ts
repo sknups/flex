@@ -30,11 +30,14 @@ export class CertificateController {
             .then((response) => {
                 logger.info(`CertificateController.certificate.then response:${JSON.stringify(response.data)}`);
 
+                const toast = req.query.redirect ? 'Congratulations on your new Skin! Check your email for details.'
+                    : req.query.active ? 'Your skin is already activated. Time to flex!' : '';
+
                 res.status(StatusCodes.OK).render('certificate', {
                     title: 'Certificate',
                     data: response.data,
-                    toast: 'Congratulations on your new Skin! Check your email for details.',
-                    showToast: req.query.redirect ? 'visible' : 'opacity-0',
+                    toast,
+                    showToast: req.query.redirect || req.query.active ? 'visible' : 'opacity-0',
                     jsonString: JSON.stringify(response.data),
                     host: req.protocol + '://' + req.hostname,
                     width: ImagesConfigs.SIZES.DEFAULT * ImagesConfigs.SIZES.SCALE,
