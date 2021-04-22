@@ -47,13 +47,13 @@ export class DefaultTemplate extends BrandTemplate {
                 }
                 const brandImage = images[1];
                 if (brandImage.status == 'fulfilled') {
-                    context.drawImage(brandImage.value, 325, 250, 150, 100);
+                    // context.drawImage(brandImage.value, 325, 250, 150, 100);
                 } else {
                     logger.info('Failed to load brand image: ' + fromCertificate.brand);
                 }
                 const gameImage = images[2];
                 if (gameImage.status == 'fulfilled') {
-                    context.drawImage(gameImage.value, 550, 250);
+                    // context.drawImage(gameImage.value, 550, 250);
                 } else {
                     logger.info('Failed to load game image: ' + fromCertificate.platformCode);
                 }
