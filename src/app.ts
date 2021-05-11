@@ -6,6 +6,7 @@ import {ServerUtils} from "./utils/server.utils";
 import express from "express";
 import http from "http";
 import {ImagesRoutesConfig} from "./images/routes/images.routes.config";
+import cors from "cors";
 
 // Load into ENV Variables
 dotenv.config();
@@ -19,6 +20,8 @@ export const app: express.Application = ServerUtils.configureApp(
     parseInt(process.env?.GCP_LOG || '') === 1 || false,
     process.env.NODE_ENV === 'production'
 );
+
+app.use(cors());
 
 const server: http.Server = ServerUtils.createServer(app);
 const port = ServerUtils.normalizePort(process.env.PORT || '3000');
