@@ -56,12 +56,15 @@ export class ServerUtils {
 
         const hbs = exphbs.create();
 
+        // here we are adding middleware to allow cross-origin requests
+        // romApp.use(cors());
+
         // Good practice mentioned in https://expressjs.com/en/advanced/best-practice-security.html
         fromApp.use(helmet({
             // Or I won't be able to load the socializer plugin
             contentSecurityPolicy: false,
         }));
-        fromApp.disable('x-powered-by');
+        // fromApp.disable('x-powered-by');
 
         // view engine setup
         fromApp.set('views', [
@@ -81,12 +84,9 @@ export class ServerUtils {
         fromApp.set('view engine', 'handlebars');
 
         // here we are adding middleware to parse all incoming requests as JSON
-        fromApp.use(bodyparser.json());
-        fromApp.use(express.urlencoded({extended: false}));
-        fromApp.use(cookieParser());
-
-        // here we are adding middleware to allow cross-origin requests
-        fromApp.use(cors());
+        // fromApp.use(bodyparser.json());
+        // fromApp.use(express.urlencoded({extended: false}));
+        // fromApp.use(cookieParser());
 
         // In case we want to use GCP Logs
         if (withGCPLogs) {
