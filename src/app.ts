@@ -40,7 +40,19 @@ app.get('/', (req: express.Request, res: express.Response) => {
     res.render('index', { title: 'SKNUPS', certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE})
 });
 
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Headers', 'accept, authorization, content-type, x-requested-with');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
+    // @ts-ignore
+    res.setHeader('Access-Control-Allow-Origin', req.header('origin'));
+    next();
+})
+
+app.use("/socket.io", express.static('../socket.io'));
 // Start server and listen on port
+let io = require("socket.io")(server);
+io.listen(server);
+
 server.listen(port, () => {
     debugLog(`Server running at ${port}`);
     routes.forEach((route: CommonRoutesConfig) => {
