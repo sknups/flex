@@ -15,13 +15,16 @@ dotenv.config();
 // We set a new instance of app
 // Tell the app if it will talk with GCP, and
 // compress the response in case we are in prod mode
-export const app: express.Application = ServerUtils.configureApp(
+/*export const app: express.Application = ServerUtils.configureApp(
     express(),
     parseInt(process.env?.GCP_LOG || '') === 1 || false,
     process.env.NODE_ENV === 'production'
-);
+);*/
+export const app: express.Application = express();
 
 app.use(cors());
+app.use('/static', express.static('static'));
+
 
 const server: http.Server = ServerUtils.createServer(app);
 const port = ServerUtils.normalizePort(process.env.PORT || '3000');
