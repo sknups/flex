@@ -15,16 +15,13 @@ dotenv.config();
 // We set a new instance of app
 // Tell the app if it will talk with GCP, and
 // compress the response in case we are in prod mode
-/*export const app: express.Application = ServerUtils.configureApp(
+export const app: express.Application = ServerUtils.configureApp(
     express(),
     parseInt(process.env?.GCP_LOG || '') === 1 || false,
     process.env.NODE_ENV === 'production'
-);*/
-export const app: express.Application = express();
+);
 
 app.use(cors());
-app.use('/static', express.static('static'));
-
 
 const server: http.Server = ServerUtils.createServer(app);
 const port = ServerUtils.normalizePort(process.env.PORT || '3000');
@@ -43,19 +40,11 @@ app.get('/', (req: express.Request, res: express.Response) => {
     res.render('index', { title: 'SKNUPS', certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE})
 });
 
-app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Headers', 'accept, authorization, content-type, x-requested-with');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
-    // @ts-ignore
-    res.setHeader('Access-Control-Allow-Origin', req.header('origin'));
-    next();
-})
-
 app.use("/socket.io", express.static('../socket.io'));
-// Start server and listen on port
 let io = require("socket.io")(server);
 io.listen(server);
 
+// Start server and listen on port
 server.listen(port, () => {
     debugLog(`Server running at ${port}`);
     routes.forEach((route: CommonRoutesConfig) => {
