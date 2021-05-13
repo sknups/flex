@@ -52,3 +52,11 @@ server.listen(port, () => {
     });
 });
 
+const {NodeTracerProvider} = require('@opentelemetry/node');
+const provider = new NodeTracerProvider();
+
+const {registerInstrumentations} = require('@opentelemetry/instrumentation');
+const {SimpleSpanProcessor} = require('@opentelemetry/tracing');
+const {ExpressInstrumentation} = require('@opentelemetry/plugin-express');
+const {HttpInstrumentation} = require('@opentelemetry/plugin-http');
+
