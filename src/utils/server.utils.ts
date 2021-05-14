@@ -98,18 +98,26 @@ export class ServerUtils {
 
         // here we are configuring the expressWinston error-logging middleware,
         // which doesn't *handle* errors per se, but does *log* them
-        fromApp.use(expressWinston.errorLogger({
-            transports,
-            format: winston.format.combine(
-                winston.format.colorize(),
-                winston.format.json()
-            )
-        }));
+        // fromApp.use(expressWinston.errorLogger({
+        //     transports: [
+        //         new winston.transports.Console(),
+        //         // Add Stackdriver Logging
+        //         new LoggingWinston(),
+        //     ],
+        //     format: winston.format.combine(
+        //         winston.format.colorize(),
+        //         winston.format.json()
+        //     )
+        // }));
 
         // here we are configuring the expressWinston error-logging middleware,
         // which doesn't *handle* errors per se, but does *log* them
         fromApp.use(expressWinston.logger({
-            transports,
+            transports: [
+                new winston.transports.Console(),
+                // Add Stackdriver Logging
+                new LoggingWinston(),
+            ],
             format: winston.format.combine(
                 winston.format.colorize(),
                 winston.format.json()
@@ -119,6 +127,18 @@ export class ServerUtils {
 // Writes some log entries
         winston.error('warp nacelles offline');
         winston.info('shields at 99%');
+
+        const logger = winston.createLogger({
+            level: 'info',
+            transports: [
+                new winston.transports.Console(),
+                // Add Stackdriver Logging
+                new LoggingWinston(),
+            ],
+        });
+        logger.error('ZZZZZZZZZZZZZZZZZZZZZZZZZZ warp nacelles offline');
+        logger.info('ZZZZ  shields at 99%');
+
 
         //@ts-ignore
         fromApp.use(function (err, req, res, next) {
