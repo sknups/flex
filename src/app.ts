@@ -37,8 +37,9 @@ provider.addSpanProcessor(new SimpleSpanProcessor(exporter));
 // compress the response in case we are in prod mode
 export const app: express.Application = ServerUtils.configureApp(
     express(),
-    parseInt(process.env?.GCP_LOG || '') === 1 || false,
-    process.env.NODE_ENV === 'production'
+    true, true
+    // parseInt(process.env?.GCP_LOG || '') === 1 || false,
+    // process.env.NODE_ENV === 'production'
 );
 
 app.use(cors());
