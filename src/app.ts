@@ -11,6 +11,26 @@ import cors from "cors";
 // Load into ENV Variables
 dotenv.config();
 
+
+const opentelemetry = require('@opentelemetry/api');
+const {NodeTracerProvider} = require('@opentelemetry/node');
+const {SimpleSpanProcessor} = require('@opentelemetry/tracing');
+const {TraceExporter} = require('@google-cloud/opentelemetry-cloud-trace-exporter');
+
+// Enable OpenTelemetry exporters to export traces to Google Cloud Trace.
+// Exporters use Application Default Credentials (ADCs) to authenticate.
+// See https://developers.google.com/identity/protocols/application-default-credentials
+// for more details.
+const provider = new NodeTracerProvider();
+
+// Initialize the exporter. When your application is running on Google Cloud,
+// you don't need to provide auth credentials or a project id.
+const exporter = new TraceExporter();
+
+// Configure the span processor to send spans to the exporter
+provider.addSpanProcessor(new SimpleSpanProcessor(exporter));
+
+
 // Variables needed to start the server
 // We set a new instance of app
 // Tell the app if it will talk with GCP, and
@@ -51,12 +71,4 @@ server.listen(port, () => {
         debugLog(`Routes configured for ${route.getName()}`);
     });
 });
-
-const {NodeTracerProvider} = require('@opentelemetry/node');
-const provider = new NodeTracerProvider();
-
-const {registerInstrumentations} = require('@opentelemetry/instrumentation');
-const {SimpleSpanProcessor} = require('@opentelemetry/tracing');
-const {ExpressInstrumentation} = require('@opentelemetry/plugin-express');
-const {HttpInstrumentation} = require('@opentelemetry/plugin-http');
 
