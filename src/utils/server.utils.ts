@@ -1,12 +1,10 @@
 import * as http from "http";
 import * as express from "express";
-import bodyparser from "body-parser";
 import cors from "cors";
 import * as Transport from "winston-transport";
 import winston from "winston";
 import {LoggingWinston} from "@google-cloud/logging-winston";
 import expressWinston from "express-winston";
-import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import path from 'path';
 import compression from "compression";
@@ -107,6 +105,20 @@ export class ServerUtils {
                 winston.format.json()
             )
         }));
+
+        // here we are configuring the expressWinston error-logging middleware,
+        // which doesn't *handle* errors per se, but does *log* them
+        fromApp.use(expressWinston.logger({
+            transports,
+            format: winston.format.combine(
+                winston.format.colorize(),
+                winston.format.json()
+            )
+        }));
+
+// Writes some log entries
+        winston.error('warp nacelles offline');
+        winston.info('shields at 99%');
 
         //@ts-ignore
         fromApp.use(function (err, req, res, next) {
