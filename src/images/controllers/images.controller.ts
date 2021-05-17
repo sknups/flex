@@ -32,7 +32,7 @@ export class ImagesController {
 
         try {
             const code = request.params.certCode;
-            const idx = code.indexOf('.png');
+            const idx = code.indexOf(".png");
 
             // request the certificate information
             const certCode = idx < 0 ? code : code.substr(0, idx); //stripping .png extension, if exists
