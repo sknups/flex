@@ -31,11 +31,8 @@ export class ImagesController {
         logger.info(`ImagesController.getImage`);
 
         try {
-            const code = request.params.certCode;
-            const idx = code.indexOf(".png");
-
             // request the certificate information
-            const certCode = idx < 0 ? code : code.substr(0, idx); //stripping .png extension, if exists
+            const certCode = this.stripExtension(request.params.certCode);
 
             const certificateDTO = await this.getCertificate(certCode);
 
@@ -67,10 +64,15 @@ export class ImagesController {
         }
     }
 
+    stripExtension(value: string): string {
+        const idx = value.indexOf(".png");
+        return idx < 0 ? value : value.substr(0, idx); //stripping .png extension, if exists
+    }
+
     async getSkuImage(request: express.Request, response: express.Response) {
         logger.info(`ImagesController.getSkuImage`);
 
-        const skuCode = request.params.skuCode;
+        const skuCode = this.stripExtension(request.params.skuCode);
 
         try {
             logger.info(`SkuCode: ${skuCode}`);
