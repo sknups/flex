@@ -76,9 +76,10 @@ export class ImagesService {
         }
     }
 
-    getSkuImage(skuCode: string): Promise<Buffer> {
-        return this.getImage(`sku.v1.default.${skuCode}.png`);
+    getSkuImage(skuCode: string, version: string, purpose: string): Promise<Buffer> {
+        return this.getImage(`sku.${version}.${purpose}.${skuCode}.png`);
     }
+
 
 
 }

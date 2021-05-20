@@ -69,19 +69,21 @@ export class ImagesController {
         return idx < 0 ? value : value.substr(0, idx); //stripping .png extension, if exists
     }
 
-    async getSkuImage(request: express.Request, response: express.Response) {
+    async getSkuImage(request: express.Request, response: express.Response, fallback: boolean) {
         logger.info(`ImagesController.getSkuImage`);
 
-        const skuCode = this.stripExtension(request.params.skuCode);
-
         try {
+            const skuCode = this.stripExtension(request.params.skuCode);
+            const version = fallback ? "v1" : request.params.version;
+            const purpose = fallback ? "default" : request.params.purpose;
+
             logger.info(`SkuCode: ${skuCode}`);
 
             // request the certificate information
             //const skuDto = await this.getSku(skuCode);
             // We shouldn't need this read - very inefficient - we just look for the skuCode directly
 
-            this.imagesService.getSkuImage(skuCode)
+            this.imagesService.getSkuImage(skuCode, version, purpose)
                 .then((buffer) => {
                     logger.info(`ImagesController.getSkuImage with buffer.length=${buffer.length}`);
 
