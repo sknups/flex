@@ -19,12 +19,20 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
             .get((req, res) => this.imagesController.index(req, res));
 
         this.getApp()
+            .route('/img/cert/cert.:version.:certCode.:purpose.png')
+            .get((req, res) => this.handleCertImageRequest(req, res));
+
+        this.getApp()
             .route('/img/cert/:certCode')
             .get((req, res) => this.handleCertImageRequest(req, res));
 
         this.getApp()
+            .route('/img/sku/sku.:version.:skuCode.:purpose.png')
+            .get((req, res) => this.handleSkuImageRequest(req, res, false));
+
+        this.getApp()
             .route('/img/sku/:skuCode')
-            .get((req, res) => this.handleSkuImageRequest(req, res));
+            .get((req, res) => this.handleSkuImageRequest(req, res, true));
 
         return this.getApp();
     }
@@ -36,7 +44,7 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
      * @private
      */
     private handleCertImageRequest(request: express.Request, response: express.Response) {
-        logger.info(`ImagesRoutesConfig.handleImageRequest from: ${request.params.certCode}`);
+        logger.info(`ImagesRoutesConfig.handleImageRequest for: ${request.params}`);
         this.imagesController.getCertImage(request, response).then(() => {
             logger.info(`imagesController.getCertImage success`);
         }).catch((err) => {
@@ -44,9 +52,9 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
         });
     }
 
-    private handleSkuImageRequest(request: express.Request, response: express.Response) {
-        logger.info(`ImagesRoutesConfig.handleSkuImageRequest from: ${request.params.skuCode}`);
-        this.imagesController.getSkuImage(request, response).then(() => {
+    private handleSkuImageRequest(request: express.Request, response: express.Response, fallback: boolean) {
+        logger.info(`ImagesRoutesConfig.handleSkuImageRequest for: ${request.params}`);
+        this.imagesController.getSkuImage(request, response, fallback).then(() => {
             logger.info(`imagesController.getSkuImage success`);
         }).catch((err) => {
             logger.info(`imagesController.getSkuImage error: ${err}`);
