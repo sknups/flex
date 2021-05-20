@@ -19,7 +19,7 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
             .get((req, res) => this.imagesController.index(req, res));
 
         this.getApp()
-            .route('/img/cert/cert.:version.:certCode.:purpose.png')
+            .route('/img/cert/:version/:purpose/:certCode.png')
             .get((req, res) => this.handleCertImageRequest(req, res));
 
         this.getApp()
@@ -27,7 +27,7 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
             .get((req, res) => this.handleCertImageRequest(req, res));
 
         this.getApp()
-            .route('/img/sku/sku.:version.:skuCode.:purpose.png')
+            .route('/img/sku/:version/:purpose/:skuCode.png')
             .get((req, res) => this.handleSkuImageRequest(req, res, false));
 
         this.getApp()
