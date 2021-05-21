@@ -27,7 +27,7 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
             .get((req, res) => this.handleCertImageRequest(req, res));
 
         this.getApp()
-            .route('/img/sku/:version/:purpose/:skuCode.png')
+            .route('/img/sku/:version/:purpose/:skuCode.:extension(png|glb)')
             .get((req, res) => this.handleSkuImageRequest(req, res, false));
 
         this.getApp()
