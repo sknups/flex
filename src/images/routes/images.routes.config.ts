@@ -44,7 +44,7 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
      * @private
      */
     private handleCertImageRequest(request: express.Request, response: express.Response) {
-        logger.info(`ImagesRoutesConfig.handleImageRequest for: ${request.params}`);
+        logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(request.params)}`);
         this.imagesController.getCertImage(request, response).then(() => {
             logger.info(`imagesController.getCertImage success`);
         }).catch((err) => {
@@ -53,7 +53,7 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
     }
 
     private handleSkuImageRequest(request: express.Request, response: express.Response, fallback: boolean) {
-        logger.info(`ImagesRoutesConfig.handleSkuImageRequest for: ${request.params}`);
+        logger.info(`ImagesRoutesConfig.handleSkuImageRequest for: ${JSON.stringify(request.params)}`);
         this.imagesController.getSkuImage(request, response, fallback).then(() => {
             logger.info(`imagesController.getSkuImage success`);
         }).catch((err) => {
