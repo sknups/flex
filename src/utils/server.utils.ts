@@ -86,11 +86,7 @@ export class ServerUtils {
         // fromApp.use(express.urlencoded({extended: false}));
         // fromApp.use(cookieParser());
 
-        // In case we want to use GCP Logs
-        if (withGCPLogs) {
-            transports.push(new LoggingWinston())
-        }
-
+     
         if (toProd) {
             fromApp.use(compression());
             fromApp.enable('view cache');
@@ -112,29 +108,27 @@ export class ServerUtils {
 
         // here we are configuring the expressWinston error-logging middleware,
         // which doesn't *handle* errors per se, but does *log* them
+    
+        // Add Stackdriver Logging
+        if (withGCPLogs){
+          transports.push(new LoggingWinston());
+        }
+
         fromApp.use(expressWinston.logger({
-            transports: [
-                new winston.transports.Console(),
-                // Add Stackdriver Logging
-                new LoggingWinston(),
-            ],
-            format: winston.format.combine(
-                winston.format.colorize(),
+            transports: transports,
+            format: winston.format.combine(                
                 winston.format.json()
             )
         }));
+        
 
-// Writes some log entries
+        // Writes some log entries
         winston.error('warp nacelles offline');
         winston.info('shields at 99%');
 
         const logger = winston.createLogger({
             level: 'info',
-            transports: [
-                new winston.transports.Console(),
-                // Add Stackdriver Logging
-                new LoggingWinston(),
-            ],
+            transports: transports,
         });
         logger.error('ZZZZZZZZZZZZZZZZZZZZZZZZZZ warp nacelles offline');
         logger.info('ZZZZ  shields at 99%');
