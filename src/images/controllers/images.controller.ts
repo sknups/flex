@@ -76,6 +76,7 @@ export class ImagesController {
             const skuCode = this.stripExtension(request.params.skuCode);
             const version = fallback ? "v1" : request.params.version;
             const purpose = fallback ? "default" : request.params.purpose;
+            const extension = fallback ? "png" : request.params.extension;
 
             logger.info(`SkuCode: ${skuCode}`);
 
@@ -83,7 +84,7 @@ export class ImagesController {
             //const skuDto = await this.getSku(skuCode);
             // We shouldn't need this read - very inefficient - we just look for the skuCode directly
 
-            this.imagesService.getSkuImage(skuCode, version, purpose)
+            this.imagesService.getSkuImage(skuCode, version, purpose, extension)
                 .then((buffer) => {
                     logger.info(`ImagesController.getSkuImage with buffer.length=${buffer.length}`);
 
