@@ -1,0 +1,28 @@
+#cookie-warning {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+
+    /* Just making sure it will be on top */
+    z-index: 100;
+
+    padding: 0.5rem;
+
+    display: flex;
+    flex-flow: column;
+}
+
+#cookie-warning #message-container p {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+#cookie-warning #actions-container {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 1rem 0;
+}
