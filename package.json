@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "build": "tsc && npm run build-scss",
-    "build-sass": "rm -rf ./public/assets/css && node-sass ./src/scss -o ./public/assets/css",
+    "build-scss": "rm -rf ./public/assets/css && node-sass ./src/scss -o ./public/assets/css",
     "start": "node ./dist/app.js",
     "scss": " node-sass ./src/scss -o ./public/assets/css && node-sass --watch ./src/scss -o ./public/assets/css",
     "dev": "export DEBUG=* && nodemon src/app.ts",
