@@ -1,24 +1,3 @@
-<style>
-    .toast-error {
-        background: #ee6e73;
-        color: white;
-        width: 100%;
-        border-radius: 10px;
-        text-align: center;
-    }
-
-    .fade-out {
-        opacity: 1;
-        transition: opacity 0.5s ease-out;
-        -moz-transition: opacity 0.5s ease-out;
-        -webkit-transition: opacity 0.5s ease-out;
-    }
-
-    .no-opacity {
-        opacity: 0;
-    }
-</style>
-
 <script>
     function hideToast() {
         const toastElement = document.querySelector('.toast-error');
@@ -28,13 +7,15 @@
     }
 </script>
 
-<div class="wrapper" style="padding: 10px">
-    <div class="toast-error fade-out">
-        <span>{{toast}}</span>
-    </div>
-    <div class="empty">
-        <div class="img">
-            <img onload="hideToast()" src="/static/backgrounds/SKNUPS_error_cert.png" alt="Invalid Certificate" />
+<div class="cert-error-page">
+    <div class="wrapper" style="padding: 10px">
+        <div class="toast-error fade-out">
+            <span>{{toast}}</span>
+        </div>
+        <div class="cert-image-wrapper">
+            <div class="cert-image">
+                <img onload="hideToast()" src="/static/backgrounds/SKNUPS_error_cert.png" alt="Invalid Certificate" />
+            </div>
         </div>
     </div>
 </div>

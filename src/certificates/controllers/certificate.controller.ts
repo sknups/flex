@@ -31,15 +31,22 @@ export class CertificateController {
                 logger.info(`CertificateController.certificate.then response:${JSON.stringify(response.data)}`);
 
                 const toast = req.query.redirect ? 'Congratulations on your new Skin! Check your email for details.'
-                    : req.query.active ? 'Your skin is already activated. Time to flex!' : '';
+                    : req.query.active ? 'Your skin is already activated. Time to flex!' : '';                    
+
+
+                let host = `${req.protocol}://${req.hostname}`
+
+                if (req.hostname == 'localhost') {
+                    host = `${host}:3000`
+                }
 
                 res.status(StatusCodes.OK).render('certificate', {
                     title: 'Certificate',
                     data: response.data,
                     toast,
-                    showToast: req.query.redirect || req.query.active ? 'visible' : 'opacity-0',
+                    showToast: req.query.redirect || req.query.active ? 'visible' : 'no-opacity',
                     jsonString: JSON.stringify(response.data),
-                    host: req.protocol + '://' + req.hostname,
+                    host: host,
                     width: ImagesConfigs.SIZES.DEFAULT * ImagesConfigs.SIZES.SCALE,
                     layout: 'certificate',
                     certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
