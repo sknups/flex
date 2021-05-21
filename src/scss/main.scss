@@ -1,0 +1,76 @@
+@import './_variables.scss';
+@import './_typography.scss';
+@import './_toast.scss';
+@import './_footer.scss';
+@import './_cookie-warning.scss';
+
+html {    
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background: $background-dm;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+}
+
+
+
+.fade-out {
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+    -moz-transition: opacity 0.5s ease-out;
+    -webkit-transition: opacity 0.5s ease-out;
+}
+
+.no-opacity { opacity: 0; } 
+
+.visible { opacity: 1; }
+
+.hidden {
+    visibility: hidden !important;
+}
+
+.index-page {
+    .logo {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .main_div {
+        padding: 50px 0;
+        text-align: center;
+        width: 100%;
+    }
+
+    body {
+        align-content: center;
+    }
+}
+
+.cert-image-wrapper{
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+}
+
+.cert-image {
+    display: flex;
+    position: absolute;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-left: auto;
+    margin-right: auto;
+
+    -webkit-transition: all 500ms ease-in;
+    -moz-transition: all 500ms ease-in;
+    -o-transition: all 500ms ease-in;
+    transition: all 500ms ease-in;
+}
+
