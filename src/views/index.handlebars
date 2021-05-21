@@ -1,31 +1,14 @@
-<style>
-    .logo {
-        display: flex;
-        justify-content: center;
-        margin-top: 2rem;
-    }
+<div class="index-page">
+    <div class="logo"><img src="/static/backgrounds/SKNUPS_BOX.png" width="500px"></div>
 
-    .main_div {
-        padding: 50px 0;
-        text-align: center;
-        width: 100%;
-        font-family: "OCR A";
-        font-size: 3vh;
-    }
+    <div class="main_div">
+        <p class="text-h3">Enter Your Certificate Id below to Flex</p>
 
-    body {
-        align-content: center;
-    }
-</style>
-<div class="logo"><img src="/static/backgrounds/SKNUPS_BOX.jpg" width="500px"></div>
-
-<div class="main_div">
-    <p>Enter your certificate ID below to flex:</p>
-
-    <form onsubmit="return process()">
-        <input type="text" name="id" id="id" required>
-        <input type="submit" value="Flex!">
-    </form>
+        <form onsubmit="return process()">
+            <input type="text" name="id" id="id" required>
+            <input type="submit" value="Flex!">
+        </form>
+    </div>
 </div>
 
 <script type="text/javascript">

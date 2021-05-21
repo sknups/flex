@@ -1,0 +1,64 @@
+html {    
+    font-family: $font-family-body;
+    color: $text-colour-dm;
+    font-size: 16px; 
+}
+
+a {
+    color:$link-colour;
+    text-decoration: none;
+}
+
+a:hover {
+    color: $link-colour-hover;
+    text-decoration: underline;
+}
+
+
+h1,
+.text-h1{
+  font-size: 6rem;
+  font-weight: 300;
+  letter-spacing: -.01562em;
+  line-height: 6rem;
+}
+
+h2,
+.text-h2{
+    font-size: 3.75rem;
+    font-weight: 300;
+    letter-spacing: -.00833em;
+    line-height: 3.75rem;
+}
+
+h3,
+.text-h3{
+    font-size: 3rem;
+    font-weight: 400;
+    letter-spacing: normal;
+    line-height: 3.125rem;
+}
+
+h4,
+.text-h4{
+    font-size: 2.125rem;
+    font-weight: 400;
+    letter-spacing: .00735em;
+    line-height: 2.5rem;
+}
+
+h5,
+.text-h5{
+    font-size: 1.5rem;
+    font-weight: 400;
+    letter-spacing: normal;
+    line-height: 2rem;
+}
+
+h6,
+.text-h6{
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: .0125em;
+    line-height: 2rem;
+}

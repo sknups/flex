@@ -1,40 +1,3 @@
-<style>
-    .wrapper {
-        display: flex !important;
-        flex-flow: column;
-
-        align-items: center;
-        justify-content: center;
-        justify-items: center;
-    }
-
-    .opacity-0 {
-        opacity: 0;
-    }
-
-    .visible {
-        opacity: 1;
-    }
-
-    .certificate {
-        word-wrap: anywhere;
-    }
-
-    .toast-success {
-        background: #267e26;
-        color: white;
-        width: 100%;
-        border-radius: 10px;
-        text-align: center;
-    }
-
-    .fade-out {
-        transition: opacity 0.5s ease-out;
-        -moz-transition: opacity 0.5s ease-out;
-        -webkit-transition: opacity 0.5s ease-out;
-    }
-</style>
-
 <script>
     gtag('event', 'show_certificate', {
         'brand': "{{data.brandCode}}",
@@ -44,7 +7,7 @@
     });
 
     function didLoadImage() {
-        const imageElement = document.querySelector('.img');
+        const imageElement = document.querySelector('.cert-image');
         const toastElement = document.querySelector('.toast-success');
 
         imageElement.classList.remove('hidden');
@@ -52,24 +15,24 @@
 
         setTimeout(function () {
             toastElement.classList.remove('visible');
-            toastElement.classList.add('opacity-0');
+            toastElement.classList.add('no-opacity');
         }, 5000);
     }
-
 </script>
 
-
-<div class="wrapper" style="padding: 10px">
-    <div class="toast-success fade-out {{showToast}}">
-        <span>{{toast}}</span>
-    </div>
-    <div class="empty">
-        <div class="img opacity-0">
-            <img src="/img/cert/{{data.thumbprint}}"
-                 style="max-width: {{width}}px; width: 100%; height: auto;"
-                 alt="{{data.stockKeepingUnitName}}"
-                 onload="didLoadImage()"
-            />
+<div class="cert-page">
+    <div class="wrapper" style="padding: 10px">
+        <div class="toast-success fade-out {{showToast}}">
+            <span>{{toast}}</span>
+        </div>
+        <div class="cert-image-wrapper">
+            <div class="cert-image no-opacity">
+                <img src="/img/cert/{{data.thumbprint}}"
+                    style="max-width: {{width}}px; width: 100%; height: auto;"
+                    alt="{{data.stockKeepingUnitName}}"
+                    onload="didLoadImage()"
+                />
+            </div>
         </div>
     </div>
 </div>

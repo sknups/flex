@@ -30,16 +30,17 @@ const exporter = new TraceExporter();
 // Configure the span processor to send spans to the exporter
 provider.addSpanProcessor(new SimpleSpanProcessor(exporter));
 
+const sendLogsToGCP = process.env.NODE_ENV === 'production'
+const isProduction = process.env.NODE_ENV === 'production'
 
 // Variables needed to start the server
 // We set a new instance of app
 // Tell the app if it will talk with GCP, and
 // compress the response in case we are in prod mode
 export const app: express.Application = ServerUtils.configureApp(
-    express(),
-    true, true
-    // parseInt(process.env?.GCP_LOG || '') === 1 || false,
-    // process.env.NODE_ENV === 'production'
+    express(),    
+    sendLogsToGCP,
+    isProduction
 );
 
 app.use(cors());

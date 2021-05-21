@@ -25,7 +25,7 @@ It's a common Node app, so, before start, make sure you install all dependencies
 
 ### Development
 
-To start in development mode just run: `npm run dev`
+To start in development mode run: `npm run dev` and `npm run scss`
 
 If you want to run the flex server against dev DRM and Asset servers (which is the best way, as you'll be using proper authentication) then set environment variables before starting: for powershell,
 
