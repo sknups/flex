@@ -131,9 +131,10 @@ export class ImagesController {
                     response.end(null, 'binary');
                 })
                 .catch((err) => {
-                    logger.error(`ImagesController.getClaimBackground Fallback background. ${err}`);
-                    response.writeHead(StatusCodes.OK);
-                    response.sendFile('/public/assets/claim.v1.claimform.default.png');
+                    logger.error(`ImagesController.getClaimBackground ERROR. ${err}`);
+
+                    response.writeHead(StatusCodes.NOT_FOUND);
+                    response.write('Failed to draw image');
                     response.end();
                 });
         } catch (err) {
