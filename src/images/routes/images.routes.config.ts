@@ -34,6 +34,14 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
             .route('/img/sku/:skuCode')
             .get((req, res) => this.handleSkuImageRequest(req, res, true));
 
+        this.getApp()
+            .route('/img/claim/:version/:purpose/:claimCode.:extension(png|jpg)')
+            .get((req, res) => this.handleClaimBackgroundRequest(req, res, false));
+
+        this.getApp()
+            .route('/img/claim/:claimCode')
+            .get((req, res) => this.handleClaimBackgroundRequest(req, res, true));
+
         return this.getApp();
     }
 
@@ -58,6 +66,15 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
             logger.info(`imagesController.getSkuImage success`);
         }).catch((err) => {
             logger.info(`imagesController.getSkuImage error: ${err}`);
+        });
+    }
+
+    private handleClaimBackgroundRequest(request: express.Request, response: express.Response, fallback: boolean) {
+        logger.info(`ImagesRoutesConfig.handleClaimBackgroundRequest for: ${JSON.stringify(request.params)}`);
+        this.imagesController.getClaimBackground(request, response, fallback).then(() => {
+            logger.info(`imagesController.getClaimBackground success`);
+        }).catch((err) => {
+            logger.info(`imagesController.getClaimBackground error: ${err}`);
         });
     }
 }

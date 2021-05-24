@@ -82,6 +82,8 @@ export class ImagesService {
         return this.getImage(`sku.${version}.${purpose}.${skuCode}.${extension}`);
     }
 
-
+    getClaimBackground(claimCode: string, version: string, purpose: string, extension: string): Promise<Buffer> {
+        return this.getImage(`claim.${version}.${purpose}.${claimCode}.${extension}`);
+    }
 
 }
