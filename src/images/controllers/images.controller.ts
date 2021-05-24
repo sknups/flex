@@ -113,9 +113,9 @@ export class ImagesController {
 
         try {
             const claimCode = this.stripExtension(request.params.skuCode);
-            const version = fallback ? "v1" : request.params.version;
-            const purpose = fallback ? "claimform" : request.params.purpose;
-            const extension = fallback ? "png" : request.params.extension;
+            const version = fallback ? 'v1' : request.params.version;
+            const purpose = fallback ? 'claimform' : request.params.purpose;
+            const extension = fallback ? 'png' : request.params.extension;
 
             logger.info(`ClaimCode: ${claimCode}`);
 
@@ -124,7 +124,7 @@ export class ImagesController {
                     logger.info(`ImagesController.getClaimBackground with buffer.length=${buffer.length}`);
 
                     response.writeHead(StatusCodes.OK, {
-                        'Content-Type': 'image/png',
+                        'Content-Type': 'image/' + extension,
                         'Content-Length': buffer.length
                     });
                     response.write(buffer);
