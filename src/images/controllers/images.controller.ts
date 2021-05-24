@@ -112,7 +112,7 @@ export class ImagesController {
         logger.info(`ImagesController.getClaimBackground`);
 
         try {
-            const claimCode = this.stripExtension(request.params.skuCode);
+            const claimCode = this.stripExtension(request.params.claimCode);
             const version = fallback ? 'v1' : request.params.version;
             const purpose = fallback ? 'claimform' : request.params.purpose;
             const extension = fallback ? 'png' : request.params.extension;
@@ -131,7 +131,6 @@ export class ImagesController {
                     response.end(null, 'binary');
                 })
                 .catch((err) => {
-                    logger.error(`Getting image with name: claim.${version}.${purpose}.${claimCode}.${extension}`);
                     logger.error(`ImagesController.getClaimBackground ERROR. ${err}`);
 
                     response.writeHead(StatusCodes.NOT_FOUND);
