@@ -83,7 +83,7 @@ export class ImagesService {
     }
 
     getClaimBackground(claimCode: string, version: string, purpose: string, extension: string): Promise<Buffer> {
-        logger.info(`Getting image with name: claim.${version}.${purpose}.${claimCode}.${extension}`);
+        logger.error(`Getting image with name: claim.${version}.${purpose}.${claimCode}.${extension}`);
         return this.getImage(`claim.${version}.${purpose}.${claimCode}.${extension}`);
     }
 
