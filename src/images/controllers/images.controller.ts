@@ -131,6 +131,7 @@ export class ImagesController {
                     response.end(null, 'binary');
                 })
                 .catch((err) => {
+                    logger.info(`Getting image with name: claim.${version}.${purpose}.${claimCode}.${extension}`);
                     logger.error(`ImagesController.getClaimBackground ERROR. ${err}`);
 
                     response.writeHead(StatusCodes.NOT_FOUND);
