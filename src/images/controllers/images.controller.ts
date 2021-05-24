@@ -108,6 +108,41 @@ export class ImagesController {
         }
     }
 
+    async getClaimBackground(request: express.Request, response: express.Response, fallback: boolean) {
+        logger.info(`ImagesController.getClaimBackground`);
+
+        try {
+            const claimCode = this.stripExtension(request.params.skuCode);
+            const version = fallback ? 'v1' : request.params.version;
+            const purpose = fallback ? 'claimform' : request.params.purpose;
+            const extension = fallback ? 'png' : request.params.extension;
+
+            logger.info(`ClaimCode: ${claimCode}`);
+
+            this.imagesService.getClaimBackground(claimCode, version, purpose, extension)
+                .then((buffer) => {
+                    logger.info(`ImagesController.getClaimBackground with buffer.length=${buffer.length}`);
+
+                    response.writeHead(StatusCodes.OK, {
+                        'Content-Type': 'image/' + extension,
+                        'Content-Length': buffer.length
+                    });
+                    response.write(buffer);
+                    response.end(null, 'binary');
+                })
+                .catch((err) => {
+                    logger.error(`ImagesController.getClaimBackground ERROR. ${err}`);
+
+                    response.writeHead(StatusCodes.NOT_FOUND);
+                    response.write('Failed to draw image');
+                    response.end();
+                });
+        } catch (err) {
+            logger.info(`ImagesController.getClaimBackground ERROR. Failed to get`);
+            this.handleCanvasImageError(response, err);
+        }
+    }
+
     async getCertificate(withId: string): Promise<CertificateDTO> {
         const response = await this.certificateService.getCertificate(withId);
         return response.data;
