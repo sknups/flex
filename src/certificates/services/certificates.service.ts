@@ -15,6 +15,7 @@ export interface CertificateDTO {
     brand: string;
     description: string;
     platformCode: string;
+    platformName: string;
     designItemCode: string;
     skuImageUrl: string;
     certImageUrl: string;
