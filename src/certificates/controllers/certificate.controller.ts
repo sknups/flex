@@ -89,7 +89,7 @@ export class CertificateController {
                     thumbprint: req.query.certCode,
                     toast,
                     showToast: response.data ? 'visible' : 'no-opacity',
-                    showUnboxing: response.status == StatusCodes.OK,
+                    showUnboxing: response.data.activated,
                     jsonString: JSON.stringify(response.data),
                     host: host,
                     width: ImagesConfigs.SIZES.DEFAULT * ImagesConfigs.SIZES.SCALE,
