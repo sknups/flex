@@ -16,7 +16,6 @@ on:
   push:
     branches:
     - 'main'
-  pull_request:
 
 env:
   GOOGLE_PROJECT: dev-drm-admin-5548
