@@ -1,19 +1,47 @@
-<div class="index-page">
-    <div class="logo"><img src="/static/backgrounds/SKNUPS_BOX.png" width="500px"></div>
+<div class="container mt-5 d-flex justify-content-center">
 
-    <div class="main_div">
-        <p class="text-h3">Enter Your Certificate Id below to Flex</p>
 
-        <form onsubmit="return process()">
-            <input type="text" name="id" id="id" required>
-            <input type="submit" value="Flex!">
-        </form>
+
+    <div class="main_div p-5 col-xl-8 col-12 bg-skn-dark ">
+        <div class="row pb-2">
+            <img class="mx-auto d-block" src="/static/backgrounds/SKNUPS_BOX.png"
+                style="width:50%;height:50%; margin:4rem">
+        </div>
+
+
+        <div class="row">
+
+            <div class="col">
+                <form onsubmit="return process()">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="certId" aria-describedby="certIdHelp"
+                            placeholder="Certificate ID">
+                        <small id="certIdHelp" class="form-text text-muted">Enter your certificate id.</small>
+                    </div>
+                     <div class="col-md-12 text-center">                    
+                    <button id="flexBtn" type="submit" class="btn btn-skn btn-lg" disabled>Flex</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+
 </div>
 
 <script type="text/javascript">
+   $(document).ready(function(){
+       $("#certId").keyup(function () {            
+            var flexBtn = $("#flexBtn");            
+            if ($(this).val().trim() != "") {                
+                flexBtn.removeAttr("disabled");
+                return;
+            }
+            flexBtn.attr("disabled", "disabled");            
+        });
+    });
+  
     function process() {
-        const certificateId = document.getElementById("id").value;
+        const certificateId = document.getElementById("certId").value;
         const url = `${window.location}{{certificateHostPath}}/${certificateId}/flex.html`;
 
         gtag('event', 'search_certificate', {
