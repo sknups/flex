@@ -28,10 +28,12 @@ export interface CertificateDTO {
 }
 
 export class CertificatesService {
-    private readonly serverUrl: string;
+    private readonly drmServerUrl: string;
+    private readonly consumerServerUrl: string;
 
     constructor() {
-        this.serverUrl = [process.env.DRM_SERVER].join('/');
+        this.drmServerUrl = [process.env.DRM_SERVER].join('/');
+        this.consumerServerUrl = [process.env.ACTIVATION_SERVER].join('/');
     }
 
     /**
@@ -39,7 +41,7 @@ export class CertificatesService {
      */
     getCertificates() {
         logger.info(`CertificatesService.getCertificates`);
-        return axios.get<CertificateDTO[]>(`${this.serverUrl}/v1/api/assets`);
+        return axios.get<CertificateDTO[]>(`${this.drmServerUrl}/v1/api/assets`);
     }
 
     /**
@@ -47,8 +49,8 @@ export class CertificatesService {
      * @param withId
      */
     async getCertificate(withId: string): Promise<AxiosResponse<CertificateDTO>> {
-        logger.info(`CertificatesService.getCertificate withId:${withId} from ${this.serverUrl}/v1/api/assets/${withId}`);
-        const url = `${this.serverUrl}/v1/api/assets/${withId}`;
+        logger.info(`CertificatesService.getCertificate withId:${withId} from ${this.drmServerUrl}/v1/api/assets/${withId}`);
+        const url = `${this.drmServerUrl}/v1/api/assets/${withId}`;
         const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
 
         const drmOptions = {
@@ -58,5 +60,25 @@ export class CertificatesService {
         };
 
         return axios.get<CertificateDTO>(url, drmOptions);
+    }
+
+    /**
+     * Activate a certificate from ID and EMAIL
+     * @param withId
+     * @param withEmail
+     */
+    async activateCertificate(withId: string, withEmail: string): Promise<AxiosResponse> {
+        logger.info(`CertificatesService.activateCertificate withId:${withId} from ${this.consumerServerUrl}/v1/api/assets/activate`);
+        const url = `${this.consumerServerUrl}/v1/api/assets/activate`;
+        const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
+
+        const consumerOptions = {
+            params: {
+                certCode: withId,
+                email: withEmail
+            }
+        };
+
+        return axios.get(url, consumerOptions);
     }
 }

@@ -28,6 +28,15 @@ export class CertificatesRoutesConfig extends CommonRoutesConfig {
             )
             .get((req, res, next) => this.certificateController.certificate(req, res));
 
+        // Activate a certificate with ID or ID + more stuff (any stuff)
+        this.getApp()
+            .route([
+                    `/activate?cert=:certCode&email=:email`,
+                    `/activate?cert=:certCode&email=:email/**`
+                ]
+            )
+            .get((req, res, next) => this.certificateController.activate(req, res));
+
         return this.getApp();
     }
 }
