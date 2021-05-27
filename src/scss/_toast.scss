@@ -1,5 +1,5 @@
 .toast-error {
-    background: #d60101;
+    background: $warning-colour;
     color: $text-colour-dm;
     width: 100%;
     border-radius: 10px;
@@ -9,7 +9,7 @@
 }
 
 .toast-success {
-    background: #267e26;
+    background: $success-colour;
     color: $text-colour-dm;
     width: 100%;
     border-radius: 10px;

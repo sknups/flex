@@ -4,7 +4,7 @@ import logger from "winston";
 import { BrandTemplate } from "../../templates/BrandTemplate";
 import * as fs from "fs";
 import { SkuDTO } from "../../skus/services/skus.service";
-import { Bucket, Storage } from " ../../@google-cloud/storage";
+import { Bucket, Storage } from "@google-cloud/storage";
 import { Image, loadImage } from "canvas";
 
 export class ImagesService {
