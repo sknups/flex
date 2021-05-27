@@ -77,6 +77,7 @@ export class ServerUtils {
         ]);
         fromApp.use(express.static(path.join(__dirname, '../../', 'public')));
         fromApp.use('/static', express.static('static'));
+        fromApp.use('/public', express.static('public'));
 
         fromApp.engine('handlebars', hbs.engine);
         fromApp.set('view engine', 'handlebars');
