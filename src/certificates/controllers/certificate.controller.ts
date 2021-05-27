@@ -75,8 +75,8 @@ export class CertificateController {
             .then((response) => {
                 logger.info(`CertificateController.activate.then response:${JSON.stringify(response.data)}`);
 
-                const toast = response.status == StatusCodes.OK ? 'Congratulations on your new Skin! Check your email for details.'
-                    : response.status == StatusCodes.NOT_MODIFIED ? 'Your skin is already activated. Time to flex!' : '';
+                const toast = response.data.activated ? 'Congratulations on your new Skin! Check your email for details.'
+                    : 'Your skin is already activated. Time to flex!';
 
                 let host = `${req.protocol}://${req.hostname}`
 
@@ -86,9 +86,9 @@ export class CertificateController {
 
                 res.status(StatusCodes.OK).render('activate', {
                     title: 'Activation',
-                    thumbprint: req.params.certCode,
+                    thumbprint: req.query.certCode,
                     toast,
-                    showToast: response.status == StatusCodes.OK || response.status == StatusCodes.NOT_MODIFIED ? 'visible' : 'no-opacity',
+                    showToast: response.data ? 'visible' : 'no-opacity',
                     showUnboxing: response.status == StatusCodes.OK,
                     jsonString: JSON.stringify(response.data),
                     host: host,
@@ -102,7 +102,7 @@ export class CertificateController {
                 const statusCode = error.response?.status || 500;
 
                 res.status(statusCode).render(statusCode.toString(10), {
-                    layout: 'missing-certificate', id: req.params.certCode,
+                    layout: 'missing-certificate', id: req.query.certCode,
                     toast: 'Something went wrong. Please try again later.',
                 });
             })
