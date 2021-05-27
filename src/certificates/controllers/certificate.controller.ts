@@ -62,4 +62,49 @@ export class CertificateController {
                 });
             })
     }
+
+    /**
+     * Activate a certificate and reveal page with flashy unboxing and CTAs
+     * @param req
+     * @param res
+     */
+    activate(req: Request, res: Response) {
+        logger.info(`CertificateController.activate`);
+
+        this.certificateService.activateCertificate(req.params.certCode, req.params.email)
+            .then((response) => {
+                logger.info(`CertificateController.activate.then response:${JSON.stringify(response.data)}`);
+
+                const toast = response.status == StatusCodes.OK ? 'Congratulations on your new Skin! Check your email for details.'
+                    : response.status == StatusCodes.NOT_MODIFIED ? 'Your skin is already activated. Time to flex!' : '';
+
+                let host = `${req.protocol}://${req.hostname}`
+
+                if (req.hostname == 'localhost') {
+                    host = `${host}:3000`
+                }
+
+                res.status(StatusCodes.OK).render('activate', {
+                    title: 'Activation',
+                    thumbprint: req.params.certCode,
+                    toast,
+                    showToast: response.status == StatusCodes.OK || response.status == StatusCodes.NOT_MODIFIED ? 'visible' : 'no-opacity',
+                    showUnboxing: response.status == StatusCodes.OK,
+                    jsonString: JSON.stringify(response.data),
+                    host: host,
+                    width: ImagesConfigs.SIZES.DEFAULT * ImagesConfigs.SIZES.SCALE,
+                    layout: 'certificate',
+                    certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
+                });
+            })
+            .catch((error: AxiosError) => {
+                logger.error(`CertificateController.activate.catch response:${error} and data: ${JSON.stringify(error.response?.data || {})}`);
+                const statusCode = error.response?.status || 500;
+
+                res.status(statusCode).render(statusCode.toString(10), {
+                    layout: 'missing-certificate', id: req.params.certCode,
+                    toast: 'Something went wrong. Please try again later.',
+                });
+            })
+    }
 }
