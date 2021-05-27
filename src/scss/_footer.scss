@@ -1,9 +1,9 @@
 .main-footer {    
     background-color: $background-dm;
     text-align: center; 
-    position: absolute; 
-    bottom: 0; 
+    flex-shrink: none;
     width: 100%;
+    color: $text-colour-dm;
 
     section {
         padding: 1.25rem 1.875rem;        
@@ -19,3 +19,4 @@
       }
     }
 } 
+

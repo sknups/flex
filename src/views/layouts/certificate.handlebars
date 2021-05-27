@@ -12,12 +12,14 @@
     {{> page/favicons}}
     {{> page/head }}    
 </head>
-<body class="dark-mode">
+<body class="dark-mode d-flex flex-column">
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
     {{> page/top_nav}}
+    <div id="page-content">
 {{{body}}}
+    </div>
 
 {{> page/social}}
 {{> page/footer}}

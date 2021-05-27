@@ -79,6 +79,11 @@ body {
  
 }
 
+#page-content {
+    flex: 1 0 auto;
+    padding-bottom: 25px;
+  }
+
 .index-page{
     background-color:$background-dm;  
 }
