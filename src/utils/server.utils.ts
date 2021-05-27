@@ -134,6 +134,15 @@ export class ServerUtils {
         logger.error('ZZZZZZZZZZZZZZZZZZZZZZZZZZ warp nacelles offline');
         logger.info('ZZZZ  shields at 99%');
 
+        //Variables that can be used in all templates
+        fromApp.use(function (req, res, next) {
+            const year = new Date().getFullYear()
+            res.locals = {
+              copyrightYear: year,              
+            };
+            next();
+         });
+
 
         //@ts-ignore
         fromApp.use(function (err, req, res, next) {
