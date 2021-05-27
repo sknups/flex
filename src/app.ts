@@ -62,6 +62,15 @@ app.get('/', (req: express.Request, res: express.Response) => {
     res.render('index', { title: 'SKNUPS', certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE})
 });
 
+const terms = require('../static/terms/privacy.json');
+app.get('/terms-and-conditions', (req: express.Request, res: express.Response) => {
+    res.render('terms', { 
+        terms: terms,
+        title: 'Terms and Conditions - SKNUPS', 
+        certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
+    })
+});
+
 app.use("/socket.io", express.static('../socket.io'));
 let io = require("socket.io")(server);
 io.listen(server);
