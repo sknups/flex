@@ -27,6 +27,10 @@ export interface CertificateDTO {
     test?: boolean;
 }
 
+export interface AssetActivationDTO {
+    activated: boolean;
+}
+
 export class CertificatesService {
     private readonly drmServerUrl: string;
     private readonly consumerServerUrl: string;
@@ -67,7 +71,7 @@ export class CertificatesService {
      * @param withId
      * @param withEmail
      */
-    async activateCertificate(withId: any, withEmail: any): Promise<AxiosResponse> {
+    async activateCertificate(withId: any, withEmail: any): Promise<AxiosResponse<AssetActivationDTO>> {
         logger.info(`CertificatesService.activateCertificate withId:${withId} from ${this.consumerServerUrl}/v1/api/assets/activate`);
         const url = `${this.consumerServerUrl}/v1/api/assets/activate`;
         const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
@@ -79,6 +83,6 @@ export class CertificatesService {
             }
         };
 
-        return axios.get(url, consumerOptions);
+        return axios.get<AssetActivationDTO>(url, consumerOptions);
     }
 }
