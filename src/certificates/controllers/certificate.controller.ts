@@ -71,7 +71,7 @@ export class CertificateController {
     activate(req: Request, res: Response) {
         logger.info(`CertificateController.activate`);
 
-        this.certificateService.activateCertificate(req.params.certCode, req.params.email)
+        this.certificateService.activateCertificate(req.query.certCode, req.query.email)
             .then((response) => {
                 logger.info(`CertificateController.activate.then response:${JSON.stringify(response.data)}`);
 
