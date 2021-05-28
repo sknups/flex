@@ -1,0 +1,19 @@
+<script>
+    function unbox() {
+        window.location.href = '{{host}}/unboxed?certCode={{certCode}}&email={{email}}';
+    }
+</script>
+
+<div class="cert-page">
+    <div class="wrapper" style="padding: 10px">
+        <div class="toast-success fade-out {{showToast}}">
+            <span>{{toast}}</span>
+        </div>
+        <div>
+            <h1>Flashy Box Animation</h1>
+        </div>
+        <div id="unbox" style="justify-content: center; align-items: center">
+            <button type="button" onclick="unbox()">Open it now</button>
+        </div>
+    </div>
+</div>
