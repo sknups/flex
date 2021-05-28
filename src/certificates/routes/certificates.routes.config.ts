@@ -28,10 +28,18 @@ export class CertificatesRoutesConfig extends CommonRoutesConfig {
             )
             .get((req, res, next) => this.certificateController.certificate(req, res));
 
-        // Activate a certificate with ID or ID + more stuff (any stuff)
+        // Assign a mystery asset to an email and get a flashy box
         this.getApp()
             .route([
-                    `/activate`
+                    `/boxed`
+                ]
+            )
+            .get((req, res, next) => this.certificateController.assign(req, res));
+
+        // Activate a flashy asset and open a mystery box, then, redirect to /cert
+        this.getApp()
+            .route([
+                    `/unboxed`
                 ]
             )
             .get((req, res, next) => this.certificateController.activate(req, res));

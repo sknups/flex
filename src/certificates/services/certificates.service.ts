@@ -25,6 +25,7 @@ export interface CertificateDTO {
     certificate: string;
     created: Date;
     test?: boolean;
+    isOwner?: boolean;
 }
 
 export interface AssetActivationDTO {
@@ -51,8 +52,9 @@ export class CertificatesService {
     /**
      * Get a certificate from ID
      * @param withId
+     * @param withEmail
      */
-    async getCertificate(withId: string): Promise<AxiosResponse<CertificateDTO>> {
+    async getCertificate(withId: string, withEmail?: any): Promise<AxiosResponse<CertificateDTO>> {
         logger.info(`CertificatesService.getCertificate withId:${withId} from ${this.drmServerUrl}/v1/api/assets/${withId}`);
         const url = `${this.drmServerUrl}/v1/api/assets/${withId}`;
         const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
@@ -60,10 +62,33 @@ export class CertificatesService {
         const drmOptions = {
             headers: {
                 Authorization: `Bearer ${bearerToken}`,
+            },
+            params: {
+                email: withEmail
             }
         };
 
         return axios.get<CertificateDTO>(url, drmOptions);
+    }
+
+    /**
+     * Assign a certificate from ID and EMAIL
+     * @param withId
+     * @param withEmail
+     */
+    async assignCertificate(withId: any, withEmail: any): Promise<AxiosResponse<AssetActivationDTO>> {
+        logger.info(`CertificatesService.assignCertificate withId:${withId} from ${this.consumerServerUrl}/v1/api/assets/assign`);
+        const url = `${this.consumerServerUrl}/v1/api/assets/assign`;
+        const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
+
+        const consumerOptions = {
+            params: {
+                certCode: withId,
+                email: withEmail
+            }
+        };
+
+        return axios.get<AssetActivationDTO>(url, consumerOptions);
     }
 
     /**
