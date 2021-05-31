@@ -19,7 +19,7 @@ export class AssetsRoutesConfig extends CommonRoutesConfig {
             .get((req, res) => this.assetsController.index(req, res));
 
         this.getApp()
-            .route('/assets/claim/:version/:purpose/:claimCode.:extension(png|jpg)')
+            .route('/assets/claim/:version/:purpose/:claimCode.:extension(mp4)')
             .get((req, res) => this.handleClaimWinnerAnimationRequest(req, res, false));
 
         this.getApp()
