@@ -7,6 +7,7 @@ import express from "express";
 import http from "http";
 import {ImagesRoutesConfig} from "./images/routes/images.routes.config";
 import cors from "cors";
+import {AssetsRoutesConfig} from "./assets/routes/assets.routes.config";
 
 // Load into ENV Variables
 dotenv.config();
@@ -53,7 +54,8 @@ const routes: Array<CommonRoutesConfig> = [
     // here we are adding the UserRoutes to our array,
     // after sending the Express.js application object to have the routes added to our app!
     new CertificatesRoutesConfig(app),
-    new ImagesRoutesConfig(app)
+    new ImagesRoutesConfig(app),
+    new AssetsRoutesConfig(app)
 ];
 
 // this is a simple route to make sure everything is working properly
