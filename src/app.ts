@@ -71,6 +71,13 @@ app.get('/terms-and-conditions', (req: express.Request, res: express.Response) =
     })
 });
 
+app.get('/about-us', (req: express.Request, res: express.Response) => {
+    res.render('about-us', {         
+        title: 'About us - SKNUPS', 
+        certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
+    })
+});
+
 app.use("/socket.io", express.static('../socket.io'));
 let io = require("socket.io")(server);
 io.listen(server);
