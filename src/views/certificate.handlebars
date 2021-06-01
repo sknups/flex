@@ -1,3 +1,25 @@
+<div class="cert-page">
+    <div class="wrapper" style="padding: 10px">
+        <div class="toast-success fade-out {{showToast}}">
+            <span>{{toast}}</span>
+        </div>
+        <div class="cert-image-wrapper">
+            <div class="cert-image no-opacity">
+                <img src="/img/cert/{{data.thumbprint}}"
+                     style="max-width: {{width}}px; width: 100%; height: auto;"
+                     alt="{{data.stockKeepingUnitName}}"
+                     onload="didLoadImage()"
+                />
+            </div>
+        </div>
+    </div>
+    <div class="d-flex" style="justify-content: center; align-items: center; position: fixed; bottom:10%; width: 100%">
+        {{#if showCTA}}
+            <button id="flexBtn" type="submit" class="btn btn-skn btn-lg" onclick="goToWallet()">Go to Wallet</button>
+        {{/if}}
+    </div>
+</div>
+
 <script>
     gtag('event', 'show_certificate', {
         'brand': "{{data.brandCode}}",
@@ -26,25 +48,3 @@
         );
     }
 </script>
-
-<div class="cert-page">
-    <div class="wrapper" style="padding: 10px">
-        <div class="toast-success fade-out {{showToast}}">
-            <span>{{toast}}</span>
-        </div>
-        <div class="cert-image-wrapper">
-            <div class="cert-image no-opacity">
-                <img src="/img/cert/{{data.thumbprint}}"
-                    style="max-width: {{width}}px; width: 100%; height: auto;"
-                    alt="{{data.stockKeepingUnitName}}"
-                    onload="didLoadImage()"
-                />
-            </div>
-        </div>
-    </div>
-    <div class="d-flex" style="justify-content: center; align-items: center; position: fixed; bottom:10%; width: 100%">
-        {{#if showCTA}}
-                <button id="flexBtn" type="submit" class="btn btn-skn btn-lg" onclick="goToWallet()">Go to Wallet</button>
-        {{/if}}
-    </div>
-</div>
