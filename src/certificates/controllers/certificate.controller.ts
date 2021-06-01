@@ -92,8 +92,10 @@ export class CertificateController {
                 logger.error('--------------------------------');
                 logger.error(`CertificateController.assign.catch response:${error} and data: ${JSON.stringify(error.response?.data || {})}`);
                 const statusCode = error.response?.status || 500;
-                /* if (statusCode === StatusCodes.CONFLICT) {
-                    if (error.code === 'ALREADY_ASSIGNED') {
+                if (statusCode === StatusCodes.CONFLICT) {
+                    logger.error('--------------------------------CONFLICT--------------------------------');
+                    if (error.response?.data?.detail?.assignMentResponseCode === 'ALREADY_ASSIGNED') {
+                        logger.error('--------------------------------ALREADY_ASSIGNED--------------------------------');
                         const toast = 'The skin is already yours. Time to unbox!';
                         res.status(StatusCodes.OK).render('boxed', {
                             title: 'Boxed',
@@ -107,7 +109,8 @@ export class CertificateController {
                             layout: 'certificate',
                             certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
                         });
-                    } else if (error.code === 'ALREADY_OWNED') {
+                    } else if (error.response?.data?.detail?.assignMentResponseCode === 'ALREADY_OWNED') {
+                        logger.error('--------------------------------ALREADY_OWNED--------------------------------');
                         res.status(StatusCodes.OK).render('unboxed', {
                             title: 'Unboxing',
                             certCode: req.query.certCode,
@@ -119,7 +122,7 @@ export class CertificateController {
                             certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
                         });
                     }
-                } else { */
+                } else {
                     res.status(statusCode).render(statusCode.toString(10), {
                         layout: 'missing-certificate', id: req.query.certCode,
                         toast: 'Something went wrong. Please try again later.',
