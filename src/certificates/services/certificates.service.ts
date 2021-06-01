@@ -32,14 +32,9 @@ export interface CertificateDTO {
 export interface ProblemErrorResponse {
     title: string;
     status: string;
-    detail: AssignmentResponse;
+    detail: string;
     level: string;
 }
-
-export interface AssignmentResponse {
-    assignmentResponseCode: string;
-}
-
 
 export interface AssetActivationDTO {
     activated: boolean;
