@@ -1,4 +1,4 @@
-import axios, {AxiosResponse} from "axios";
+import axios, {AxiosRequestConfig, AxiosResponse} from "axios";
 import logger from "winston";
 import {AuthenticationUtils} from "../../utils/authentication.utils";
 
@@ -26,6 +26,22 @@ export interface CertificateDTO {
     created: Date;
     test?: boolean;
     isOwner?: boolean;
+}
+
+export interface ProblemErrorResponse {
+    title: string;
+    status: string;
+    detail: AssignmentResponse;
+    level: string;
+}
+
+export interface AssignmentResponse {
+    assignmentResponseCode: AssignmentResponseCode;
+}
+
+export enum AssignmentResponseCode {
+    ALREADY_ASSIGNED = 'ALREADY_ASSIGNED',
+    ALREADY_OWNED = 'ALREADY_OWNED'
 }
 
 export interface AssetActivationDTO {
