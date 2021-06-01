@@ -89,13 +89,10 @@ export class CertificateController {
                 });
             })
             .catch((error: any) => {
+                logger.error('--------------------------------');
                 logger.error(`CertificateController.assign.catch response:${error} and data: ${JSON.stringify(error.response?.data || {})}`);
                 const statusCode = error.response?.status || 500;
-                logger.error('--------------------------------');
-                logger.error(error.code);
-                logger.error(error.response?.data?.detail?.assignmentResponseCode);
-                logger.error(error.response?.detail?.assignmentResponseCode);
-                if (statusCode === StatusCodes.CONFLICT) {
+                /* if (statusCode === StatusCodes.CONFLICT) {
                     if (error.code === 'ALREADY_ASSIGNED') {
                         const toast = 'The skin is already yours. Time to unbox!';
                         res.status(StatusCodes.OK).render('boxed', {
@@ -122,12 +119,12 @@ export class CertificateController {
                             certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
                         });
                     }
-                } else {
+                } else { */
                     res.status(statusCode).render(statusCode.toString(10), {
                         layout: 'missing-certificate', id: req.query.certCode,
                         toast: 'Something went wrong. Please try again later.',
                     });
-                }
+                // }
             })
     }
 
