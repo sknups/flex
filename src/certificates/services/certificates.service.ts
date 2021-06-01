@@ -36,13 +36,9 @@ export interface ProblemErrorResponse {
 }
 
 export interface AssignmentResponse {
-    assignmentResponseCode: AssignmentResponseCode;
+    assignmentResponseCode: string;
 }
 
-export enum AssignmentResponseCode {
-    ALREADY_ASSIGNED = 'ALREADY_ASSIGNED',
-    ALREADY_OWNED = 'ALREADY_OWNED'
-}
 
 export interface AssetActivationDTO {
     activated: boolean;
