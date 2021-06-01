@@ -96,8 +96,12 @@ export class CertificateController {
                     logger.error('--------------------------------CONFLICT--------------------------------');
                     logger.error(error.response?.data?.status);
                     logger.error(error.response?.data?.detail);
-                    logger.error(error.response?.data?.detail?.assignmentResponseCode);
-                    if (error.response?.data?.detail?.assignmentResponseCode === 'ALREADY_ASSIGNED') {
+                    // @ts-ignore
+                    logger.error(JSON.parse(error.response.data.detail));
+                    // @ts-ignore
+                    logger.error(JSON.parse(error.response.data.detail).assignmentResponseCode);
+                    // @ts-ignore
+                    if (JSON.parse(error.response.data.detail).assignmentResponseCode === 'ALREADY_ASSIGNED') {
                         logger.error('--------------------------------ALREADY_ASSIGNED--------------------------------');
                         const toast = 'The skin is already yours. Time to unbox!';
                         res.status(StatusCodes.OK).render('boxed', {
@@ -112,7 +116,8 @@ export class CertificateController {
                             layout: 'certificate',
                             certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
                         });
-                    } else if (error.response?.data?.detail?.assignmentResponseCode === 'ALREADY_OWNED') {
+                    // @ts-ignore
+                    } else if (JSON.parse(error.response.data.detail).assignmentResponseCode === 'ALREADY_OWNED') {
                         logger.error('--------------------------------ALREADY_OWNED--------------------------------');
                         this.certificateService.getCertificate(req.query.certCode, req.query.email)
                             .then((response) => {
