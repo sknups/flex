@@ -127,7 +127,7 @@ export class CertificateController {
                         layout: 'missing-certificate', id: req.query.certCode,
                         toast: 'Something went wrong. Please try again later.',
                     });
-                // }
+                }
             })
     }
 

@@ -1,3 +1,16 @@
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="main_div p-5 col-xl-8 col-12 bg-skn-dark">
+        <div class="toast-success fade-out {{showToast}}">
+            <span>{{toast}}</span>
+        </div>
+        <div class="row pb-2">
+            <video autoplay loop id="winnerVideo1">
+                <source class="w-100 h-100" src="./static/assets/unboxing-animation.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+</div>
+
 <script>
     window.onload = function unboxing() {
         setTimeout(function () {
@@ -5,11 +18,3 @@
         }, 5000);
     }
 </script>
-
-<div class="cert-page">
-    <div class="wrapper" style="padding: 10px">
-        <div>
-            <h1>Flashy Unboxing</h1>
-        </div>
-    </div>
-</div>
