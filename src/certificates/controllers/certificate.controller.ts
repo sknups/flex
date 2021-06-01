@@ -92,7 +92,6 @@ export class CertificateController {
                 logger.error(`CertificateController.assign.catch response:${error} and data: ${JSON.stringify(error.response?.data || {})}`);
                 const statusCode = error.response?.status || 500;
                 logger.error('--------------------------------');
-                logger.error(error.response);
                 logger.error(error.code);
                 logger.error(error.response?.data?.detail?.assignmentResponseCode);
                 logger.error(error.response?.detail?.assignmentResponseCode);
