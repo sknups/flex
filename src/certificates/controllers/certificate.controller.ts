@@ -122,6 +122,7 @@ export class CertificateController {
                             certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
                         });
                     }
+                    logger.error('--------------------------------STUCK--------------------------------');
                 } else {
                     res.status(statusCode).render(statusCode.toString(10), {
                         layout: 'missing-certificate', id: req.query.certCode,
