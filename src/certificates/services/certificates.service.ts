@@ -22,6 +22,7 @@ export interface CertificateDTO {
     thumbprint: string;
     flexUrl: string;
     certUrl: string;
+    sknappUrl: string;
     certificate: string;
     created: Date;
     test?: boolean;
