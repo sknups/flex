@@ -94,6 +94,9 @@ export class CertificateController {
                 const statusCode = error.response?.status || 500;
                 if (statusCode === StatusCodes.CONFLICT) {
                     logger.error('--------------------------------CONFLICT--------------------------------');
+                    logger.error(error.response?.data?.status);
+                    logger.error(error.response?.data?.detail);
+                    logger.error(error.response?.data?.detail?.assignmentResponseCode);
                     if (error.response?.data?.detail?.assignmentResponseCode === AssignmentResponseCode.ALREADY_ASSIGNED) {
                         logger.error('--------------------------------ALREADY_ASSIGNED--------------------------------');
                         const toast = 'The skin is already yours. Time to unbox!';
