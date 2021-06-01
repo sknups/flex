@@ -18,6 +18,13 @@
             toastElement.classList.add('no-opacity');
         }, 5000);
     }
+
+    function goToWallet() {
+        window.open(
+            {{data.sknappUrl}},
+            '_blank'
+        );
+    }
 </script>
 
 <div class="cert-page">
@@ -33,11 +40,11 @@
                     onload="didLoadImage()"
                 />
             </div>
-            {{#if showCTA}}
-                <div style="justify-content: center; align-items: center">
-                    <h4>Calls to Action</h4>
-                </div>
-            {{/if}}
         </div>
+    </div>
+    <div class="d-flex" style="justify-content: center; align-items: center; position: fixed; bottom:10%; width: 100%">
+        {{#if showCTA}}
+                <button id="flexBtn" type="submit" class="btn btn-skn btn-lg" onclick="goToWallet()">Go to Wallet</button>
+        {{/if}}
     </div>
 </div>
