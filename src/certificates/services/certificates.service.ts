@@ -66,7 +66,7 @@ export class CertificatesService {
      * @param withId
      * @param withEmail
      */
-    async getCertificate(withId: string, withEmail?: any): Promise<AxiosResponse<CertificateDTO>> {
+    async getCertificate(withId: any, withEmail?: any): Promise<AxiosResponse<CertificateDTO>> {
         logger.info(`CertificatesService.getCertificate withId:${withId} from ${this.drmServerUrl}/v1/api/assets/${withId}`);
         const url = `${this.drmServerUrl}/v1/api/assets/${withId}`;
         const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
