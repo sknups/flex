@@ -1,4 +1,4 @@
-import {AssignmentResponseCode, CertificatesService, ProblemErrorResponse} from "../services/certificates.service";
+import {CertificatesService, ProblemErrorResponse} from "../services/certificates.service";
 import {Request, Response} from "express";
 import {AxiosError} from 'axios';
 import {StatusCodes} from "http-status-codes";
@@ -97,7 +97,7 @@ export class CertificateController {
                     logger.error(error.response?.data?.status);
                     logger.error(error.response?.data?.detail);
                     logger.error(error.response?.data?.detail?.assignmentResponseCode);
-                    if (error.response?.data?.detail?.assignmentResponseCode === AssignmentResponseCode.ALREADY_ASSIGNED) {
+                    if (error.response?.data?.detail?.assignmentResponseCode === 'ALREADY_ASSIGNED') {
                         logger.error('--------------------------------ALREADY_ASSIGNED--------------------------------');
                         const toast = 'The skin is already yours. Time to unbox!';
                         res.status(StatusCodes.OK).render('boxed', {
@@ -112,18 +112,43 @@ export class CertificateController {
                             layout: 'certificate',
                             certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
                         });
-                    } else if (error.response?.data?.detail?.assignmentResponseCode === AssignmentResponseCode.ALREADY_OWNED) {
+                    } else if (error.response?.data?.detail?.assignmentResponseCode === 'ALREADY_OWNED') {
                         logger.error('--------------------------------ALREADY_OWNED--------------------------------');
-                        res.status(StatusCodes.OK).render('unboxed', {
-                            title: 'Unboxing',
-                            certCode: req.query.certCode,
-                            email: req.query.email,
-                            host: req.hostname,
-                            jsonString: JSON.stringify(error.response?.data),
-                            width: ImagesConfigs.SIZES.DEFAULT * ImagesConfigs.SIZES.SCALE,
-                            layout: 'certificate',
-                            certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
-                        });
+                        this.certificateService.getCertificate(req.query.certCode, req.query.email)
+                            .then((response) => {
+                                logger.info(`CertificateController.certificate.then response:${JSON.stringify(response.data)}`);
+
+                                const toast = req.query.redirect ?
+                                    'Congratulations on your new Skin! Check your email for details.': '';
+
+                                let host = `${req.protocol}://${req.hostname}`
+
+                                if (req.hostname == 'localhost') {
+                                    host = `${host}:3000`
+                                }
+
+                                res.status(StatusCodes.OK).render('certificate', {
+                                    title: 'Certificate',
+                                    data: response.data,
+                                    toast,
+                                    showToast: req.query.redirect ? 'visible' : 'no-opacity',
+                                    showCTA: response.data.isOwner,
+                                    jsonString: JSON.stringify(response.data),
+                                    host: host,
+                                    width: ImagesConfigs.SIZES.DEFAULT * ImagesConfigs.SIZES.SCALE,
+                                    layout: 'certificate',
+                                    certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
+                                });
+                            })
+                            .catch((error: AxiosError) => {
+                                logger.error(`CertificateController.certificate.catch response:${error} and data: ${JSON.stringify(error.response?.data || {})}`);
+                                const statusCode = error.response?.status || 500;
+
+                                res.status(statusCode).render(statusCode.toString(10), {
+                                    layout: 'missing-certificate', id: req.params.id,
+                                    toast: 'Something went wrong. Please try again later.',
+                                });
+                            })
                     }
                     logger.error('--------------------------------STUCK--------------------------------');
                 } else {
