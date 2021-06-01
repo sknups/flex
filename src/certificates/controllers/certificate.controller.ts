@@ -1,4 +1,4 @@
-import {CertificatesService} from "../services/certificates.service";
+import {AssignmentResponseCode, CertificatesService, ProblemErrorResponse} from "../services/certificates.service";
 import {Request, Response} from "express";
 import {AxiosError} from 'axios';
 import {StatusCodes} from "http-status-codes";
@@ -88,13 +88,13 @@ export class CertificateController {
                     certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
                 });
             })
-            .catch((error: any) => {
+            .catch((error: AxiosError<ProblemErrorResponse>) => {
                 logger.error('--------------------------------');
                 logger.error(`CertificateController.assign.catch response:${error} and data: ${JSON.stringify(error.response?.data || {})}`);
                 const statusCode = error.response?.status || 500;
                 if (statusCode === StatusCodes.CONFLICT) {
                     logger.error('--------------------------------CONFLICT--------------------------------');
-                    if (error.response?.data?.detail?.assignMentResponseCode === 'ALREADY_ASSIGNED') {
+                    if (error.response?.data?.detail?.assignmentResponseCode === AssignmentResponseCode.ALREADY_ASSIGNED) {
                         logger.error('--------------------------------ALREADY_ASSIGNED--------------------------------');
                         const toast = 'The skin is already yours. Time to unbox!';
                         res.status(StatusCodes.OK).render('boxed', {
@@ -109,7 +109,7 @@ export class CertificateController {
                             layout: 'certificate',
                             certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
                         });
-                    } else if (error.response?.data?.detail?.assignMentResponseCode === 'ALREADY_OWNED') {
+                    } else if (error.response?.data?.detail?.assignmentResponseCode === AssignmentResponseCode.ALREADY_OWNED) {
                         logger.error('--------------------------------ALREADY_OWNED--------------------------------');
                         res.status(StatusCodes.OK).render('unboxed', {
                             title: 'Unboxing',
