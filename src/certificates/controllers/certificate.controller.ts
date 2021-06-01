@@ -91,11 +91,43 @@ export class CertificateController {
             .catch((error: AxiosError) => {
                 logger.error(`CertificateController.assign.catch response:${error} and data: ${JSON.stringify(error.response?.data || {})}`);
                 const statusCode = error.response?.status || 500;
-
-                res.status(statusCode).render(statusCode.toString(10), {
-                    layout: 'missing-certificate', id: req.query.certCode,
-                    toast: 'Something went wrong. Please try again later.',
-                });
+                logger.error('--------------------------------');
+                logger.error(JSON.stringify(error.response));
+                logger.error(JSON.stringify(error.code));
+                logger.error(JSON.stringify(error.response?.data));
+                if (statusCode === StatusCodes.CONFLICT) {
+                    if (error.code === 'ALREADY_ASSIGNED') {
+                        const toast = 'The skin is already yours. Time to unbox!';
+                        res.status(StatusCodes.OK).render('boxed', {
+                            title: 'Boxed',
+                            certCode: req.query.certCode,
+                            toast,
+                            showToast: 'visible',
+                            email: req.query.email,
+                            host: req.hostname,
+                            jsonString: JSON.stringify(error.response?.data),
+                            width: ImagesConfigs.SIZES.DEFAULT * ImagesConfigs.SIZES.SCALE,
+                            layout: 'certificate',
+                            certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
+                        });
+                    } else if (error.code === 'ALREADY_OWNED') {
+                        res.status(StatusCodes.OK).render('unboxed', {
+                            title: 'Unboxing',
+                            certCode: req.query.certCode,
+                            email: req.query.email,
+                            host: req.hostname,
+                            jsonString: JSON.stringify(error.response?.data),
+                            width: ImagesConfigs.SIZES.DEFAULT * ImagesConfigs.SIZES.SCALE,
+                            layout: 'certificate',
+                            certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
+                        });
+                    }
+                } else {
+                    res.status(statusCode).render(statusCode.toString(10), {
+                        layout: 'missing-certificate', id: req.query.certCode,
+                        toast: 'Something went wrong. Please try again later.',
+                    });
+                }
             })
     }
 
