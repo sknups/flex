@@ -27,7 +27,7 @@ export class ImagesController {
         });
     }
 
-    async getCertImage(request: express.Request, response: express.Response) {
+    async getImage(type: String, request: express.Request, response: express.Response) {
         logger.info(`ImagesController.getImage`);
 
         try {
@@ -38,10 +38,10 @@ export class ImagesController {
 
             const brandCode = certificateDTO.brandCode;
 
-            logger.info(`ImagesController.getCertImage from brand: ${brandCode} with certCode: ${certCode}`);
+            logger.info(`ImagesController.getImage type: ${type} from brand: ${brandCode} with certCode: ${certCode}`);
 
             // Legacy Info for now
-            this.imagesService.generateCanvasImage(certificateDTO)
+            this.imagesService.generateCanvasImage(type, certificateDTO)
                 .then((buffer) => {
                     logger.info(`ImagesController.getImage with buffer.length=${buffer.length}`);
 
