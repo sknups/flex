@@ -27,7 +27,7 @@ export class ImagesController {
         });
     }
 
-    async getImage(type: String, request: express.Request, response: express.Response) {
+    async getImage(type: string, request: express.Request, response: express.Response) {
         logger.info(`ImagesController.getImage`);
 
         try {

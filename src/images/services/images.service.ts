@@ -28,30 +28,31 @@ export class ImagesService {
         }
     }
 
-    async generateCanvasImage(type: String, fromCertificate: CertificateDTO) {
+    async generateCanvasImage(type: string, fromCertificate: CertificateDTO) {
         logger.info(`ImagesService`);
 
         const brandCode = fromCertificate.brandCode;
         const brandCodeToClassName = StringUtils.classify(brandCode.toLowerCase());
+        const typeToClassName = StringUtils.classify(type);
 
-        logger.info(`ImagesService.generateCanvasImage Will try to load type ${type} for brandCode: ${brandCode} template with name ${brandCodeToClassName}`)
+        logger.info(`ImagesService.generateCanvasImage Will try to load type ${typeToClassName} for brandCode: ${brandCode} template with name ${brandCodeToClassName}`)
 
         try {
-            const brandModule = await import(`../../templates/${type}/brands/${brandCodeToClassName}`);
+            const brandModule = await import(`../../templates/${brandCodeToClassName}/${typeToClassName}`);
             const brandTemplateController: BrandTemplate = new brandModule[brandCodeToClassName];
 
             return brandTemplateController.renderTemplate(fromCertificate, brandCode);
         } catch (error) {
-            logger.info(`ImagesService.generateCanvasImage Unable to get the ${type} Template for ${brandCode}:${brandCodeToClassName}`);
+            logger.info(`ImagesService.generateCanvasImage Unable to get the ${typeToClassName} Template for ${brandCode}:${brandCodeToClassName}`);
             try {
-                const defaultTemplateModule = await import(`../../templates/${type}/default/DefaultTemplate`);
+                const defaultTemplateModule = await import(`../../templates/default/${typeToClassName}`);
                 const templateController = new defaultTemplateModule.DefaultTemplate();
                 return templateController.renderTemplate(fromCertificate, brandCode);
             } catch (error) {
                 logger.error(error);
                 
-                logger.info(`ImagesService.generateCanvasImage ../../templates/${type}/default/DefaultTemplate`);
-                throw new error(`Failed to load ../../templates/${type}/default/DefaultTemplate`);
+                logger.error(`ImagesService.generateCanvasImage failed to load ../../templates/default/${typeToClassName}`);
+                throw new error(`Failed to load ../../templates/${typeToClassName}/default/DefaultTemplate`);
             }
         }
     }
