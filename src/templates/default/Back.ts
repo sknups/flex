@@ -1,8 +1,8 @@
-import {BrandTemplate} from "../../BrandTemplate";
-import {ImagesConfigs} from "../../../images/images.configs";
+import {BrandTemplate} from "../BrandTemplate";
+import {ImagesConfigs} from "../../images/images.configs";
 import {createCanvas, Image, loadImage, registerFont} from "canvas";
 import logger from "winston";
-import {CertificateDTO} from "../../../certificates/services/certificates.service";
+import {CertificateDTO} from "../../certificates/services/certificates.service";
 
 export class DefaultTemplate extends BrandTemplate {
 
@@ -78,7 +78,7 @@ export class DefaultTemplate extends BrandTemplate {
                 context.font = '10pt Inter';
                 this.wrapText(context, fromCertificate.description, 325, 125, 450, 30);
                 context.font = '16pt OCR-A';
-                context.fillText('CARD NUMBER ' + fromCertificate.thumbprint, 325, 50);
+                context.fillText('SERIAL NUMBER ' + fromCertificate.thumbprint, 325, 50);
                 context.fillText('ITEM ' + fromCertificate.saleQty + ' OF ' + fromCertificate.maxQty, 325, 75);
                 context.font = '12pt OCR-A';
                 context.fillStyle = 'rgb(248,34,41)';
