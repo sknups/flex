@@ -14,6 +14,8 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
     }
 
     configureRoutes(): express.Application {
+        logger.info(`Images.routes.config`)
+
         // Root of Request
         this.getApp().route(`/img`)
             .get((req, res) => this.imagesController.index(req, res));
@@ -25,6 +27,14 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
         this.getApp()
             .route('/img/cert/:certCode')
             .get((req, res) => this.handleCertImageRequest(req, res));
+
+        this.getApp()
+            .route('/img/card/:version/:purpose/:certCode.png')
+            .get((req, res) => this.handleCardImageRequest(req, res));
+
+        this.getApp()
+            .route('/img/back/:version/:purpose/:certCode.png')
+            .get((req, res) => this.handleBackImageRequest(req, res));
 
         this.getApp()
             .route('/img/sku/:version/:purpose/:skuCode.:extension(png|glb)')
@@ -53,12 +63,31 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
      */
     private handleCertImageRequest(request: express.Request, response: express.Response) {
         logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(request.params)}`);
-        this.imagesController.getCertImage(request, response).then(() => {
+        this.imagesController.getImage("cert", request, response).then(() => {
             logger.info(`imagesController.getCertImage success`);
         }).catch((err) => {
             logger.info(`imagesController.getCertImage error: ${err}`);
         });
     }
+
+    private handleCardImageRequest(request: express.Request, response: express.Response) {
+        logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(request.params)}`);
+        this.imagesController.getImage("card", request, response).then(() => {
+            logger.info(`imagesController.getCertImage success`);
+        }).catch((err) => {
+            logger.info(`imagesController.getCertImage error: ${err}`);
+        });
+    }
+
+    private handleBackImageRequest(request: express.Request, response: express.Response) {
+        logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(request.params)}`);
+        this.imagesController.getImage("back",request, response).then(() => {
+            logger.info(`imagesController.getCertImage success`);
+        }).catch((err) => {
+            logger.info(`imagesController.getCertImage error: ${err}`);
+        });
+    }
+    
 
     private handleSkuImageRequest(request: express.Request, response: express.Response, fallback: boolean) {
         logger.info(`ImagesRoutesConfig.handleSkuImageRequest for: ${JSON.stringify(request.params)}`);
