@@ -73,6 +73,15 @@ app.get('/terms-and-conditions', (req: express.Request, res: express.Response) =
     })
 });
 
+const termsOfUse = require('../static/terms/use.json');
+app.get('/terms-of-use', (req: express.Request, res: express.Response) => {
+    res.render('terms', {         
+        terms: termsOfUse,
+        title: 'Terms of Use - SKNUPS', 
+        certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
+    })
+});
+
 app.get('/about-us', (req: express.Request, res: express.Response) => {
     res.render('about-us', {         
         title: 'About us - SKNUPS', 
