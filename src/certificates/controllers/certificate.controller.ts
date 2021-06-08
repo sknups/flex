@@ -35,13 +35,26 @@ export class CertificateController {
 
                 let host = `${req.protocol}://${req.hostname}`
 
+                if (!response.data.cardImgUrl){
+                    response.data.cardImgUrl = response.data.certImgUrl.replace('cert', 'card');
+                    response.data.backImgUrl = response.data.certImgUrl.replace('cert', 'back');
+                    logger.error(response.data.cardImgUrl);
+                    logger.info("Deducing cardImgUrl and backImgUrl as not set");
+                }
+
                 if (req.hostname == 'localhost') {
                     host = `${host}:3000`
+                    response.data.certImgUrl = response.data.certImgUrl.replace('https://flex-dev.sknups.gg', host);
+                    response.data.cardImgUrl = response.data.certImgUrl.replace('https://flex-dev.sknups.gg', host);
+                    response.data.backImgUrl = response.data.certImgUrl.replace('https://flex-dev.sknups.gg', host);
+                    logger.warn("Editing img URL to localhost");
                 }
 
                 res.status(StatusCodes.OK).render('certificate', {
                     title: 'Certificate',
                     data: response.data,
+                    cardImgUrl: response.data.certImgUrl.replace('cert', 'card'),
+                    backImgUrl: response.data.certImgUrl.replace('cert', 'back'),
                     toast,
                     showToast: req.query.redirect ? 'visible' : 'no-opacity',
                     showCTA: response.data.isOwner,
