@@ -1,8 +1,8 @@
-import {BrandTemplate} from "../BrandTemplate";
-import {ImagesConfigs} from "../../images/images.configs";
-import {createCanvas, Image, loadImage, registerFont} from "canvas";
+import { BrandTemplate } from "../BrandTemplate";
+import { ImagesConfigs } from "../../images/images.configs";
+import { createCanvas, Image, loadImage, registerFont } from "canvas";
 import logger from "winston";
-import {CertificateDTO} from "../../certificates/services/certificates.service";
+import { CertificateDTO } from "../../certificates/services/certificates.service";
 
 export class DefaultTemplate extends BrandTemplate {
 
@@ -25,14 +25,17 @@ export class DefaultTemplate extends BrandTemplate {
             }
 
             //Lock ratio to golden section
-            const height = ImagesConfigs.SIZES.DEFAULT / ImagesConfigs.LANDSCAPE_RATIO;
-            const canvas = createCanvas(ImagesConfigs.SIZES.DEFAULT, height);
+            //const height = ImagesConfigs.SIZES.DEFAULT / ImagesConfigs.LANDSCAPE_RATIO;
+            //const canvas = createCanvas(ImagesConfigs.SIZES.DEFAULT, height);
+            const height = 900;
+            const canvas = createCanvas(600, height);
+
 
             // Load Fonts
             this.loadFontsIntoCanvas([
-                {path: './static/fonts/Inter-Regular-slnt=0.ttf', fontFace: {family: "Inter"}},
-                {path: './static/fonts/InterstateMonoLight.otf', fontFace: {family: "Interstate"}},
-                {path: './static/fonts/OCR-A.ttf', fontFace: {family: "OCR-A"}},
+                { path: './static/fonts/Inter-Regular-slnt=0.ttf', fontFace: { family: "Inter" } },
+                { path: './static/fonts/InterstateMonoLight.otf', fontFace: { family: "Interstate" } },
+                { path: './static/fonts/OCR-A.ttf', fontFace: { family: "OCR-A" } },
             ]);
 
             const context = canvas.getContext('2d');
@@ -41,7 +44,7 @@ export class DefaultTemplate extends BrandTemplate {
 
             //Load all required images in parallel before drawing them on the canvas
             this.loadImages([
-                './static/backgrounds/SKNUPS_cert_bg.jpg',
+                './static/backgrounds/card.back.default.v1.png',
                 `brand.v1.default.${fromCertificate.brandCode}.png`,
                 `platform.v1.default.${fromCertificate.platformCode}.png`,
                 `sku.v1.default.${fromCertificate.stockKeepingUnitCode}.png`,
@@ -53,37 +56,22 @@ export class DefaultTemplate extends BrandTemplate {
                 } else {
                     logger.info('Failed to load background image image:');
                 }
-                const brandImage = images[1];
-                if (brandImage.status == 'fulfilled') {
-                    context.drawImage(brandImage.value, 325, 250, 150, 100);
-                } else {
-                    logger.info('Failed to load brand image: ' + fromCertificate.brand);
-                }
-                const gameImage = images[2];
-                if (gameImage.status == 'fulfilled') {
-                    const imageDimensions = this.scaleToMax(170, 100, gameImage.value);
-                    context.drawImage(gameImage.value, 550, 250, imageDimensions[0], imageDimensions[1]);
-                } else {
-                    logger.info('Failed to load game image: ' + fromCertificate.platformCode);
-                }
-                const skuImage = images[3];
-                if (skuImage.status == 'fulfilled') {
-                    context.drawImage(skuImage.value, 30, 30);
-                } else {
-                    logger.info('Failed to load sku image: ' + fromCertificate.stockKeepingUnitCode);
-                }
-
                 //write the text
-                context.fillStyle = 'rgb(29,29,27)';
-                context.font = '10pt Inter';
-                this.wrapText(context, fromCertificate.description, 325, 125, 450, 30);
-                context.font = '16pt OCR-A';
-                context.fillText('SERIAL NUMBER ' + fromCertificate.thumbprint, 325, 50);
-                context.fillText('ITEM ' + fromCertificate.saleQty + ' OF ' + fromCertificate.maxQty, 325, 75);
-                context.font = '12pt OCR-A';
                 context.fillStyle = 'rgb(248,34,41)';
-                this.wrapText(context, 'SOLD TO ' + fromCertificate.gamerTag.toUpperCase() + ' FOR UNLIMITED USE IN ' + fromCertificate.platformName.toUpperCase(), 325, 100, 500, 30);
+                context.font = '16pt OCR-A';
+                context.textAlign = 'center';
+                context.fillText(fromCertificate.gamerTag, 150, 120);
+                context.fillText(`Item number ${fromCertificate.saleQty}/${fromCertificate.maxQty}`, 450, 120);
                 
+                context.fillText(fromCertificate.id, 150, 240);
+                context.fillText(`For use in ${fromCertificate.platformName}`, 450, 240);
+
+                context.fillText('Collection data to be added later', 300, 360);
+                
+                context.textAlign = 'left';
+                this.wrapText(context, fromCertificate.description, 60, 420, 450, 30);
+
+
                 if (fromCertificate?.test) {
                     context.fillStyle = 'rgb(118,188,127)';
                     context.font = '42pt OCR-A';

@@ -19,6 +19,8 @@ export interface CertificateDTO {
     designItemCode: string;
     skuImageUrl: string;
     certImgUrl: string;
+    cardImgUrl: string;
+    backImgUrl: string;
     thumbprint: string;
     flexUrl: string;
     certUrl: string;
