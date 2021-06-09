@@ -1,23 +1,38 @@
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
+
 <div class="cert-page">
     <div class="wrapper" style="padding: 10px">
         <div class="toast-success fade-out {{showToast}}">
             <span>{{toast}}</span>
         </div>
+
         <div class="cert-image-wrapper">
-            <div class="cert-image no-opacity">
-                <img src="/img/cert/{{data.thumbprint}}"
+            <div id="card">
+                <div class="front">
+                    <img src="{{cardImgUrl}}" style="max-width: {{width}}px; width: 100%; height: auto;"
+                        alt="{{data.stockKeepingUnitName}}" onload="didLoadImage()">
+                </div>
+                <div class="back">
+                    <img src="{{backImgUrl}}" style="max-width: {{width}}px; width: 100%; height: auto;"
+                        alt="{{data.stockKeepingUnitName}}" onload="didLoadImage()">
+                </div>
+            </div>
+        </div>
+        <div class="cert-image no-opacity">
+            <!--img src="{{data.certImgUrl}}"
                      style="max-width: {{width}}px; width: 100%; height: auto;"
                      alt="{{data.stockKeepingUnitName}}"
                      onload="didLoadImage()"
-                />
-            </div>
+                /-->
         </div>
     </div>
-    <div class="d-flex" style="justify-content: center; align-items: center; position: fixed; bottom:10%; width: 100%">
-        {{#if showCTA}}
-            <button id="flexBtn" type="submit" class="btn btn-skn btn-lg" onclick="goToWallet()">Go to Wallet</button>
-        {{/if}}
-    </div>
+</div>
+<div class="d-flex" style="justify-content: center; align-items: center; position: fixed; bottom:10%; width: 100%">
+    {{#if showCTA}}
+    <button id="flexBtn" type="submit" class="btn btn-skn btn-lg" onclick="goToWallet()">Go to Wallet</button>
+    {{/if}}
+</div>
 </div>
 
 <script>
@@ -29,11 +44,14 @@
     });
 
     function didLoadImage() {
+
         const imageElement = document.querySelector('.cert-image');
         const toastElement = document.querySelector('.toast-success');
 
         imageElement.classList.remove('no-opacity');
         imageElement.classList.add('visible');
+
+        $("#card").flip();
 
         setTimeout(function () {
             toastElement.classList.remove('visible');
