@@ -23,7 +23,7 @@
 
 <script type="text/javascript">
    $(document).ready(function(){
-       $("#certId").keyup(function () {            
+       $("#certId").on('change',function () {            
             var flexBtn = $("#flexBtn");            
             if ($(this).val().trim() != "") {                
                 flexBtn.removeAttr("disabled");

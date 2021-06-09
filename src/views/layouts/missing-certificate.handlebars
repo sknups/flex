@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="/assets/css/main.css" />
-        <title>Sknups</title>
-        {{> page/google-tag-manager}}
-        {{> page/favicons}}
-        {{> page/missing-certificate-head }}        
-    </head>
-    <body class="dark-mode d-flex flex-column">
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css" />
+    <title>Sknups</title>
+    {{> page/google-tag-manager}}
+    {{> page/favicons}}
+    {{> page/missing-certificate-head }}
+</head>
+
+<body class="dark-mode d-flex flex-column" background="/static/backgrounds/claim-form-bg.png">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
     {{> page/top_nav}}
     <div id="page-content">
         {{{body}}}
-        </div>
-        
-        
-        {{> page/footer}}
-        {{> page/cookie}}
-         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    </div>
+
+
+    {{> page/footer}}
+    {{> page/cookie}}
+    {{> page/effects}}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
@@ -30,5 +35,7 @@
         crossorigin="anonymous"></script>
     <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
 
-    </body>
+    
+</body>
+
 </html>
