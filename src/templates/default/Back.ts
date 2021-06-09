@@ -3,6 +3,7 @@ import { ImagesConfigs } from "../../images/images.configs";
 import { createCanvas, Image, loadImage, registerFont } from "canvas";
 import logger from "winston";
 import { CertificateDTO } from "../../certificates/services/certificates.service";
+import { Context } from "node:vm";
 
 export class DefaultTemplate extends BrandTemplate {
 
@@ -12,6 +13,14 @@ export class DefaultTemplate extends BrandTemplate {
         const scaleFactor = boxAspectRatio >= imageAspectRatio ? maxHeight / image.height : maxWidth / image.width;
 
         return [image.width * scaleFactor, image.height * scaleFactor];
+    }
+
+    writeText(ctx: Context, title: String, body: String, x:number, y:number){
+        const lineDepth = 20;
+        ctx.fillStyle = '#919191';
+        ctx.fillText(title, x, y);
+        ctx.fillStyle = '#edecec';
+        ctx.fillText(body, x, y + 30);
     }
 
     renderTemplate(fromCertificate: CertificateDTO, use: string): Promise<Buffer> {
@@ -32,11 +41,7 @@ export class DefaultTemplate extends BrandTemplate {
 
 
             // Load Fonts
-            this.loadFontsIntoCanvas([
-                { path: './static/fonts/Inter-Regular-slnt=0.ttf', fontFace: { family: "Inter" } },
-                { path: './static/fonts/InterstateMonoLight.otf', fontFace: { family: "Interstate" } },
-                { path: './static/fonts/OCR-A.ttf', fontFace: { family: "OCR-A" } },
-            ]);
+            this.loadDefaultFontsIntoCanvas();
 
             const context = canvas.getContext('2d');
             context.patternQuality = 'bilinear';
@@ -46,8 +51,6 @@ export class DefaultTemplate extends BrandTemplate {
             this.loadImages([
                 './static/backgrounds/card.back.default.v1.png',
                 `brand.v1.default.${fromCertificate.brandCode}.png`,
-                `platform.v1.default.${fromCertificate.platformCode}.png`,
-                `sku.v1.default.${fromCertificate.stockKeepingUnitCode}.png`,
             ]).then((images) => {
                 //draw the images first
                 const backgroundImage = images[0];
@@ -57,24 +60,20 @@ export class DefaultTemplate extends BrandTemplate {
                     logger.info('Failed to load background image image:');
                 }
                 //write the text
-                context.fillStyle = 'rgb(248,34,41)';
-                context.font = '16pt OCR-A';
+                context.font = '22pt Jost';
                 context.textAlign = 'center';
-                context.fillText(fromCertificate.gamerTag, 150, 120);
-                context.fillText(`Item number ${fromCertificate.saleQty}/${fromCertificate.maxQty}`, 450, 120);
+                this.writeText(context, 'Owner',fromCertificate.gamerTag, 150, 120);
+                this.writeText(context, 'Item number',this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty),450,120);
+                this.writeText(context, 'Ownership token', fromCertificate.thumbprint, 150, 240);
+                this.writeText(context, 'For use in', fromCertificate.platformName, 450, 240);
+                this.writeText(context, 'Collection', 'TBD',300, 360);
                 
-                context.fillText(fromCertificate.id, 150, 240);
-                context.fillText(`For use in ${fromCertificate.platformName}`, 450, 240);
-
-                context.fillText('Collection data to be added later', 300, 360);
-                
-                context.textAlign = 'left';
-                this.wrapText(context, fromCertificate.description, 60, 420, 450, 30);
-
+                this.writeText(context, 'Description', '',300, 550);
+                this.wrapText(context, fromCertificate.description, 300, 580, 500, 30);
 
                 if (fromCertificate?.test) {
                     context.fillStyle = 'rgb(118,188,127)';
-                    context.font = '42pt OCR-A';
+                    context.font = '36pt OCR-A';
                     context.fillText('TEST CERTIFICATE ONLY', 200, 175);
                 }
             }).catch(err => {

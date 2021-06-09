@@ -6,10 +6,17 @@ import { IFlexImage } from "../models/IFlexImage";
 import { ImagesService } from "../images/services/images.service";
 
 export abstract class BrandTemplate {
+    private MAX_DISPLAY_QTY = 9999;
 
     private readonly imagesService: ImagesService;
     constructor() {
         this.imagesService = new ImagesService();
+    }
+    /**
+     * What is the largets number of qtyAvailable we will show on a card?
+     **/
+    getItemNumberText(maxQty: number, saleQty: number) {
+        return maxQty < this.MAX_DISPLAY_QTY ? saleQty + '/' + maxQty : saleQty + "";;
     }
     /**
      * Function responsible for render the template according to the requirements of each brand
@@ -25,7 +32,7 @@ export abstract class BrandTemplate {
      * 
      * @param imagesPaths
      */
-    loadImages(imagesPaths: string[]): Promise<PromiseSettledResult<Image|void>[]> {
+    loadImages(imagesPaths: string[]): Promise<PromiseSettledResult<Image | void>[]> {
         logger.info(`BrandTemplate.loadImages: Will load images with paths: ${imagesPaths}`);
 
         const imagesPromises = imagesPaths.map((imagePath) => {
@@ -55,6 +62,14 @@ export abstract class BrandTemplate {
             });
     }
 
+    loadDefaultFontsIntoCanvas() {
+        this.loadFontsIntoCanvas([
+            { path: './static/fonts/Jost-Medium-500.ttf', fontFace: { family: "Jost" } },
+            { path: './static/fonts/Jost-Regular-400.ttf', fontFace: { family: "Jost" } },
+            { path: './static/fonts/Jost-SemiBold-600.ttf', fontFace: { family: "JostSemi" } },
+            { path: './static/fonts/OCR-A.ttf', fontFace: { family: "OCR-A" } },
+        ]);
+    }
     /**
      * Will load the desired fonts into canvas
      */
