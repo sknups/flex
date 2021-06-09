@@ -32,11 +32,7 @@ export class DefaultTemplate extends BrandTemplate {
 
 
             // Load Fonts
-            this.loadFontsIntoCanvas([
-                { path: './static/fonts/Inter-Regular-slnt=0.ttf', fontFace: { family: "Inter" } },
-                { path: './static/fonts/InterstateMonoLight.otf', fontFace: { family: "Interstate" } },
-                { path: './static/fonts/OCR-A.ttf', fontFace: { family: "OCR-A" } },
-            ]);
+            this.loadDefaultFontsIntoCanvas();
 
             const context = canvas.getContext('2d');
             context.patternQuality = 'bilinear';
@@ -79,11 +75,14 @@ export class DefaultTemplate extends BrandTemplate {
                 }
 
                 //write the text
-                context.fillStyle = 'rgb(29,29,27)';
-                context.font = '28pt OCR-A';
+                context.fillStyle = '#151515';
+                context.font = '35pt JostSemi';
                 context.textAlign = 'center';
                 context.fillText(fromCertificate.stockKeepingUnitName, 300, 60);
-                context.fillText(fromCertificate.saleQty + '/' + fromCertificate.maxQty, 120, 870);
+                context.font = '30pt Jost';
+                
+                var qty = this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty);
+                context.fillText(qty, 120, 870);
 
                 if (fromCertificate?.test) {
                     context.fillStyle = 'rgb(118,188,127)';
