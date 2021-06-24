@@ -1,6 +1,6 @@
 import {CommonRoutesConfig} from "../../common/common.routes.config";
 import express from "express";
-import logger from "winston";
+import {logger } from '../../logger'
 import {AssetsController} from "../controllers/assets.controller";
 
 export class AssetsRoutesConfig extends CommonRoutesConfig {

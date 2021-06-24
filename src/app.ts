@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 import {CommonRoutesConfig} from './common/common.routes.config';
-import {CertificatesRoutesConfig} from './certificates/routes/certificates.routes.config';
 import debug from 'debug';
 import {ServerUtils} from "./utils/server.utils";
 import express from "express";
@@ -8,6 +7,7 @@ import http from "http";
 import {ImagesRoutesConfig} from "./images/routes/images.routes.config";
 import cors from "cors";
 import {AssetsRoutesConfig} from "./assets/routes/assets.routes.config";
+import { logger } from './logger'
 
 // Load into ENV Variables
 dotenv.config();
@@ -31,7 +31,6 @@ const exporter = new TraceExporter();
 // Configure the span processor to send spans to the exporter
 provider.addSpanProcessor(new SimpleSpanProcessor(exporter));
 
-const sendLogsToGCP = process.env.NODE_ENV === 'production'
 const isProduction = process.env.NODE_ENV === 'production'
 
 // Variables needed to start the server
@@ -40,7 +39,6 @@ const isProduction = process.env.NODE_ENV === 'production'
 // compress the response in case we are in prod mode
 export const app: express.Application = ServerUtils.configureApp(
     express(),    
-    sendLogsToGCP,
     isProduction
 );
 
@@ -52,50 +50,19 @@ const debugLog: debug.IDebugger = debug('flex-server-app');
 
 const routes: Array<CommonRoutesConfig> = [
     // here we are adding the UserRoutes to our array,
-    // after sending the Express.js application object to have the routes added to our app!
-    new CertificatesRoutesConfig(app),
+    // after sending the Express.js application object to have the routes added to our app!    
     new ImagesRoutesConfig(app),
     new AssetsRoutesConfig(app)
 ];
 
-// this is a simple route to make sure everything is working properly
-// Adding just a default rout
-app.get('/', (req: express.Request, res: express.Response) => {
-    res.render('index', { title: 'SKNUPS', certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE})
+// Return empty OK response, used check app is up when deployed 
+app.get('/', (req: express.Request, res: express.Response) => {    
+    res.send('');
 });
-
-const terms = require('../static/terms/privacy.json');
-app.get('/terms-and-conditions', (req: express.Request, res: express.Response) => {
-    res.render('terms', { 
-        terms: terms,
-        title: 'Terms and Conditions - SKNUPS', 
-        certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
-    })
-});
-
-const termsOfUse = require('../static/terms/use.json');
-app.get('/terms-of-use', (req: express.Request, res: express.Response) => {
-    res.render('terms', {         
-        terms: termsOfUse,
-        title: 'Terms of Use - SKNUPS', 
-        certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
-    })
-});
-
-app.get('/about-us', (req: express.Request, res: express.Response) => {
-    res.render('about-us', {         
-        title: 'About us - SKNUPS', 
-        certificateHostPath: CertificatesRoutesConfig.ROUTE_NEEDLE
-    })
-});
-
-app.use("/socket.io", express.static('../socket.io'));
-let io = require("socket.io")(server);
-io.listen(server);
 
 // Start server and listen on port
 server.listen(port, () => {
-    debugLog(`Server running at ${port}`);
+    logger.info(`Server running at ${port}`);    
     routes.forEach((route: CommonRoutesConfig) => {
         debugLog(`Routes configured for ${route.getName()}`);
     });

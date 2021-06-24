@@ -28,10 +28,8 @@ ENV NODE_ENV=production
 # Create app directory
 WORKDIR /usr/src/app
 
-COPY --from=builder /usr/src/app/public ./public
 COPY --from=builder /usr/src/app/static ./static
 COPY --from=builder /usr/src/app/dist ./dist
-COPY --from=builder /usr/src/app/src/views ./dist/views
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 
 RUN npm install canvas
