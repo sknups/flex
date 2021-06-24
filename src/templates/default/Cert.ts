@@ -1,10 +1,8 @@
-import { BrandTemplate } from "../BrandTemplate";
-import { ImagesConfigs } from "../../images/images.configs";
-import { createCanvas, Image, loadImage, registerFont } from "canvas";
-import logger from "winston";
-import { CertificateDTO } from "../../certificates/services/certificates.service";
-import { Context } from "node:vm";
-import { wrap } from "node:module";
+import {BrandTemplate} from "../BrandTemplate";
+import {ImagesConfigs} from "../../images/images.configs";
+import {createCanvas, Image, loadImage, registerFont} from "canvas";
+import {logger } from '../../logger'
+import {CertificateDTO} from "../../certificates/services/certificates.service";
 
 export class DefaultTemplate extends BrandTemplate {
 

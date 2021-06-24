@@ -1,5 +1,5 @@
 import axios from "axios";
-import logger from "winston";
+import {logger } from '../logger'
 
 export class AuthenticationUtils {
     static getServiceBearerToken(serviceUrl: string): Promise<string> {
