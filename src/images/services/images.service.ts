@@ -1,10 +1,8 @@
 import { CertificateDTO } from "../../certificates/services/certificates.service";
 import { StringUtils } from "../../utils/string.utils";
-import logger from "winston";
+import {logger } from '../../logger'
 import { BrandTemplate } from "../../templates/BrandTemplate";
-import * as fs from "fs";
-import { SkuDTO } from "../../skus/services/skus.service";
-import { Bucket, Storage } from "@google-cloud/storage";
+import { Storage } from "@google-cloud/storage";
 import { Image, loadImage } from "canvas";
 
 export class ImagesService {

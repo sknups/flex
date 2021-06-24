@@ -1,4 +1,4 @@
-import logger from "winston";
+import {logger } from '../../logger'
 import { Storage } from "@google-cloud/storage";
 
 export class AssetsService {
