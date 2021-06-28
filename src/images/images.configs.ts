@@ -7,4 +7,7 @@ export class ImagesConfigs {
     }
 
     static LANDSCAPE_RATIO = 2.69;
+
+    //How long do images stay in the cache?
+    static TTL = 604800;
 }

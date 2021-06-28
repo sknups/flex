@@ -3,7 +3,7 @@ import {StatusCodes} from "http-status-codes";
 import {logger } from '../../logger'
 import {ImagesService} from "../services/images.service";
 import {CertificateDTO, CertificatesService} from "../../certificates/services/certificates.service";
-
+import { ImagesConfigs } from "../images.configs";
 
 export class ImagesController {
 
@@ -45,7 +45,8 @@ export class ImagesController {
 
                     response.writeHead(StatusCodes.OK, {
                         'Content-Type': 'image/png',
-                        'Content-Length': buffer.length
+                        'Content-Length': buffer.length,
+                        'Cache-Control': `public, max-age=${ImagesConfigs.TTL}`
                     });
                     response.write(buffer);
                     response.end(null, 'binary');
