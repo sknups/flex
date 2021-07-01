@@ -15,12 +15,33 @@ export class DefaultTemplate extends BrandTemplate {
         return [image.width * scaleFactor, image.height * scaleFactor];
     }
 
-    writeText(ctx: Context, title: String, body: String, x:number, y:number){
-        const lineDepth = 20;
-        ctx.fillStyle = '#919191';
-        ctx.fillText(title, x, y);
-        ctx.fillStyle = '#edecec';
-        ctx.fillText(body, x, y + 30);
+    //If the text is wrapped, will return by how many pixels *additional* depth - 0 if on one line
+    writeText(ctx: Context, title: String, body: String, lx: number, rx: number, y: number) {
+
+        let wrap = 0;
+        const space = 30;
+        ctx.textAlign = 'left';
+        ctx.fillStyle = ImagesConfigs.TEXT_RGB;
+        ctx.font = '25pt Jost';
+        ctx.fillText(title.toUpperCase() + ':', lx, y);
+        ctx.font = '25pt OCR-A';
+        if (body.length > 15) {
+            const words = body.split(' ');
+            let line = '';
+            for (let n = 0; n < words.length; n++) {
+                if (line.length + words[n].length > 15) {
+                    ctx.fillText(line.toUpperCase(), rx, y + wrap);
+                    wrap = wrap + space;
+                    line = words[n] + ' ';
+                } else {
+                    line = line + words[n] + ' '
+                }
+            }
+            ctx.fillText(line.toUpperCase(), rx, y + wrap);
+        } else {
+            ctx.fillText(body.toUpperCase(), rx, y);
+        }
+        return wrap;
     }
 
     renderTemplate(fromCertificate: CertificateDTO, use: string): Promise<Buffer> {
@@ -36,8 +57,8 @@ export class DefaultTemplate extends BrandTemplate {
             //Lock ratio to golden section
             //const height = ImagesConfigs.SIZES.DEFAULT / ImagesConfigs.LANDSCAPE_RATIO;
             //const canvas = createCanvas(ImagesConfigs.SIZES.DEFAULT, height);
-            const height = 900;
-            const canvas = createCanvas(600, height);
+            const height = 1350;
+            const canvas = createCanvas(900, height);
 
 
             // Load Fonts
@@ -49,9 +70,14 @@ export class DefaultTemplate extends BrandTemplate {
 
             //Load all required images in parallel before drawing them on the canvas
             this.loadImages([
-                './static/backgrounds/card.back.default.v1.png',
-                `brand.v1.default.${fromCertificate.brandCode}.png`,
+                './static/backgrounds/card.back.default.v2.jpg',
+                `brand.v2.default.${fromCertificate.brandCode}.png`,
+                `sku.v1.default.${fromCertificate.stockKeepingUnitCode}.png`,
+                './static/backgrounds/card.back.glass.v2.png',
             ]).then((images) => {
+                const L_COL_L = 130;
+                const L_COL_C = L_COL_L + 305 / 2;
+                const R_COL_L = 470;
                 //draw the images first
                 const backgroundImage = images[0];
                 if (backgroundImage.status == 'fulfilled') {
@@ -59,22 +85,41 @@ export class DefaultTemplate extends BrandTemplate {
                 } else {
                     logger.info('Failed to load background image image:');
                 }
+                const skuImage = images[2];
+                if (skuImage.status == 'fulfilled') {
+                    const imageDimensions = this.scaleToMax(265, 292, skuImage.value);
+                    context.drawImage(skuImage.value, L_COL_C - imageDimensions[0] / 2, 1050 - imageDimensions[1] / 2, imageDimensions[0], imageDimensions[1]);
+                } else {
+                    logger.info('Failed to load sku image: ' + fromCertificate.stockKeepingUnitCode);
+                }
+                const brandImage = images[1];
+                if (brandImage.status == 'fulfilled') {
+                    const imageDimensions = this.scaleToMax(265, 225, brandImage.value);
+                    context.drawImage(brandImage.value, L_COL_C - imageDimensions[0] / 2, 800 - imageDimensions[1] / 2, imageDimensions[0], imageDimensions[1]);
+                } else {
+                    logger.info('Failed to load brand image: ' + fromCertificate.brand);
+                }
                 //write the text
-                context.font = '22pt Jost';
-                context.textAlign = 'center';
-                this.writeText(context, 'Owner',fromCertificate.gamerTag, 150, 120);
-                this.writeText(context, 'Item number',this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty),450,120);
-                this.writeText(context, 'Ownership token', fromCertificate.thumbprint, 150, 240);
-                this.writeText(context, 'For use in', fromCertificate.platformName, 450, 240);
-                this.writeText(context, 'Collection', 'TBD',300, 360);
-                
-                this.writeText(context, 'Description', '',300, 550);
-                this.wrapText(context, fromCertificate.description, 300, 580, 500, 30);
+                let y_shift = this.writeText(context, 'Item', fromCertificate.stockKeepingUnitName, L_COL_L, R_COL_L, 200);
+                this.writeText(context, 'Owner', fromCertificate.gamerTag, L_COL_L, R_COL_L, 270 + y_shift);
+                this.writeText(context, 'Item number', this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty), L_COL_L, R_COL_L, 340 + y_shift);
+                this.writeText(context, 'Ownership token', fromCertificate.thumbprint, L_COL_L, R_COL_L, 410 + y_shift);
+                this.writeText(context, 'For use in', fromCertificate.platformName, L_COL_L, R_COL_L, 480 + y_shift);
+
+                this.writeText(context, 'Description', '', L_COL_L, R_COL_L, 550 + y_shift);
+                context.font = '18pt Minion';
+                this.wrapText(context, fromCertificate.description, R_COL_L, 550 + y_shift, 340, 45);
 
                 if (fromCertificate?.test) {
                     context.fillStyle = 'rgb(118,188,127)';
                     context.font = '36pt OCR-A';
                     context.fillText('TEST CERTIFICATE ONLY', 200, 175);
+                }
+                const glassImage = images[3];
+                if (glassImage.status == 'fulfilled') {
+                    context.drawImage(glassImage.value, 0, 0);
+                } else {
+                    logger.info('Failed to load glass image:');
                 }
             }).catch(err => {
                 console.error(err);
