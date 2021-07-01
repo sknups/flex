@@ -77,15 +77,16 @@
             var host = document.getElementById("host").value;
             var certs = document.getElementById("certs").value.split(" ");
             var innerHTML = "<table>";
+            var t = Date.now();
             for (var i = 0; i < certs.length; i++) {
                 
                 innerHTML += `<TR><td colspan=\"2\"><A target=\"_blank\" href=\"${host}/cert/${certs[i]}/cert.html\">Certificate</A></td></TR>`;
                 innerHTML += "<TR><td>";
-                innerHTML += `<img src=\"${host}/img/card/v1/default/${certs[i]}.png\"/>`;
+                innerHTML += `<img src=\"${host}/img/card/v1/default/${certs[i]}.png?t=${t}\"/>`;
                 innerHTML += "</td><TD>";
-                innerHTML += `<img src=\"${host}/img/back/v1/default/${certs[i]}.png\"/>`;
+                innerHTML += `<img src=\"${host}/img/back/v1/default/${certs[i]}.png?t=${t}\"/>`;
                 innerHTML += "</td><TD>";
-                innerHTML += `<img src=\"${host}/img/cert/v1/default/${certs[i]}.png\"/>`;
+                innerHTML += `<img src=\"${host}/img/cert/v1/default/${certs[i]}.png?t=${t}\"/>`;
                 innerHTML += "</td></TR>";
             }
             innerHTML += "</table>";

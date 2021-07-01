@@ -10,4 +10,6 @@ export class ImagesConfigs {
 
     //How long do images stay in the cache?
     static TTL = 604800;
+    //Card text
+    static TEXT_RGB = 'rgb(255,255,255)';
 }
