@@ -1,7 +1,7 @@
 import { BrandTemplate } from "../BrandTemplate";
 import { ImagesConfigs } from "../../images/images.configs";
 import { createCanvas, Image, loadImage, registerFont } from "canvas";
-import {logger } from '../../logger'
+import logger from "winston";
 import { CertificateDTO } from "../../certificates/services/certificates.service";
 
 export class DefaultTemplate extends BrandTemplate {
@@ -27,8 +27,8 @@ export class DefaultTemplate extends BrandTemplate {
             //Lock ratio to golden section
             //const height = ImagesConfigs.SIZES.DEFAULT / ImagesConfigs.LANDSCAPE_RATIO;
             //const canvas = createCanvas(ImagesConfigs.SIZES.DEFAULT, height);
-            const height = 1350;
-            const canvas = createCanvas(900, height);
+            const height = 900;
+            const canvas = createCanvas(600, height);
 
 
             // Load Fonts
@@ -40,10 +40,10 @@ export class DefaultTemplate extends BrandTemplate {
 
             //Load all required images in parallel before drawing them on the canvas
             this.loadImages([
-                './static/backgrounds/card.front.default.v2.jpg',
-                `brand.v2.default.${fromCertificate.brandCode}.png`,
+                './static/backgrounds/card.front.default.v1.png',
+                `brand.v1.default.${fromCertificate.brandCode}.png`,
+                `platform.v1.default.${fromCertificate.platformCode}.png`,
                 `sku.v1.default.${fromCertificate.stockKeepingUnitCode}.png`,
-                './static/backgrounds/card.front.glass.v2.png',
             ]).then((images) => {
                 //draw the images first
                 const backgroundImage = images[0];
@@ -52,42 +52,42 @@ export class DefaultTemplate extends BrandTemplate {
                 } else {
                     logger.info('Failed to load background image image:');
                 }
-                const skuImage = images[2];
+                const skuImage = images[3];
                 if (skuImage.status == 'fulfilled') {
-                    const imageDimensions = this.scaleToMax(600, 776, skuImage.value);
-                    context.drawImage(skuImage.value, 450 - imageDimensions[0] / 2, 675 - imageDimensions[1]/2, imageDimensions[0], imageDimensions[1]);
+                    const imageDimensions = this.scaleToMax(540, 540, skuImage.value);
+                    context.drawImage(skuImage.value, 300 - imageDimensions[0] / 2, 400 - imageDimensions[1]/2, imageDimensions[0], imageDimensions[1]);
                 } else {
                     logger.info('Failed to load sku image: ' + fromCertificate.stockKeepingUnitCode);
                 }
                 const brandImage = images[1];
                 if (brandImage.status == 'fulfilled') {
-                    const imageDimensions = this.scaleToMax(482, 312, brandImage.value);
-                    context.drawImage(brandImage.value, 450 - imageDimensions[0] / 2, 230 - imageDimensions[1]/2, imageDimensions[0], imageDimensions[1]);
+                    const imageDimensions = this.scaleToMax(540, 150, brandImage.value);
+                    context.drawImage(brandImage.value, 300 - imageDimensions[0] / 2, 750 - imageDimensions[1]/2, imageDimensions[0], imageDimensions[1]);
                 } else {
                     logger.info('Failed to load brand image: ' + fromCertificate.brand);
                 }
+                const gameImage = images[2];
+                if (gameImage.status == 'fulfilled') {
+                    const imageDimensions = this.scaleToMax(220, 80, gameImage.value);
+                    context.drawImage(gameImage.value, 480 - imageDimensions[0] / 2, 870 - imageDimensions[1], imageDimensions[0], imageDimensions[1]);
+                } else {
+                    logger.info('Failed to load game image: ' + fromCertificate.platformCode);
+                }
 
                 //write the text
-                context.fillStyle = ImagesConfigs.TEXT_RGB;
+                context.fillStyle = '#151515';
                 context.font = '35pt JostSemi';
-                context.textAlign = 'left';
-                context.fillText(fromCertificate.stockKeepingUnitName, 100, 1040);
-
-                context.font = '35pt OCR-A';
+                context.textAlign = 'center';
+                context.fillText(fromCertificate.stockKeepingUnitName, 300, 60);
+                context.font = '30pt Jost';
+                
                 var qty = this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty);
-                context.fillText(qty, 100, 1100);
+                context.fillText(qty, 120, 870);
 
                 if (fromCertificate?.test) {
                     context.fillStyle = 'rgb(118,188,127)';
                     context.font = '42pt OCR-A';
                     context.fillText('TEST CERTIFICATE ONLY', 200, 175);
-                }
-                
-                const glassImage = images[3];
-                if (glassImage.status == 'fulfilled') {
-                    context.drawImage(glassImage.value, 0, 0);
-                } else {
-                    logger.info('Failed to load glass image:');
                 }
             }).catch(err => {
                 console.error(err);
