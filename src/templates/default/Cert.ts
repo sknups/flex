@@ -6,14 +6,6 @@ import {CertificateDTO} from "../../certificates/services/certificates.service";
 
 export class DefaultTemplate extends BrandTemplate {
 
-    scaleToMax(maxWidth: number, maxHeight: number, image: any): number[] {
-        const boxAspectRatio: number = maxWidth / maxHeight;
-        const imageAspectRatio: number = image.width / image.height;
-        const scaleFactor = boxAspectRatio >= imageAspectRatio ? maxHeight / image.height : maxWidth / image.width;
-
-        return [image.width * scaleFactor, image.height * scaleFactor];
-    }
-
     renderTemplate(fromCertificate: CertificateDTO, use: string): Promise<Buffer> {
         return new Promise<Buffer>((accept, reject) => {
             //find out if we're going to scale the image

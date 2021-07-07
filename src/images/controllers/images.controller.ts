@@ -31,15 +31,14 @@ export class ImagesController {
         try {
             // request the certificate information
             const certCode = this.stripExtension(request.params.certCode);
-
             const certificateDTO = await this.getCertificate(certCode);
-
             const brandCode = certificateDTO.brandCode;
+            const purpose = request.params.purpose;
 
-            logger.info(`ImagesController.getImage type: ${type} from brand: ${brandCode} with certCode: ${certCode}`);
+            logger.info(`ImagesController.getImage type: ${type} purpose: ${purpose} from brand: ${brandCode} with certCode: ${certCode}`);
 
             // Legacy Info for now
-            this.imagesService.generateCanvasImage(type, certificateDTO)
+            this.imagesService.generateCanvasImage(type, purpose, certificateDTO)
                 .then((buffer) => {
                     logger.info(`ImagesController.getImage with buffer.length=${buffer.length}`);
 
@@ -52,7 +51,7 @@ export class ImagesController {
                     response.end(null, 'binary');
                 })
                 .catch((err) => {
-                    logger.error(`ImagesController.getImage ERROR. Failed to draw image`);
+                    logger.error(`ImagesController.getImage ERROR. Failed to draw image: ${err}`);
 
                     response.writeHead(StatusCodes.NOT_FOUND);
                     response.write('Failed to draw image');
