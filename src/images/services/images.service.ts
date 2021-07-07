@@ -6,6 +6,7 @@ import * as fs from "fs";
 import { SkuDTO } from "../../skus/services/skus.service";
 import { Bucket, Storage } from "@google-cloud/storage";
 import { Image, loadImage } from "canvas";
+import {DefaultTemplate} from "../../templates/default/Card";
 
 export class ImagesService {
 
@@ -28,8 +29,9 @@ export class ImagesService {
         }
     }
 
-    async generateCanvasImage(type: string, fromCertificate: CertificateDTO) {
-        logger.info(`ImagesService`);
+    async generateCanvasImage(type: string, purpose: string, fromCertificate: CertificateDTO) {
+        
+        logger.debug(`Drawing ${type} for ${fromCertificate.id}`);
 
         const brandCode = fromCertificate.brandCode;
         const brandCodeToClassName = StringUtils.classify(brandCode.toLowerCase());
@@ -41,13 +43,13 @@ export class ImagesService {
             const brandModule = await import(`../../templates/${brandCodeToClassName}/${typeToClassName}`);
             const brandTemplateController: BrandTemplate = new brandModule[brandCodeToClassName];
 
-            return brandTemplateController.renderTemplate(fromCertificate, brandCode);
+            return brandTemplateController.renderTemplate(fromCertificate, purpose);
         } catch (error) {
             logger.info(`ImagesService.generateCanvasImage Unable to get the ${typeToClassName} Template for ${brandCode}:${brandCodeToClassName}`);
             try {
                 const defaultTemplateModule = await import(`../../templates/default/${typeToClassName}`);
                 const templateController = new defaultTemplateModule.DefaultTemplate();
-                return templateController.renderTemplate(fromCertificate, brandCode);
+                return templateController.renderTemplate(fromCertificate, purpose);
             } catch (error) {
                 logger.error(error);
                 
