@@ -1,9 +1,10 @@
 import { CertificateDTO } from "../certificates/services/certificates.service";
-import { CanvasRenderingContext2D, Image, loadImage, registerFont } from "canvas";
+import { CanvasRenderingContext2D, Canvas, Image, loadImage, registerFont, createCanvas } from "canvas";
 import logger from "winston";
 import { IFont } from "../models/IFont";
 import { IFlexImage } from "../models/IFlexImage";
 import { ImagesService } from "../images/services/images.service";
+import { ImagesConfigs } from "../images/images.configs";
 
 export abstract class BrandTemplate {
     private MAX_DISPLAY_QTY = 9999;
@@ -20,10 +21,10 @@ export abstract class BrandTemplate {
     }
     /**
      * Function responsible for render the template according to the requirements of each brand
-     * @param fromCertificate
-     * @param use
+     * @param fromCertificate The DTO for the certificate
+     * @param use The use intended for the image: handed in as part of the URL. default/any=full size: og=small square: 
      */
-    abstract renderTemplate(fromCertificate: CertificateDTO, use: string): Promise<any>;
+    abstract renderTemplate(fromCertificate: CertificateDTO, purpose: string): Promise<any>;
 
     /**
      * Try to load a "bunch" of images from a given design
@@ -60,6 +61,39 @@ export abstract class BrandTemplate {
                     logger.error(`Unable to add images with coords ${JSON.stringify(result.coords)} and value ${JSON.stringify(result.image)}`);
                 }
             });
+    }
+
+    /**
+     * This will convert the image to a ImagesConfigs.SIZES.OG px square with the a transparent background and the image vertically centered
+     * @param context 
+     */
+    convertToOg(canvas: Canvas): Canvas{
+        try {
+            //cache the image on a temp canvas as resizing the canvas will
+            const tempCanvas = createCanvas(ImagesConfigs.SIZES.OG, ImagesConfigs.SIZES.OG);
+            var scaled = this.scaleToMax(ImagesConfigs.SIZES.OG,ImagesConfigs.SIZES.OG,canvas);
+            tempCanvas.getContext("2d").drawImage(canvas, (ImagesConfigs.SIZES.OG - scaled[0])/2, 0, scaled[0], scaled[1]);
+            logger.info("Converted to OG");
+            return tempCanvas;
+        } catch (error) {
+            logger.error("Failed to convert canvas to OG: " + error);
+            return canvas;
+        }
+    }
+
+    /**
+     * Utility method to work out the maximum size of an image we are scaling
+     * @param maxWidth 
+     * @param maxHeight 
+     * @param image 
+     * @returns 
+     */
+    scaleToMax(maxWidth: number, maxHeight: number, image: any): number[] {
+        const boxAspectRatio: number = maxWidth / maxHeight;
+        const imageAspectRatio: number = image.width / image.height;
+        const scaleFactor = boxAspectRatio >= imageAspectRatio ? maxHeight / image.height : maxWidth / image.width;
+
+        return [image.width * scaleFactor, image.height * scaleFactor];
     }
 
     loadDefaultFontsIntoCanvas() {
