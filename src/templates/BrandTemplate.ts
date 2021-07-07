@@ -82,6 +82,24 @@ export abstract class BrandTemplate {
     }
 
     /**
+     * This will scale the image by ImagesConfigs.SIZES.THUMB
+     * @param context 
+     */
+     convertToThumb(canvas: Canvas): Canvas{
+        try {
+            const w = canvas.width / ImagesConfigs.SIZES.THUMB;
+            const h = canvas.height / ImagesConfigs.SIZES.THUMB;
+            const tempCanvas = createCanvas(w,h);
+            tempCanvas.getContext("2d").drawImage(canvas, 0, 0, w, h);
+            logger.info("Converted to thumb");
+            return tempCanvas;
+        } catch (error) {
+            logger.error("Failed to convert canvas to thumb: " + error);
+            return canvas;
+        }
+    }
+
+    /**
      * Utility method to work out the maximum size of an image we are scaling
      * @param maxWidth 
      * @param maxHeight 

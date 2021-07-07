@@ -36,21 +36,16 @@ export class DefaultTemplate extends BrandTemplate {
         return wrap;
     }
 
-    renderTemplate(fromCertificate: CertificateDTO, use: string): Promise<Buffer> {
+    renderTemplate(fromCertificate: CertificateDTO, purpose: string): Promise<Buffer> {
         return new Promise<Buffer>((accept, reject) => {
             //find out if we're going to scale the image
             let scale = ImagesConfigs.SIZES.SCALE;
-            if (use == "og") {
-                scale = ImagesConfigs.SIZES.OG / ImagesConfigs.SIZES.DEFAULT;
-            } else if (use == "twitter") {
-                scale = ImagesConfigs.SIZES.TWITTER / ImagesConfigs.SIZES.DEFAULT;
-            }
 
             //Lock ratio to golden section
             //const height = ImagesConfigs.SIZES.DEFAULT / ImagesConfigs.LANDSCAPE_RATIO;
             //const canvas = createCanvas(ImagesConfigs.SIZES.DEFAULT, height);
             const height = 1350;
-            const canvas = createCanvas(900, height);
+            let canvas = createCanvas(900, height);
 
 
             // Load Fonts
@@ -113,6 +108,11 @@ export class DefaultTemplate extends BrandTemplate {
                 } else {
                     logger.info('Failed to load glass image:');
                 }
+
+                if(purpose == 'thumb'){
+                    canvas = this.convertToThumb(canvas);
+                }
+
             }).catch(err => {
                 console.error(err);
                 logger.info(err);
