@@ -3,7 +3,8 @@ export class ImagesConfigs {
         DEFAULT: 1024,
         OG: 383,
         TWITTER: 280,
-        SCALE: 1
+        SCALE: 1,
+        THUMB: 10
     }
 
     static LANDSCAPE_RATIO = 2.69;

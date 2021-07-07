@@ -78,6 +78,10 @@ export class DefaultTemplate extends BrandTemplate {
                     canvas = this.convertToOg(canvas);
                 }
 
+                if(purpose == 'thumb'){
+                    canvas = this.convertToThumb(canvas);
+                }
+
             }).catch(err => {
                 console.error(err);
                 logger.info(err);
