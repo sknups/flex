@@ -7,14 +7,6 @@ import { Context } from "node:vm";
 
 export class DefaultTemplate extends BrandTemplate {
 
-    scaleToMax(maxWidth: number, maxHeight: number, image: any): number[] {
-        const boxAspectRatio: number = maxWidth / maxHeight;
-        const imageAspectRatio: number = image.width / image.height;
-        const scaleFactor = boxAspectRatio >= imageAspectRatio ? maxHeight / image.height : maxWidth / image.width;
-
-        return [image.width * scaleFactor, image.height * scaleFactor];
-    }
-
     //If the text is wrapped, will return by how many pixels *additional* depth - 0 if on one line
     writeText(ctx: Context, title: String, body: String, lx: number, rx: number, y: number) {
 
