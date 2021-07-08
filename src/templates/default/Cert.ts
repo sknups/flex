@@ -42,7 +42,7 @@ export class DefaultTemplate extends BrandTemplate {
                     const imageDimensions = this.scaleToMax(880, 254, brandImage.value);
                     context.drawImage(brandImage.value, WIDTH / 2 - imageDimensions[0] / 2, 1050 - imageDimensions[1] / 2, imageDimensions[0], imageDimensions[1]);
                 } else {
-                    logger.info('Failed to load brand image: ' + fromCertificate.brand);
+                    logger.info('Failed to load brand image: ' + fromCertificate.brandCode);
                 }
                 const skuImage = images[2];
                 if (skuImage.status == 'fulfilled') {

@@ -48,7 +48,7 @@ export class DefaultTemplate extends BrandTemplate {
                     const imageDimensions = this.scaleToMax(482, 312, brandImage.value);
                     context.drawImage(brandImage.value, 450 - imageDimensions[0] / 2, 230 - imageDimensions[1]/2, imageDimensions[0], imageDimensions[1]);
                 } else {
-                    logger.info('Failed to load brand image: ' + fromCertificate.brand);
+                    logger.info('Failed to load brand image: ' + fromCertificate.brandCode);
                 }
 
                 //write the text
