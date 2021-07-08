@@ -8,14 +8,6 @@ import { wrap } from "node:module";
 
 export class DefaultTemplate extends BrandTemplate {
 
-    scaleToMax(maxWidth: number, maxHeight: number, image: any): number[] {
-        const boxAspectRatio: number = maxWidth / maxHeight;
-        const imageAspectRatio: number = image.width / image.height;
-        const scaleFactor = boxAspectRatio >= imageAspectRatio ? maxHeight / image.height : maxWidth / image.width;
-
-        return [image.width * scaleFactor, image.height * scaleFactor];
-    }
-
     renderTemplate(fromCertificate: CertificateDTO, use: string): Promise<Buffer> {
         return new Promise<Buffer>((accept, reject) => {
             const MARGIN = 100;
@@ -50,7 +42,7 @@ export class DefaultTemplate extends BrandTemplate {
                     const imageDimensions = this.scaleToMax(880, 254, brandImage.value);
                     context.drawImage(brandImage.value, WIDTH / 2 - imageDimensions[0] / 2, 1050 - imageDimensions[1] / 2, imageDimensions[0], imageDimensions[1]);
                 } else {
-                    logger.info('Failed to load brand image: ' + fromCertificate.brand);
+                    logger.info('Failed to load brand image: ' + fromCertificate.brandCode);
                 }
                 const skuImage = images[2];
                 if (skuImage.status == 'fulfilled') {

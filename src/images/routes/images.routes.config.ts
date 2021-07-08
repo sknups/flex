@@ -1,6 +1,6 @@
-import {CommonRoutesConfig} from "../../common/common.routes.config";
+import { CommonRoutesConfig } from "../../common/common.routes.config";
 import express from "express";
-import {ImagesController} from "../controllers/images.controller";
+import { ImagesController } from "../controllers/images.controller";
 import logger from "winston";
 
 export class ImagesRoutesConfig extends CommonRoutesConfig {
@@ -81,13 +81,13 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
 
     private handleBackImageRequest(request: express.Request, response: express.Response) {
         logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(request.params)}`);
-        this.imagesController.getImage("back",request, response).then(() => {
+        this.imagesController.getImage("back", request, response).then(() => {
             logger.info(`imagesController.getCertImage success`);
         }).catch((err) => {
             logger.info(`imagesController.getCertImage error: ${err}`);
         });
     }
-    
+
 
     private handleSkuImageRequest(request: express.Request, response: express.Response, fallback: boolean) {
         logger.info(`ImagesRoutesConfig.handleSkuImageRequest for: ${JSON.stringify(request.params)}`);
