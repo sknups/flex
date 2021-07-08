@@ -64,14 +64,14 @@ export abstract class BrandTemplate {
 
     loadDefaultFontsIntoCanvas() {
         this.loadFontsIntoCanvas([
-            { path: './static/fonts/Jost-Medium-500.ttf', fontFace: { family: "Jost" } },
             { path: './static/fonts/Jost-Regular-400.ttf', fontFace: { family: "Jost" } },
             { path: './static/fonts/Jost-SemiBold-600.ttf', fontFace: { family: "JostSemi" } },
             { path: './static/fonts/OCR-A.ttf', fontFace: { family: "OCR-A" } },
-            { path: './static/fonts/Minion-Pro-Cond-Caption.otf', fontFace: { family: "Minion" } },
+            { path: './static/fonts/mnon_n.ttf', fontFace: { family: "Minion" } },
         ]);
     }
     /**
+     *
      * Will load the desired fonts into canvas
      */
     loadFontsIntoCanvas(fontsPaths: IFont[]): void {
