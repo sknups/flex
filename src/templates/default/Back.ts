@@ -11,10 +11,10 @@ export class DefaultTemplate extends BrandTemplate {
     writeText(ctx: Context, title: String, body: String, lx: number, rx: number, y: number) {
 
         let wrap = 0;
-        const space = 30;
+        const space = 32;
         ctx.textAlign = 'left';
         ctx.fillStyle = ImagesConfigs.TEXT_RGB;
-        ctx.font = '25pt Jost';
+        ctx.font = '23.5pt Jost';
         ctx.fillText(title.toUpperCase() + ':', lx, y);
         ctx.font = '25pt OCR-A';
         if (body.length > 15) {
@@ -45,19 +45,19 @@ export class DefaultTemplate extends BrandTemplate {
             //const height = ImagesConfigs.SIZES.DEFAULT / ImagesConfigs.LANDSCAPE_RATIO;
             //const canvas = createCanvas(ImagesConfigs.SIZES.DEFAULT, height);
             const height = 1350;
-            let canvas = createCanvas(900, height);
-
-
             // Load Fonts
             this.loadDefaultFontsIntoCanvas();
+            const canvas = createCanvas(900, height);
+
+
 
             const context = canvas.getContext('2d');
-            context.patternQuality = 'bilinear';
-            context.quality = 'bilinear';
+            context.patternQuality = 'good';
+            context.quality = 'good';
 
             //Load all required images in parallel before drawing them on the canvas
             this.loadImages([
-                './static/backgrounds/card.back.default.v2.jpg',
+                './static/backgrounds/card.back.default.v3.jpg',
                 `brand.v2.default.${fromCertificate.brandCode}.png`,
                 `sku.v1.default.${fromCertificate.stockKeepingUnitCode}.png`,
                 './static/backgrounds/card.back.glass.v2.png',

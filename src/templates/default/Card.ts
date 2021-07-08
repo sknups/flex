@@ -12,19 +12,19 @@ export class DefaultTemplate extends BrandTemplate {
             let scale = ImagesConfigs.SIZES.SCALE;
             logger.debug(`Drawing card ${fromCertificate.id} purpose ${purpose}`);
             const height = 1350;
-            let canvas = createCanvas(900, height);
-
 
             // Load Fonts
             this.loadDefaultFontsIntoCanvas();
+            const canvas = createCanvas(900, height);
+
 
             const context = canvas.getContext('2d');
-            context.patternQuality = 'bilinear';
-            context.quality = 'bilinear';
+            context.patternQuality = 'good';
+            context.quality = 'good';
 
             //Load all required images in parallel before drawing them on the canvas
             this.loadImages([
-                './static/backgrounds/card.front.default.v2.jpg',
+                './static/backgrounds/card.front.default.v3.jpg',
                 `brand.v2.default.${fromCertificate.brandCode}.png`,
                 `sku.v1.default.${fromCertificate.stockKeepingUnitCode}.png`,
                 './static/backgrounds/card.front.glass.v2.png',
