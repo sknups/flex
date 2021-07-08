@@ -47,7 +47,7 @@ export class DefaultTemplate extends BrandTemplate {
             const height = 1350;
             // Load Fonts
             this.loadDefaultFontsIntoCanvas();
-            const canvas = createCanvas(900, height);
+            let canvas = createCanvas(900, height);
 
 
 

@@ -15,7 +15,7 @@ export class DefaultTemplate extends BrandTemplate {
 
             // Load Fonts
             this.loadDefaultFontsIntoCanvas();
-            const canvas = createCanvas(900, height);
+            let canvas = createCanvas(900, height);
 
 
             const context = canvas.getContext('2d');
