@@ -49,7 +49,7 @@ export class DefaultTemplate extends BrandTemplate {
                 if (brandImage.status == 'fulfilled') {
                     context.drawImage(brandImage.value, 325, 250, 150, 100);
                 } else {
-                    logger.info('Failed to load brand image: ' + fromCertificate.brand);
+                    logger.info('Failed to load brand image: ' + fromCertificate.brandCode);
                 }
                 const gameImage = images[2];
                 if (gameImage.status == 'fulfilled') {
