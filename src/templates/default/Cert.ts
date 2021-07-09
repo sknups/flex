@@ -15,7 +15,7 @@ export class DefaultTemplate extends BrandTemplate {
             const WIDTH = 1080;
             const HEIGHT = 1500;
             const SPACE = 50;
-            const canvas = createCanvas(WIDTH, HEIGHT);
+            let canvas = createCanvas(WIDTH, HEIGHT);
 
             // Load Fonts
             this.loadDefaultFontsIntoCanvas();
@@ -68,6 +68,8 @@ export class DefaultTemplate extends BrandTemplate {
                     context.font = '42pt OCR-A';
                     context.fillText('TEST CERTIFICATE ONLY', 200, 175);
                 }
+
+                canvas = this.scale(canvas, 2);
             }).catch(err => {
                 console.error(err);
                 logger.info(err);

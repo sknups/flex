@@ -17,7 +17,6 @@ export class DefaultTemplate extends BrandTemplate {
             let canvas = createCanvas(900, height);
 
 
-
             const context = canvas.getContext('2d');
             context.patternQuality = 'good';
             context.quality = 'good';
