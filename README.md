@@ -1,11 +1,8 @@
 # Flex Server
 
-**Will evolve during time. This might not be the end result**
-
 ## Intro
 
-Project based on FLEX PoC from [GitHub Branch DEV-20](https://github.com/SknUps/flex_poc).
-
+Image server which generates cards and certificates for assets, and also serves non-static images for hte app - eg, SKU images and models, non-default backgrounds, videos
 
 ## Brief explanation
 
