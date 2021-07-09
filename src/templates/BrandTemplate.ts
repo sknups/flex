@@ -86,9 +86,17 @@ export abstract class BrandTemplate {
      * @param context 
      */
      convertToThumb(canvas: Canvas): Canvas{
+        return this.scale(canvas, ImagesConfigs.SIZES.THUMB);
+    }
+
+    /**
+     * This will scale the image by ImagesConfigs.SIZES.THUMB
+     * @param context 
+     */
+     scale(canvas: Canvas, scale:number): Canvas{
         try {
-            const w = canvas.width / ImagesConfigs.SIZES.THUMB;
-            const h = canvas.height / ImagesConfigs.SIZES.THUMB;
+            const w = canvas.width / scale;
+            const h = canvas.height / scale;
             const tempCanvas = createCanvas(w,h);
             tempCanvas.getContext("2d").drawImage(canvas, 0, 0, w, h);
             logger.info("Converted to thumb");
