@@ -88,7 +88,7 @@ export class DefaultTemplate extends BrandTemplate {
                 }
                 //write the text
                 let y_shift = this.writeText(context, 'Item', fromCertificate.stockKeepingUnitName, L_COL_L, R_COL_L, 200);
-                this.writeText(context, 'Owner', fromCertificate.gamerTag, L_COL_L, R_COL_L, 270 + y_shift);
+                const tag = (fromCertificate.gamerTag.length > 15) ? fromCertificate.gamerTag.slice(0,14) + "." : fromCertificate.gamerTag;                this.writeText(context, 'Owner', tag, L_COL_L, R_COL_L, 270 + y_shift);
                 this.writeText(context, 'Item number', this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty), L_COL_L, R_COL_L, 340 + y_shift);
                 this.writeText(context, 'Ownership token', fromCertificate.thumbprint, L_COL_L, R_COL_L, 410 + y_shift);
                 this.writeText(context, 'For use in', fromCertificate.platformName, L_COL_L, R_COL_L, 480 + y_shift);
