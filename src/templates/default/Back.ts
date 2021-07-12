@@ -11,10 +11,10 @@ export class DefaultTemplate extends BrandTemplate {
     writeText(ctx: Context, title: String, body: String, lx: number, rx: number, y: number) {
 
         let wrap = 0;
-        const space = 30;
+        const space = 32;
         ctx.textAlign = 'left';
         ctx.fillStyle = ImagesConfigs.TEXT_RGB;
-        ctx.font = '25pt Jost';
+        ctx.font = '23.5pt Jost';
         ctx.fillText(title.toUpperCase() + ':', lx, y);
         ctx.font = '25pt OCR-A';
         if (body.length > 15) {
@@ -45,19 +45,19 @@ export class DefaultTemplate extends BrandTemplate {
             //const height = ImagesConfigs.SIZES.DEFAULT / ImagesConfigs.LANDSCAPE_RATIO;
             //const canvas = createCanvas(ImagesConfigs.SIZES.DEFAULT, height);
             const height = 1350;
+            // Load Fonts
+            this.loadDefaultFontsIntoCanvas();
             let canvas = createCanvas(900, height);
 
 
-            // Load Fonts
-            this.loadDefaultFontsIntoCanvas();
 
             const context = canvas.getContext('2d');
-            context.patternQuality = 'bilinear';
-            context.quality = 'bilinear';
+            context.patternQuality = 'good';
+            context.quality = 'good';
 
             //Load all required images in parallel before drawing them on the canvas
             this.loadImages([
-                './static/backgrounds/card.back.default.v2.jpg',
+                './static/backgrounds/card.back.default.v3.jpg',
                 `brand.v2.default.${fromCertificate.brandCode}.png`,
                 `sku.v1.default.${fromCertificate.stockKeepingUnitCode}.png`,
                 './static/backgrounds/card.back.glass.v2.png',
@@ -84,11 +84,11 @@ export class DefaultTemplate extends BrandTemplate {
                     const imageDimensions = this.scaleToMax(265, 225, brandImage.value);
                     context.drawImage(brandImage.value, L_COL_C - imageDimensions[0] / 2, 800 - imageDimensions[1] / 2, imageDimensions[0], imageDimensions[1]);
                 } else {
-                    logger.info('Failed to load brand image: ' + fromCertificate.brand);
+                    logger.info('Failed to load brand image: ' + fromCertificate.brandCode);
                 }
                 //write the text
                 let y_shift = this.writeText(context, 'Item', fromCertificate.stockKeepingUnitName, L_COL_L, R_COL_L, 200);
-                this.writeText(context, 'Owner', fromCertificate.gamerTag, L_COL_L, R_COL_L, 270 + y_shift);
+                const tag = (fromCertificate.gamerTag.length > 15) ? fromCertificate.gamerTag.slice(0,14) + "." : fromCertificate.gamerTag;                this.writeText(context, 'Owner', tag, L_COL_L, R_COL_L, 270 + y_shift);
                 this.writeText(context, 'Item number', this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty), L_COL_L, R_COL_L, 340 + y_shift);
                 this.writeText(context, 'Ownership token', fromCertificate.thumbprint, L_COL_L, R_COL_L, 410 + y_shift);
                 this.writeText(context, 'For use in', fromCertificate.platformName, L_COL_L, R_COL_L, 480 + y_shift);
