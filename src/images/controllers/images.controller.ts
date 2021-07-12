@@ -1,21 +1,18 @@
 import express from "express";
 import {StatusCodes} from "http-status-codes";
-import logger from "winston";
+import {logger } from '../../logger'
 import {ImagesService} from "../services/images.service";
 import {CertificateDTO, CertificatesService} from "../../certificates/services/certificates.service";
-import {SkuDTO, SkusService} from "../../skus/services/skus.service";
 import { ImagesConfigs } from "../images.configs";
 
 export class ImagesController {
 
     private readonly imagesService: ImagesService;
     private readonly certificateService: CertificatesService;
-    private readonly skuService: SkusService;
 
     constructor() {
         this.imagesService = new ImagesService();
-        this.certificateService = new CertificatesService();
-        this.skuService = new SkusService();
+        this.certificateService = new CertificatesService();        
     }
 
     index(request: express.Request, response: express.Response) {
@@ -81,10 +78,6 @@ export class ImagesController {
 
             logger.info(`SkuCode: ${skuCode}`);
 
-            // request the certificate information
-            //const skuDto = await this.getSku(skuCode);
-            // We shouldn't need this read - very inefficient - we just look for the skuCode directly
-
             this.imagesService.getSkuImage(skuCode, version, purpose, extension)
                 .then((buffer) => {
                     logger.info(`ImagesController.getSkuImage with buffer.length=${buffer.length}`);
@@ -149,10 +142,6 @@ export class ImagesController {
         return response.data;
     }
 
-    async getSku(withCode: string): Promise<SkuDTO> {
-        const response = await this.skuService.getSku(withCode);
-        return response.data;
-    }
 
     handleCanvasImageError(response: express.Response, err: any) {
         response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR).send(err.message);

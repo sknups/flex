@@ -1,6 +1,6 @@
 import { CertificateDTO } from "../certificates/services/certificates.service";
-import { CanvasRenderingContext2D, Canvas, Image, loadImage, registerFont, createCanvas } from "canvas";
-import logger from "winston";
+import {logger } from '../logger'
+import { CanvasRenderingContext2D, Canvas, Image, registerFont, createCanvas } from "canvas";
 import { IFont } from "../models/IFont";
 import { IFlexImage } from "../models/IFlexImage";
 import { ImagesService } from "../images/services/images.service";

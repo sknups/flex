@@ -1,7 +1,7 @@
 import { CommonRoutesConfig } from "../../common/common.routes.config";
 import express from "express";
-import { ImagesController } from "../controllers/images.controller";
-import logger from "winston";
+import {ImagesController} from "../controllers/images.controller";
+import {logger } from '../../logger'
 
 export class ImagesRoutesConfig extends CommonRoutesConfig {
 

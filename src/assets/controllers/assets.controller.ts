@@ -1,6 +1,6 @@
 import express from "express";
 import {StatusCodes} from "http-status-codes";
-import logger from "winston";
+import {logger } from '../../logger'
 import {AssetsService} from "../services/assets.service";
 
 export class AssetsController {

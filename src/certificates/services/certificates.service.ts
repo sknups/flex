@@ -1,5 +1,5 @@
-import axios, {AxiosRequestConfig, AxiosResponse} from "axios";
-import logger from "winston";
+import axios, { AxiosResponse} from "axios";
+import {logger } from '../../logger'
 import {AuthenticationUtils} from "../../utils/authentication.utils";
 
 export interface CertificateDTO {
@@ -31,32 +31,11 @@ export interface CertificateDTO {
     isOwner?: boolean;
 }
 
-export interface ProblemErrorResponse {
-    title: string;
-    status: string;
-    detail: string;
-    level: string;
-}
-
-export interface AssetActivationDTO {
-    activated: boolean;
-}
-
 export class CertificatesService {
-    private readonly drmServerUrl: string;
-    private readonly consumerServerUrl: string;
+    private readonly drmServerUrl: string;    
 
     constructor() {
-        this.drmServerUrl = [process.env.DRM_SERVER].join('/');
-        this.consumerServerUrl = [process.env.ACTIVATION_SERVER].join('/');
-    }
-
-    /**
-     * Get All Certificates
-     */
-    getCertificates() {
-        logger.info(`CertificatesService.getCertificates`);
-        return axios.get<CertificateDTO[]>(`${this.drmServerUrl}/v1/api/assets`);
+        this.drmServerUrl = [process.env.DRM_SERVER].join('/');        
     }
 
     /**
@@ -80,44 +59,5 @@ export class CertificatesService {
 
         return axios.get<CertificateDTO>(url, drmOptions);
     }
-
-    /**
-     * Assign a certificate from ID and EMAIL
-     * @param withId
-     * @param withEmail
-     */
-    async assignCertificate(withId: any, withEmail: any): Promise<AxiosResponse<AssetActivationDTO>> {
-        logger.info(`CertificatesService.assignCertificate withId:${withId} from ${this.consumerServerUrl}/v1/api/assets/assign`);
-        const url = `${this.consumerServerUrl}/v1/api/assets/assign`;
-        const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
-
-        const consumerOptions = {
-            params: {
-                certCode: withId,
-                email: withEmail
-            }
-        };
-
-        return axios.get<AssetActivationDTO>(url, consumerOptions);
-    }
-
-    /**
-     * Activate a certificate from ID and EMAIL
-     * @param withId
-     * @param withEmail
-     */
-    async activateCertificate(withId: any, withEmail: any): Promise<AxiosResponse<AssetActivationDTO>> {
-        logger.info(`CertificatesService.activateCertificate withId:${withId} from ${this.consumerServerUrl}/v1/api/assets/activate`);
-        const url = `${this.consumerServerUrl}/v1/api/assets/activate`;
-        const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
-
-        const consumerOptions = {
-            params: {
-                certCode: withId,
-                email: withEmail
-            }
-        };
-
-        return axios.get<AssetActivationDTO>(url, consumerOptions);
-    }
+    
 }

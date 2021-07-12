@@ -1,7 +1,8 @@
+
 import { BrandTemplate } from "../BrandTemplate";
 import { ImagesConfigs } from "../../images/images.configs";
 import { createCanvas, Image, loadImage, registerFont } from "canvas";
-import logger from "winston";
+import { logger } from "../../logger";
 import { CertificateDTO } from "../../certificates/services/certificates.service";
 import { Context } from "node:vm";
 import { wrap } from "node:module";
