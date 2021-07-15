@@ -34,11 +34,12 @@ export class ImagesController {
             const certificateDTO = await this.getCertificate(certCode);
             const brandCode = certificateDTO.brandCode;
             const purpose = request.params.purpose;
+            const version = request.params.version;
 
-            logger.info(`ImagesController.getImage type: ${type} purpose: ${purpose} from brand: ${brandCode} with certCode: ${certCode}`);
+            logger.info(`ImagesController.getImage version: ${version} type: ${type} purpose: ${purpose} from brand: ${brandCode} with certCode: ${certCode}`);
 
             // Legacy Info for now
-            this.imagesService.generateCanvasImage(type, purpose, certificateDTO)
+            this.imagesService.generateCanvasImage(version, type, purpose, certificateDTO)
                 .then((buffer) => {
                     logger.info(`ImagesController.getImage with buffer.length=${buffer.length}`);
 
@@ -58,7 +59,8 @@ export class ImagesController {
                     response.end();
                 });
         } catch (err) {
-            this.handleCanvasImageError(response, err);
+            logger.error(err);
+            response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR).send(err.message);
         }
     }
 
@@ -98,7 +100,7 @@ export class ImagesController {
                 });
         } catch (err) {
             logger.info(`ImagesController.getSkuImage ERROR. Failed to get`);            
-            this.handleCanvasImageError(response, err);
+            response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR).send(err.message);
         }
     }
 
@@ -133,7 +135,7 @@ export class ImagesController {
                 });
         } catch (err) {
             logger.info(`ImagesController.getClaimBackground ERROR. Failed to get`);
-            this.handleCanvasImageError(response, err);
+            response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR).send(err.message);
         }
     }
 
@@ -142,8 +144,4 @@ export class ImagesController {
         return response.data;
     }
 
-
-    handleCanvasImageError(response: express.Response, err: any) {
-        response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR).send(err.message);
-    }
 }
