@@ -62,11 +62,7 @@ export class DefaultTemplate extends BrandTemplate {
                 var qty = this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty);
                 context.fillText(qty, 100, 1100);
 
-                if (fromCertificate?.test) {
-                    context.fillStyle = 'rgb(118,188,127)';
-                    context.font = '42pt OCR-A';
-                    context.fillText('TEST CERTIFICATE ONLY', 200, 175);
-                }
+                this.writeTestWatermark(context);
                 
                 const glassImage = images[3];
                 if (glassImage.status == 'fulfilled') {
