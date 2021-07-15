@@ -4,7 +4,6 @@ import {logger } from '../../logger'
 import { BrandTemplate } from "../../templates/BrandTemplate";
 import { Storage } from "@google-cloud/storage";
 import { Image, loadImage } from "canvas";
-import {DefaultTemplate} from "../../templates/default/Card";
 
 export class ImagesService {
 
@@ -27,7 +26,7 @@ export class ImagesService {
         }
     }
 
-    async generateCanvasImage(type: string, purpose: string, fromCertificate: CertificateDTO) {
+    async generateCanvasImage(version: string, type: string, purpose: string, fromCertificate: CertificateDTO) {
         
         logger.debug(`Drawing ${type} for ${fromCertificate.id}`);
 
@@ -35,17 +34,17 @@ export class ImagesService {
         const brandCodeToClassName = StringUtils.classify(brandCode.toLowerCase());
         const typeToClassName = StringUtils.classify(type);
 
-        logger.info(`ImagesService.generateCanvasImage Will try to load type ${typeToClassName} for brandCode: ${brandCode} template with name ${brandCodeToClassName}`)
+        logger.info(`ImagesService.generateCanvasImage Will try to load version ${version} type ${typeToClassName} for brandCode: ${brandCode} template with name ${brandCodeToClassName}`)
 
         try {
-            const brandModule = await import(`../../templates/${brandCodeToClassName}/${typeToClassName}`);
+            const brandModule = await import(`../../templates/${version}/${brandCodeToClassName}/${typeToClassName}`);
             const brandTemplateController: BrandTemplate = new brandModule[brandCodeToClassName];
 
             return brandTemplateController.renderTemplate(fromCertificate, purpose);
         } catch (error) {
             logger.info(`ImagesService.generateCanvasImage Unable to get the ${typeToClassName} Template for ${brandCode}:${brandCodeToClassName}`);
             try {
-                const defaultTemplateModule = await import(`../../templates/default/${typeToClassName}`);
+                const defaultTemplateModule = await import(`../../templates/${version}/default/${typeToClassName}`);
                 const templateController = new defaultTemplateModule.DefaultTemplate();
                 return templateController.renderTemplate(fromCertificate, purpose);
             } catch (error) {
