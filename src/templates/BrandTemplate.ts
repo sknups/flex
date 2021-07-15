@@ -1,6 +1,6 @@
 import { CertificateDTO } from "../certificates/services/certificates.service";
-import { CanvasRenderingContext2D, Canvas, Image, loadImage, registerFont, createCanvas } from "canvas";
-import {logger } from '../logger'
+import { logger } from '../logger'
+import { CanvasRenderingContext2D, Canvas, Image, registerFont, createCanvas } from "canvas";
 import { IFont } from "../models/IFont";
 import { IFlexImage } from "../models/IFlexImage";
 import { ImagesService } from "../images/services/images.service";
@@ -64,15 +64,32 @@ export abstract class BrandTemplate {
     }
 
     /**
+     * 
+     * @param canvas 
+     * @returns 
+     */
+    writeTestWatermark(context: CanvasRenderingContext2D) {
+        if (process.env.ENVIRONMENT != 'live') {
+            context.save();
+            context.fillStyle = 'rgb(118,188,127)';
+            context.font = '32pt OCR-A';
+            context.textAlign = 'center';
+            context.rotate(-Math.PI / 4);
+            context.fillText('TEST ONLY', -4, 140);
+            context.restore();
+        }
+    }
+
+    /**
      * This will convert the image to a ImagesConfigs.SIZES.OG px square with the a transparent background and the image vertically centered
      * @param context 
      */
-    convertToOg(canvas: Canvas): Canvas{
+    convertToOg(canvas: Canvas): Canvas {
         try {
             //cache the image on a temp canvas as resizing the canvas will
             const tempCanvas = createCanvas(ImagesConfigs.SIZES.OG, ImagesConfigs.SIZES.OG);
-            var scaled = this.scaleToMax(ImagesConfigs.SIZES.OG,ImagesConfigs.SIZES.OG,canvas);
-            tempCanvas.getContext("2d").drawImage(canvas, (ImagesConfigs.SIZES.OG - scaled[0])/2, 0, scaled[0], scaled[1]);
+            var scaled = this.scaleToMax(ImagesConfigs.SIZES.OG, ImagesConfigs.SIZES.OG, canvas);
+            tempCanvas.getContext("2d").drawImage(canvas, (ImagesConfigs.SIZES.OG - scaled[0]) / 2, 0, scaled[0], scaled[1]);
             logger.info("Converted to OG");
             return tempCanvas;
         } catch (error) {
@@ -85,7 +102,7 @@ export abstract class BrandTemplate {
      * This will scale the image by ImagesConfigs.SIZES.THUMB
      * @param context 
      */
-     convertToThumb(canvas: Canvas): Canvas{
+    convertToThumb(canvas: Canvas): Canvas {
         return this.scale(canvas, ImagesConfigs.SIZES.THUMB);
     }
 
@@ -93,11 +110,11 @@ export abstract class BrandTemplate {
      * This will scale the image by ImagesConfigs.SIZES.THUMB
      * @param context 
      */
-     scale(canvas: Canvas, scale:number): Canvas{
+    scale(canvas: Canvas, scale: number): Canvas {
         try {
             const w = canvas.width / scale;
             const h = canvas.height / scale;
-            const tempCanvas = createCanvas(w,h);
+            const tempCanvas = createCanvas(w, h);
             tempCanvas.getContext("2d").drawImage(canvas, 0, 0, w, h);
             logger.info("Converted to thumb");
             return tempCanvas;

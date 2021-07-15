@@ -6,6 +6,7 @@ export interface CertificateDTO {
     // FIX DTO
     id: string;
     gamerTag: string;
+    displayName: string;
     saleQty: number;
     maxQty: number;
     stockKeepingUnitCode: string;
@@ -56,8 +57,8 @@ export class CertificatesService {
                 email: withEmail
             }
         };
-
         return axios.get<CertificateDTO>(url, drmOptions);
     }
+
     
 }
