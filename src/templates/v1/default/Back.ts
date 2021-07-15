@@ -88,7 +88,7 @@ export class DefaultTemplate extends BrandTemplate {
                 }
                 //write the text
                 let y_shift = this.writeText(context, 'Item', fromCertificate.stockKeepingUnitName, L_COL_L, R_COL_L, 200);
-                const tag = (fromCertificate.gamerTag.length > 15) ? fromCertificate.gamerTag.slice(0,14) + "." : fromCertificate.gamerTag;                this.writeText(context, 'Owner', tag, L_COL_L, R_COL_L, 270 + y_shift);
+                const tag = (fromCertificate.displayName.length > 15) ? fromCertificate.displayName.slice(0,14) + "." : fromCertificate.displayName;                this.writeText(context, 'Owner', tag, L_COL_L, R_COL_L, 270 + y_shift);
                 this.writeText(context, 'Item number', this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty), L_COL_L, R_COL_L, 340 + y_shift);
                 this.writeText(context, 'Ownership token', fromCertificate.thumbprint, L_COL_L, R_COL_L, 410 + y_shift);
                 this.writeText(context, 'For use in', fromCertificate.platformName, L_COL_L, R_COL_L, 480 + y_shift);
@@ -97,11 +97,8 @@ export class DefaultTemplate extends BrandTemplate {
                 context.font = '18pt Minion';
                 this.wrapText(context, fromCertificate.description, R_COL_L, 550 + y_shift, 340, 45);
 
-                if (fromCertificate?.test) {
-                    context.fillStyle = 'rgb(118,188,127)';
-                    context.font = '36pt OCR-A';
-                    context.fillText('TEST CERTIFICATE ONLY', 200, 175);
-                }
+                this.writeTestWatermark(context);
+
                 const glassImage = images[3];
                 if (glassImage.status == 'fulfilled') {
                     context.drawImage(glassImage.value, 0, 0);

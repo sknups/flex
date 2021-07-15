@@ -63,11 +63,7 @@ export class DefaultTemplate extends BrandTemplate {
                 if (fromCertificate.description.length > 250) { context.font = '22pt Minion'; } else { context.font = '24pt Minion'; }
                 this.wrapText(context, fromCertificate.description, MARGIN, 750, 880, 30);
 
-                if (fromCertificate?.test) {
-                    context.fillStyle = 'rgb(118,188,127)';
-                    context.font = '42pt OCR-A';
-                    context.fillText('TEST CERTIFICATE ONLY', 200, 175);
-                }
+                this.writeTestWatermark(context);
 
                 canvas = this.scale(canvas, 2);
             }).catch(err => {
