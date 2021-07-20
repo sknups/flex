@@ -31,7 +31,7 @@ export class ImagesController {
 
         try {
             // request the certificate information
-            const certCode = this.stripExtension(request.params.certCode);
+            const certCode = request.params.certCode;
             const certificateDTO = await this.getCertificate(certCode);
             const brandCode = certificateDTO.brandCode;
             const purpose = request.params.purpose;
@@ -77,12 +77,6 @@ export class ImagesController {
 
     }
 
-
-    stripExtension(value: string): string {
-        const idx = value.indexOf(".png");
-        return idx < 0 ? value : value.substr(0, idx); //stripping .png extension, if exists
-    }
-
     async getEntityImage(request: express.Request, response: express.Response) {
         logger.info(`ImagesController.getSkuImage`);
 
@@ -114,78 +108,6 @@ export class ImagesController {
                 });
         } catch (err) {
             logger.info(`ImagesController.getSkuImage ERROR. Failed to get`);
-            response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR).send(err.message);
-        }
-    }
-
-    //These two deprecated
-
-    async getSkuImage(request: express.Request, response: express.Response, fallback: boolean) {
-        logger.info(`ImagesController.getSkuImage`);
-
-        try {
-            const skuCode = this.stripExtension(request.params.skuCode);
-            const version = fallback ? "v1" : request.params.version;
-            const purpose = fallback ? "default" : request.params.purpose;
-            const extension = fallback ? "png" : request.params.extension;
-
-            logger.info(`SkuCode: ${skuCode}`);
-
-            this.imagesService.getBucketImage(`sku.${version}.${purpose}.${skuCode}.${extension}`)
-                .then((buffer) => {
-                    logger.info(`ImagesController.getSkuImage with buffer.length=${buffer.length}`);
-
-                    response.writeHead(StatusCodes.OK, {
-                        'Content-Type': 'image/png',
-                        'Content-Length': buffer.length
-                    });
-                    response.write(buffer);
-                    response.end(null, 'binary');
-                })
-                .catch((err) => {
-                    logger.error(`ImagesController.getSkuImage ERROR. ${err}`);
-
-                    response.writeHead(StatusCodes.NOT_FOUND);
-                    response.write('Failed to draw image');
-                    response.end();
-                });
-        } catch (err) {
-            logger.info(`ImagesController.getSkuImage ERROR. Failed to get`);
-            response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR).send(err.message);
-        }
-    }
-
-    async getClaimBackground(request: express.Request, response: express.Response, fallback: boolean) {
-        logger.info(`ImagesController.getClaimBackground`);
-
-        try {
-            const claimCode = this.stripExtension(request.params.claimCode);
-            const version = fallback ? 'v1' : request.params.version;
-            const purpose = fallback ? 'claimform' : request.params.purpose;
-            const extension = fallback ? 'png' : request.params.extension;
-
-            logger.info(`ClaimCode: ${claimCode}`);
-
-            this.imagesService.getBucketImage(`claim.${version}.${purpose}.${claimCode}.${extension}`)
-                .then((buffer) => {
-                    logger.info(`ImagesController.getClaimBackground with buffer.length=${buffer.length}`);
-
-                    response.writeHead(StatusCodes.OK, {
-                        'Content-Type': 'image/' + extension,
-                        'Content-Length': buffer.length
-                    });
-                    response.write(buffer);
-                    response.end(null, 'binary');
-                })
-                .catch((err) => {
-                    logger.error(`ImagesController.getClaimBackground ERROR. ${err}`);
-
-                    response.writeHead(StatusCodes.NOT_FOUND);
-                    response.write('Failed to draw image');
-                    response.end();
-                });
-        } catch (err) {
-            logger.info(`ImagesController.getClaimBackground ERROR. Failed to get`);
             response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR).send(err.message);
         }
     }
