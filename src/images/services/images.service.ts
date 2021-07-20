@@ -3,7 +3,7 @@ import { StringUtils } from "../../utils/string.utils";
 import {logger } from '../../logger'
 import { BrandTemplate } from "../../templates/BrandTemplate";
 import { Storage } from "@google-cloud/storage";
-import { Image, loadImage } from "canvas";
+import { Canvas, Image, loadImage } from "canvas";
 
 export class ImagesService {
 
@@ -26,10 +26,9 @@ export class ImagesService {
         }
     }
 
-    async generateCanvasImage(version: string, type: string, purpose: string, fromCertificate: CertificateDTO) {
+    // This will return a promise wrapping a canvas on which the image is drawn
+    async generateCanvasImage(version: string, type: string, use: string, fromCertificate: CertificateDTO, format: string): Promise<Canvas> {
         
-        logger.debug(`Drawing ${type} for ${fromCertificate.id}`);
-
         const brandCode = fromCertificate.brandCode;
         const brandCodeToClassName = StringUtils.classify(brandCode.toLowerCase());
         const typeToClassName = StringUtils.classify(type);
@@ -40,13 +39,13 @@ export class ImagesService {
             const brandModule = await import(`../../templates/${version}/${brandCodeToClassName}/${typeToClassName}`);
             const brandTemplateController: BrandTemplate = new brandModule[brandCodeToClassName];
 
-            return brandTemplateController.renderTemplate(fromCertificate, purpose);
+            return brandTemplateController.renderTemplate(fromCertificate, use);
         } catch (error) {
             logger.info(`ImagesService.generateCanvasImage Unable to get the ${typeToClassName} Template for ${brandCode}:${brandCodeToClassName}`);
             try {
                 const defaultTemplateModule = await import(`../../templates/${version}/default/${typeToClassName}`);
                 const templateController = new defaultTemplateModule.DefaultTemplate();
-                return templateController.renderTemplate(fromCertificate, purpose);
+                return templateController.renderTemplate(fromCertificate, use);
             } catch (error) {
                 logger.error(error);
                 
@@ -56,7 +55,7 @@ export class ImagesService {
         }
     }
 
-    async getImage(name: string): Promise<Buffer> {
+    async getBucketImage(name: string): Promise<Buffer> {
         const bucket = await this.bucket;
         const getRawBody = require('raw-body');
         const file = this.bucket.file(name);
@@ -72,7 +71,7 @@ export class ImagesService {
             return loadImage(name);
         } else {
             try {
-                let res = await this.getImage(name);
+                let res = await this.getBucketImage(name);
                 return loadImage(res);
             } catch (err) {
                 logger.error(`ImagesService.getCanvasImage name ="${name}" error="${err}"`);
@@ -82,13 +81,4 @@ export class ImagesService {
             }
         }
     }
-
-    getSkuImage(skuCode: string, version: string, purpose: string, extension: string): Promise<Buffer> {
-        return this.getImage(`sku.${version}.${purpose}.${skuCode}.${extension}`);
-    }
-
-    getClaimBackground(claimCode: string, version: string, purpose: string, extension: string): Promise<Buffer> {
-        return this.getImage(`claim.${version}.${purpose}.${claimCode}.${extension}`);
-    }
-
 }

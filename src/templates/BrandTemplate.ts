@@ -1,6 +1,6 @@
 import { CertificateDTO } from "../certificates/services/certificates.service";
 import { logger } from '../logger'
-import { CanvasRenderingContext2D, Canvas, Image, registerFont, createCanvas } from "canvas";
+import { Canvas, Image, registerFont, createCanvas } from "canvas";
 import { IFont } from "../models/IFont";
 import { IFlexImage } from "../models/IFlexImage";
 import { ImagesService } from "../images/services/images.service";
@@ -24,9 +24,9 @@ export abstract class BrandTemplate {
      * @param fromCertificate The DTO for the certificate
      * @param use The use intended for the image: handed in as part of the URL. default/any=full size: og=small square: 
      */
-    abstract renderTemplate(fromCertificate: CertificateDTO, purpose: string): Promise<any>;
+    abstract renderTemplate(fromCertificate: CertificateDTO, purpose: string): Promise<Canvas>;
 
-    /**
+     /**
      * Try to load a "bunch" of images from a given design
      * Images with 'static' in the name will be loaded locally
      * All other images will be loaded from the bucket
@@ -155,8 +155,8 @@ export abstract class BrandTemplate {
         fontsPaths.forEach((font) => {
             try {
                 registerFont(font.path, font.fontFace);
-            } catch (error) {
-                logger.info("Interstate: " + error);
+            } catch (err) {
+                logger.info(`Font error: ${font.path} ${err}`);
             }
         });
     }
