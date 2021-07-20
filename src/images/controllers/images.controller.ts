@@ -34,13 +34,13 @@ export class ImagesController {
             const certCode = request.params.certCode;
             const certificateDTO = await this.getCertificate(certCode);
             const brandCode = certificateDTO.brandCode;
-            const purpose = request.params.purpose;
+            const use = request.params.use;
             const version = request.params.version;
             const format = request.params.format;
 
-            logger.info(`ImagesController.getImage version: ${version} type: ${type} purpose: ${purpose} from brand: ${brandCode} with certCode: ${certCode}`);
+            logger.info(`ImagesController.getImage version: ${version} type: ${type} purpose: ${use} from brand: ${brandCode} with certCode: ${certCode}`);
 
-            this.imagesService.generateCanvasImage(version, type, purpose, certificateDTO, format).then(canvas => {
+            this.imagesService.generateCanvasImage(version, type, use, certificateDTO, format).then(canvas => {
                 
                 if (format == 'png') {
                     var buffer = canvas.toBuffer();

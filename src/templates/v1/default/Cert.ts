@@ -67,6 +67,10 @@ export class DefaultTemplate extends BrandTemplate {
 
         canvas = this.scale(canvas, 2);
 
+        if (use == 'thumb') {
+            canvas = this.convertToThumb(canvas);
+        }
+
         return canvas;
 
         function writeText(context: Context, text: String, x: number, y: number): number {

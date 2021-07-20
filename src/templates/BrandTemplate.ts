@@ -155,8 +155,8 @@ export abstract class BrandTemplate {
         fontsPaths.forEach((font) => {
             try {
                 registerFont(font.path, font.fontFace);
-            } catch (error) {
-                logger.info("Interstate: " + error);
+            } catch (err) {
+                logger.info(`Font error: ${font.path} ${err}`);
             }
         });
     }
