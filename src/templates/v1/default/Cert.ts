@@ -1,77 +1,73 @@
-import {BrandTemplate} from "../BrandTemplate";
-import {ImagesConfigs} from "../../images/images.configs";
-import {createCanvas, Image, loadImage, registerFont} from "canvas";
-import {logger } from '../../logger'
-import {CertificateDTO} from "../../certificates/services/certificates.service";
+
+import { BrandTemplate } from "../../BrandTemplate";
+import { ImagesConfigs } from "../../../images/images.configs";
+import { Canvas, createCanvas, Image, loadImage, registerFont } from "canvas";
+import { logger } from '../../../logger'
+import { CertificateDTO } from "../../../certificates/services/certificates.service";
+import { Context } from "node:vm";
 
 export class DefaultTemplate extends BrandTemplate {
 
-    renderTemplate(fromCertificate: CertificateDTO, use: string): Promise<Buffer> {
-        return new Promise<Buffer>((accept, reject) => {
-            const MARGIN = 100;
-            const RCOL = 570;
-            const WIDTH = 1080;
-            const HEIGHT = 1500;
-            const SPACE = 50;
-            let canvas = createCanvas(WIDTH, HEIGHT);
+    async renderTemplate(fromCertificate: CertificateDTO, use: string): Promise<Canvas> {
 
-            // Load Fonts
-            this.loadDefaultFontsIntoCanvas();
+        const MARGIN = 100;
+        const RCOL = 570;
+        const WIDTH = 1080;
+        const HEIGHT = 1500;
+        const SPACE = 50;
+        let canvas = createCanvas(WIDTH, HEIGHT);
 
-            const context = canvas.getContext('2d');
-            context.patternQuality = 'good';
-            context.quality = 'good';
+        // Load Fonts
+        this.loadDefaultFontsIntoCanvas();
 
-            //Load all required images in parallel before drawing them on the canvas
-            this.loadImages([
-                './static/backgrounds/cert.front.default.v1.jpg',
-                `brand.v1.default.${fromCertificate.brandCode}.png`,
-                `sku.v1.default.${fromCertificate.stockKeepingUnitCode}.png`,
-            ]).then((images) => {
-                //draw the images firstx
-                const backgroundImage = images[0];
-                if (backgroundImage.status == 'fulfilled') {
-                    context.drawImage(backgroundImage.value, 0, 0);
-                } else {
-                    logger.info('Failed to load background image image:');
-                }
-                const brandImage = images[1];
-                if (brandImage.status == 'fulfilled') {
-                    const imageDimensions = this.scaleToMax(880, 254, brandImage.value);
-                    context.drawImage(brandImage.value, WIDTH / 2 - imageDimensions[0] / 2, 1050 - imageDimensions[1] / 2, imageDimensions[0], imageDimensions[1]);
-                } else {
-                    logger.info('Failed to load brand image: ' + fromCertificate.brandCode);
-                }
-                const skuImage = images[2];
-                if (skuImage.status == 'fulfilled') {
-                    const imageDimensions = this.scaleToMax(440, 586, skuImage.value);
-                    context.drawImage(skuImage.value, MARGIN + 220 - imageDimensions[0] / 2, MARGIN + 283 - imageDimensions[1] / 2, imageDimensions[0], imageDimensions[1]);
-                } else {
-                    logger.info('Failed to load sku image: ' + fromCertificate.stockKeepingUnitCode);
-                }
+        const context = canvas.getContext('2d');
+        context.patternQuality = 'good';
+        context.quality = 'good';
 
-                //write the text
-                context.fillStyle = 'rgb(29,29,27)';
-                context.font = '24pt OCR-A';
-                let Y: number = MARGIN + 30;
-                Y = Y + writeText(context, fromCertificate.stockKeepingUnitName, RCOL, Y);
-                Y = Y + writeText(context, 'ITEM ' + fromCertificate.saleQty + ' OF ' + fromCertificate.maxQty, RCOL, Y + SPACE);
-                Y = Y + writeText(context, 'OWNERSHIP TOKEN ' + fromCertificate.thumbprint, RCOL, Y + SPACE * 2);
+        //Load all required images in parallel before drawing them on the canvas
+        let images = await this.loadImages([
+            './static/backgrounds/cert.front.default.v1.jpg',
+            `brand.v1.default.${fromCertificate.brandCode}.png`,
+            `sku.v1.default.${fromCertificate.stockKeepingUnitCode}.png`,
+        ]);
+        //draw the images firstx
+        const backgroundImage = images[0];
+        if (backgroundImage.status == 'fulfilled') {
+            context.drawImage(backgroundImage.value, 0, 0);
+        } else {
+            logger.info('Failed to load background image image:');
+        }
+        const brandImage = images[1];
+        if (brandImage.status == 'fulfilled') {
+            const imageDimensions = this.scaleToMax(880, 254, brandImage.value);
+            context.drawImage(brandImage.value, WIDTH / 2 - imageDimensions[0] / 2, 1050 - imageDimensions[1] / 2, imageDimensions[0], imageDimensions[1]);
+        } else {
+            logger.info('Failed to load brand image: ' + fromCertificate.brandCode);
+        }
+        const skuImage = images[2];
+        if (skuImage.status == 'fulfilled') {
+            const imageDimensions = this.scaleToMax(440, 586, skuImage.value);
+            context.drawImage(skuImage.value, MARGIN + 220 - imageDimensions[0] / 2, MARGIN + 283 - imageDimensions[1] / 2, imageDimensions[0], imageDimensions[1]);
+        } else {
+            logger.info('Failed to load sku image: ' + fromCertificate.stockKeepingUnitCode);
+        }
 
-                if (fromCertificate.description.length > 250) { context.font = '22pt Minion'; } else { context.font = '24pt Minion'; }
-                this.wrapText(context, fromCertificate.description, MARGIN, 750, 880, 30);
+        //write the text
+        context.fillStyle = 'rgb(29,29,27)';
+        context.font = '24pt OCR-A';
+        let Y: number = MARGIN + 30;
+        Y = Y + writeText(context, fromCertificate.stockKeepingUnitName, RCOL, Y);
+        Y = Y + writeText(context, 'ITEM ' + fromCertificate.saleQty + ' OF ' + fromCertificate.maxQty, RCOL, Y + SPACE);
+        Y = Y + writeText(context, 'OWNERSHIP TOKEN ' + fromCertificate.thumbprint, RCOL, Y + SPACE * 2);
 
-                this.writeTestWatermark(context);
+        if (fromCertificate.description.length > 250) { context.font = '22pt Minion'; } else { context.font = '24pt Minion'; }
+        this.wrapText(context, fromCertificate.description, MARGIN, 750, 880, 30);
 
-                canvas = this.scale(canvas, 2);
-            }).catch(err => {
-                console.error(err);
-                logger.info(err);
-                reject(err);
-            }).finally(() => {
-                accept(canvas.toBuffer());
-            });
-        });
+        this.writeTestWatermark(context);
+
+        canvas = this.scale(canvas, 2);
+
+        return canvas;
 
         function writeText(context: Context, text: String, x: number, y: number): number {
             let wrap = 0;

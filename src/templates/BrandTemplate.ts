@@ -24,9 +24,9 @@ export abstract class BrandTemplate {
      * @param fromCertificate The DTO for the certificate
      * @param use The use intended for the image: handed in as part of the URL. default/any=full size: og=small square: 
      */
-    abstract renderTemplate(fromCertificate: CertificateDTO, purpose: string): Promise<any>;
+    abstract renderTemplate(fromCertificate: CertificateDTO, purpose: string): Promise<Canvas>;
 
-    /**
+     /**
      * Try to load a "bunch" of images from a given design
      * Images with 'static' in the name will be loaded locally
      * All other images will be loaded from the bucket
