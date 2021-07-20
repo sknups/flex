@@ -21,6 +21,12 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
             .get((req, res) => this.imagesController.index(req, res));
 
         this.getApp()
+            .route('/skn/:version/:type(card|back|cert)/:use/:certCode.:format')
+            .get((req, res) => this.handleSknImageRequest(req, res));
+
+        //The next four are be deprecated and should be removed
+
+        this.getApp()
             .route('/img/cert/:version/:purpose/:certCode.png')
             .get((req, res) => this.handleCertImageRequest(req, res));
 
@@ -35,6 +41,13 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
         this.getApp()
             .route('/img/back/:version/:purpose/:certCode.png')
             .get((req, res) => this.handleBackImageRequest(req, res));
+
+        //Not deprecated!    
+        this.getApp()
+            .route('/img/:entity/:version/:purpose/:entityCode.:format')
+            .get((req, res) => this.handleBucketImageRequest(req, res));
+
+        //Deprecated!
 
         this.getApp()
             .route('/img/sku/:version/:purpose/:skuCode.:extension(png|glb)')
@@ -55,6 +68,25 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
         return this.getApp();
     }
 
+
+    private handleSknImageRequest(request: express.Request, response: express.Response) {
+        logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(request.params)}`);
+        this.imagesController.getImage(request.params.type, request, response).then(() => {
+            logger.info(`imagesController.getSknImage success`);
+        }).catch((err) => {
+            logger.info(`imagesController.getCertImage error: ${err}`);
+        });
+    }
+
+    private handleBucketImageRequest(request: express.Request, response: express.Response) {
+        logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(request.params)}`);
+        this.imagesController.getEntityImage(request, response).then(() => {
+            logger.info(`imagesController.getEntityImage success`);
+        }).catch((err) => {
+            logger.info(`imagesController.getEntityImage error: ${err}`);
+        });
+    }
+
     /**
      * We might have multiple routes handling the image in the same way
      * @param request
@@ -62,7 +94,7 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
      * @private
      */
     private handleCertImageRequest(request: express.Request, response: express.Response) {
-        logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(request.params)}`);
+        logger.warn(`DEPRECATED ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(request.params)}`);
         this.imagesController.getImage("cert", request, response).then(() => {
             logger.info(`imagesController.getCertImage success`);
         }).catch((err) => {
@@ -71,7 +103,7 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
     }
 
     private handleCardImageRequest(request: express.Request, response: express.Response) {
-        logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(request.params)}`);
+        logger.warn(`DEPRECATED ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(request.params)}`);
         this.imagesController.getImage("card", request, response).then(() => {
             logger.info(`imagesController.getCertImage success`);
         }).catch((err) => {
@@ -80,7 +112,7 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
     }
 
     private handleBackImageRequest(request: express.Request, response: express.Response) {
-        logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(request.params)}`);
+        logger.warn(`DEPRECATED ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(request.params)}`);
         this.imagesController.getImage("back", request, response).then(() => {
             logger.info(`imagesController.getCertImage success`);
         }).catch((err) => {
@@ -90,7 +122,7 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
 
 
     private handleSkuImageRequest(request: express.Request, response: express.Response, fallback: boolean) {
-        logger.info(`ImagesRoutesConfig.handleSkuImageRequest for: ${JSON.stringify(request.params)}`);
+        logger.warn(`DEPRECATED ImagesRoutesConfig.handleSkuImageRequest for: ${JSON.stringify(request.params)}`);
         this.imagesController.getSkuImage(request, response, fallback).then(() => {
             logger.info(`imagesController.getSkuImage success`);
         }).catch((err) => {
@@ -99,7 +131,7 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
     }
 
     private handleClaimBackgroundRequest(request: express.Request, response: express.Response, fallback: boolean) {
-        logger.info(`ImagesRoutesConfig.handleClaimBackgroundRequest for: ${JSON.stringify(request.params)}`);
+        logger.warn(`DEPRECATED ImagesRoutesConfig.handleClaimBackgroundRequest for: ${JSON.stringify(request.params)}`);
         this.imagesController.getClaimBackground(request, response, fallback).then(() => {
             logger.info(`imagesController.getClaimBackground success`);
         }).catch((err) => {
