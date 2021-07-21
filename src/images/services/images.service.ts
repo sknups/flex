@@ -26,33 +26,31 @@ export class ImagesService {
         }
     }
 
-    // This will return a promise wrapping a canvas on which the image is drawn
-    async generateCanvasImage(version: string, type: string, use: string, fromCertificate: CertificateDTO, format: string): Promise<Canvas> {
+    // This will return a promise wrapping a canvas on which the image is drawn,  The code to draw the canvas is selected according to the parameters passed.
+    async generateCanvasImage(version: string, type: string, use: string, fromCertificate: CertificateDTO): Promise<Canvas> {
         
         const brandCode = fromCertificate.brandCode;
         const brandCodeToClassName = StringUtils.classify(brandCode.toLowerCase());
         const typeToClassName = StringUtils.classify(type);
 
-        logger.info(`ImagesService.generateCanvasImage Will try to load version ${version} type ${typeToClassName} for brandCode: ${brandCode} template with name ${brandCodeToClassName}`)
+        //If you add brand templates you will need to uncomment this lot :-) but for speed and clearer logging:
+        //logger.info(`ImagesService.generateCanvasImage Will try to load version ${version} type ${typeToClassName} for brandCode: ${brandCode} template with name ${brandCodeToClassName}`)
+        //try {
+        //    const brandModule = await import(`../../templates/${version}/${brandCodeToClassName}/${typeToClassName}`);
+        //    const brandTemplateController: BrandTemplate = new brandModule[brandCodeToClassName];
 
-        try {
-            const brandModule = await import(`../../templates/${version}/${brandCodeToClassName}/${typeToClassName}`);
-            const brandTemplateController: BrandTemplate = new brandModule[brandCodeToClassName];
-
-            return brandTemplateController.renderTemplate(fromCertificate, use);
-        } catch (error) {
-            logger.info(`ImagesService.generateCanvasImage Unable to get the ${typeToClassName} Template for ${brandCode}:${brandCodeToClassName}`);
+        //    return brandTemplateController.renderTemplate(fromCertificate, use);
+        //} catch (error) {
+            //logger.info(`ImagesService.generateCanvasImage Unable to get the ${typeToClassName} Template for ${brandCode}:${brandCodeToClassName}`);
             try {
                 const defaultTemplateModule = await import(`../../templates/${version}/default/${typeToClassName}`);
                 const templateController = new defaultTemplateModule.DefaultTemplate();
                 return templateController.renderTemplate(fromCertificate, use);
-            } catch (error) {
-                logger.error(error);
-                
-                logger.error(`ImagesService.generateCanvasImage failed to load ../../templates/default/${typeToClassName}`);
+            } catch (error) {                
+                logger.error(`ImagesService.generateCanvasImage failed to load ../../templates/${version}/default/${typeToClassName}: ${error}`);
                 throw new error(`Failed to load ../../templates/${typeToClassName}/default/DefaultTemplate`);
             }
-        }
+        //}
     }
 
     async getBucketImage(name: string): Promise<Buffer> {

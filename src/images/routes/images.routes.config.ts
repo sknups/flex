@@ -1,7 +1,7 @@
 import { CommonRoutesConfig } from "../../common/common.routes.config";
 import express from "express";
-import {ImagesController} from "../controllers/images.controller";
-import {logger } from '../../logger'
+import { ImagesController } from "../controllers/images.controller";
+import { logger } from '../../logger'
 
 export class ImagesRoutesConfig extends CommonRoutesConfig {
 
@@ -22,31 +22,26 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
 
         this.getApp()
             .route('/skn/:version/:type(card|back|cert)/:use/:certCode.:format')
-            .get((req, res) => this.handleSknImageRequest(req, res));
-  
+            .get((req, res) => {
+                logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)}`);
+                this.imagesController.getImage(req, res).then(() => {
+                    //logger.info(`imagesController.getSknImage success`);
+                }).catch((err) => {
+                    logger.info(`imagesController.getCertImage error: ${err}`);
+                });
+            });
+
         this.getApp()
             .route('/img/:entity/:version/:purpose/:entityCode.:format')
-            .get((req, res) => this.handleBucketImageRequest(req, res));
+            .get((req, res) => {
+                logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)}`);
+                this.imagesController.getEntityImage(req, res).then(() => {
+                    logger.info(`imagesController.getEntityImage success`);
+                }).catch((err) => {
+                    logger.info(`imagesController.getEntityImage error: ${err}`);
+                });
+            });
 
         return this.getApp();
-    }
-
-
-    private handleSknImageRequest(request: express.Request, response: express.Response) {
-        logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(request.params)}`);
-        this.imagesController.getImage(request.params.type, request, response).then(() => {
-            logger.info(`imagesController.getSknImage success`);
-        }).catch((err) => {
-            logger.info(`imagesController.getCertImage error: ${err}`);
-        });
-    }
-
-    private handleBucketImageRequest(request: express.Request, response: express.Response) {
-        logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(request.params)}`);
-        this.imagesController.getEntityImage(request, response).then(() => {
-            logger.info(`imagesController.getEntityImage success`);
-        }).catch((err) => {
-            logger.info(`imagesController.getEntityImage error: ${err}`);
-        });
     }
 }

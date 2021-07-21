@@ -43,27 +43,6 @@ export abstract class BrandTemplate {
     }
 
     /**
-     * Add images to canvas
-     *
-     * <strong>Order matters</strong>
-     * @param context
-     * @param results
-     */
-    addImagesToCanvas(context: CanvasRenderingContext2D, results: IFlexImage<Image>[]): void {
-        results
-            .filter(result => result.image.status === 'fulfilled')
-            .forEach((result) => {
-                try {
-                    // Ignore because .value is not available from TS PromiseSettledResult type
-                    //@ts-ignore
-                    context.drawImage(result.image.value, result.coords.dx, result.coords.dy, result.coords.dw, result.coords.dh);
-                } catch (error) {
-                    logger.error(`Unable to add images with coords ${JSON.stringify(result.coords)} and value ${JSON.stringify(result.image)}`);
-                }
-            });
-    }
-
-    /**
      * 
      * @param canvas 
      * @returns 
