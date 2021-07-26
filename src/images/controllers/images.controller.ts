@@ -5,6 +5,7 @@ import { ImagesService } from "../services/images.service";
 import { CertificateDTO, CertificatesService } from "../../certificates/services/certificates.service";
 import { ImagesConfigs } from "../images.configs";
 import { Canvas } from "canvas";
+import { BrandTemplate } from "templates/BrandTemplate";
 
 export class ImagesController {
 
@@ -26,11 +27,10 @@ export class ImagesController {
         });
     }
 
-    async getImage(type: string, request: express.Request, response: express.Response) {
-        logger.info(`ImagesController.getImage`);
-
+    async getImage(request: express.Request, response: express.Response) {
         try {
             // request the certificate information
+            const type = request.params.type;
             const certCode = request.params.certCode;
             const certificateDTO = await this.getCertificate(certCode);
             const brandCode = certificateDTO.brandCode;
@@ -38,10 +38,10 @@ export class ImagesController {
             const version = request.params.version;
             const format = request.params.format;
 
+
             logger.info(`ImagesController.getImage version: ${version} type: ${type} purpose: ${use} from brand: ${brandCode} with certCode: ${certCode}`);
 
-            this.imagesService.generateCanvasImage(version, type, use, certificateDTO, format).then(canvas => {
-                
+            this.imagesService.generateCanvasImage(version, type, use, certificateDTO).then(canvas => {
                 if (format == 'png') {
                     var buffer = canvas.toBuffer();
                     logger.info(`ImagesController.getImage png with buffer.length=${buffer.length}`);
@@ -53,7 +53,7 @@ export class ImagesController {
                     response.write(buffer);
                     response.end(null, 'binary');
                 } else {
-                    var buffer = canvas.toBuffer('image/jpeg', { quality: 0.85 });
+                    var buffer = canvas.toBuffer('image/jpeg', { quality: ImagesConfigs.QUALITY });
                     logger.info(`ImagesController.getImage jpeg with buffer.length=${buffer.length}`);
                     response.writeHead(StatusCodes.OK, {
                         'Content-Type': 'image/jpeg',
@@ -65,21 +65,21 @@ export class ImagesController {
                 }
 
             }).catch((err) => {
-                logger.error(`ImagesController.getImage ERROR. Failed to render canvas: ${err}`);
+                logger.error(`ImagesController.getImage ERROR. Failed to render canvas: ${err}.  Check AUTH_TOKEN.`);
                 response.writeHead(StatusCodes.NOT_FOUND);
                 response.write('Failed to draw image');
                 response.end();
             });
         } catch (err) {
             logger.error(err);
-            response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR).send(err.message);
+            response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR);
+            response.write('Failed to draw image');
+            response.end();
         }
 
     }
 
     async getEntityImage(request: express.Request, response: express.Response) {
-        logger.info(`ImagesController.getSkuImage`);
-
         try {
             const entity = request.params.entity;
             const entityCode = request.params.entityCode;
@@ -89,8 +89,15 @@ export class ImagesController {
 
             this.imagesService.getBucketImage(`${entity}.${version}.${purpose}.${entityCode}.${format}`)
                 .then((buffer) => {
-                    logger.info(`ImagesController.getSkuImage with buffer.length=${buffer.length}`);
-
+                    let contentType = 'image/png';
+                    if(format == 'jpg' || format=='jpeg'){
+                        contentType = 'image/jpeg';
+                    } else if (format == 'mp4') {
+                        contentType = 'video/mp4';
+                    } else if (format == 'glb') {
+                        contentType = 'model/gltf-binary';
+                    }
+                    logger.info(`ImagesController.getEntityImage with buffer.length=${buffer.length} and format ${format} and contentType $`);
                     response.writeHead(StatusCodes.OK, {
 
                         'Content-Type': 'image/png',
@@ -100,14 +107,14 @@ export class ImagesController {
                     response.end(null, 'binary');
                 })
                 .catch((err) => {
-                    logger.error(`ImagesController.getSkuImage ERROR. ${err}`);
+                    logger.error(`ImagesController.getEntityImage ERROR. ${err}`);
 
                     response.writeHead(StatusCodes.NOT_FOUND);
                     response.write('Failed to draw image');
                     response.end();
                 });
         } catch (err) {
-            logger.info(`ImagesController.getSkuImage ERROR. Failed to get`);
+            logger.info(`ImagesController.getEntityImage ERROR. Failed to get. ${err}`);
             response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR).send(err.message);
         }
     }

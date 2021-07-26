@@ -17,7 +17,7 @@ export class AuthenticationUtils {
 
         return axios.get(metadataUrl, options)
             .then((res: any) => {
-                logger.debug(res.data);
+                //logger.debug(res.data);
                 return res.data;
             }).catch((error: any) => {
                 logger.error(error);
