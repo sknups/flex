@@ -123,7 +123,7 @@ export abstract class BrandTemplate {
             { path: './static/fonts/Jost-Regular-400.ttf', fontFace: { family: "Jost" } },
             { path: './static/fonts/Jost-SemiBold-600.ttf', fontFace: { family: "JostSemi" } },
             { path: './static/fonts/OCR-A.ttf', fontFace: { family: "OCR-A" } },
-            { path: './static/fonts/mnon_n.ttf', fontFace: { family: "Minion" } },
+            { path: './static/fonts/CrimsonText-Regular.ttf', fontFace: { family: "Minion" } },
         ]);
     }
     /**
