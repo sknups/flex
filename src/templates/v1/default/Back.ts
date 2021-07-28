@@ -11,7 +11,7 @@ export class DefaultTemplate extends BrandTemplate {
     writeText(ctx: Context, title: String, body: String, lx: number, rx: number, y: number) {
 
         let wrap = 0;
-        const space = 32;
+        const space = 34;
         ctx.textAlign = 'left';
         ctx.fillStyle = ImagesConfigs.TEXT_RGB;
         ctx.font = '23.5pt Jost';
@@ -87,7 +87,7 @@ export class DefaultTemplate extends BrandTemplate {
 
         this.writeText(context, 'Description', '', L_COL_L, R_COL_L, 550 + y_shift);
         context.font = '18pt Minion';
-        this.wrapText(context, fromCertificate.description, R_COL_L, 550 + y_shift, 340, 45);
+        this.wrapText(context, fromCertificate.description, R_COL_L, 550 + y_shift, 340, 35);
 
         this.writeTestWatermark(context);
 
