@@ -16,7 +16,7 @@ export class ImagesService {
                 logger.warn("Warn - no env var ENVIRONMENT - defaulting to DEV");
                 this.bucket = new Storage().bucket('assets-dev.sknups.gg');
                 break;
-            case 'live':
+            case 'prd':
                 this.bucket = new Storage().bucket('assets.sknups.gg');
                 break;
             default:
