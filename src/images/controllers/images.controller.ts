@@ -1,4 +1,5 @@
 import express from "express";
+import querystring from "querystring";
 import { StatusCodes } from "http-status-codes";
 import { logger } from '../../logger'
 import { ImagesService } from "../services/images.service";
@@ -37,6 +38,10 @@ export class ImagesController {
             const use = request.params.use;
             const version = request.params.version;
             const format = request.params.format;
+            let q = Number(request.query.q);
+            if(isNaN(q) || q <= 0 || q >= 1) {
+                q = ImagesConfigs.QUALITY;
+            }
 
 
             logger.info(`ImagesController.getImage version: ${version} type: ${type} purpose: ${use} from brand: ${brandCode} with certCode: ${certCode}`);
@@ -53,8 +58,8 @@ export class ImagesController {
                     response.write(buffer);
                     response.end(null, 'binary');
                 } else {
-                    var buffer = canvas.toBuffer('image/jpeg', { quality: ImagesConfigs.QUALITY });
-                    logger.info(`ImagesController.getImage jpeg with buffer.length=${buffer.length}`);
+                    var buffer = canvas.toBuffer('image/jpeg', { quality: q });
+                    logger.info(`ImagesController.getImage jpeg with quality ${q} buffer.length=${buffer.length}`);
                     response.writeHead(StatusCodes.OK, {
                         'Content-Type': 'image/jpeg',
                         'Content-Length': buffer.length,
