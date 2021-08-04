@@ -33,10 +33,10 @@ export interface CertificateDTO {
 }
 
 export class CertificatesService {
-    private readonly drmServerUrl: string;    
+    private readonly drmServerUrl: string = 'https://drm-dev.sknups.gg/';    
 
     constructor() {
-        this.drmServerUrl = [process.env.DRM_SERVER].join('/');        
+        if (process.env.DRM_SERVER) this.drmServerUrl = [process.env.DRM_SERVER].join('/');        
     }
 
     /**
