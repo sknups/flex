@@ -39,7 +39,7 @@ export class ImagesController {
             const version = request.params.version;
             const format = request.params.format;
             let q = Number(request.query.q);
-            if(isNaN(q) || q <= 0 || q >= 1) {
+            if(isNaN(q) || q <= 0 || q > 1) {
                 q = ImagesConfigs.QUALITY;
             }
 
