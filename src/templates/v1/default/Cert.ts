@@ -39,15 +39,15 @@ export class DefaultTemplate extends BrandTemplate {
         }
         const brandImage = images[1];
         if (brandImage.status == 'fulfilled') {
-            const imageDimensions = this.scaleToMax(880, 254, brandImage.value);
-            context.drawImage(brandImage.value, WIDTH / 2 - imageDimensions[0] / 2, 1050 - imageDimensions[1] / 2, imageDimensions[0], imageDimensions[1]);
+            const imageDimensions = this.scaleToMax(1080, 1500, brandImage.value);
+            context.drawImage(brandImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
         } else {
             logger.info('Failed to load brand image: ' + fromCertificate.brandCode);
         }
         const skuImage = images[2];
         if (skuImage.status == 'fulfilled') {
-            const imageDimensions = this.scaleToMax(440, 586, skuImage.value);
-            context.drawImage(skuImage.value, MARGIN + 220 - imageDimensions[0] / 2, MARGIN + 283 - imageDimensions[1] / 2, imageDimensions[0], imageDimensions[1]);
+            const imageDimensions = this.scaleToMax(1080, 1500, skuImage.value);
+            context.drawImage(skuImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
         } else {
             logger.info('Failed to load sku image: ' + fromCertificate.stockKeepingUnitCode);
         }

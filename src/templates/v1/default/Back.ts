@@ -66,15 +66,15 @@ export class DefaultTemplate extends BrandTemplate {
         }
         const skuImage = images[2];
         if (skuImage.status == 'fulfilled') {
-            const imageDimensions = this.scaleToMax(265, 292, skuImage.value);
-            context.drawImage(skuImage.value, L_COL_C - imageDimensions[0] / 2, 1050 - imageDimensions[1] / 2, imageDimensions[0], imageDimensions[1]);
+            const imageDimensions = this.scaleToMax(900, 1350, skuImage.value);
+            context.drawImage(skuImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
         } else {
             logger.info('Failed to load sku image: ' + fromCertificate.stockKeepingUnitCode);
         }
         const brandImage = images[1];
         if (brandImage.status == 'fulfilled') {
-            const imageDimensions = this.scaleToMax(265, 225, brandImage.value);
-            context.drawImage(brandImage.value, L_COL_C - imageDimensions[0] / 2, 800 - imageDimensions[1] / 2, imageDimensions[0], imageDimensions[1]);
+            const imageDimensions = this.scaleToMax(900, 1350, brandImage.value);
+            context.drawImage(brandImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
         } else {
             logger.info('Failed to load brand image: ' + fromCertificate.brandCode);
         }
