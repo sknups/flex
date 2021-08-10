@@ -25,7 +25,7 @@ export class DefaultTemplate extends BrandTemplate {
             './static/backgrounds/card.front.default.v3.jpg',
             `brand.${fromCertificate.certVersion}.cardFront.${fromCertificate.brandCode}.png`,
             `sku.${fromCertificate.certVersion}.cardFront.${fromCertificate.stockKeepingUnitCode}.png`,
-            './static/backgrounds/card.front.glass.v2png',
+            './static/backgrounds/card.front.glass.v2.png',
         ]);
         //.then((images) => {
         //draw the images first
@@ -37,15 +37,16 @@ export class DefaultTemplate extends BrandTemplate {
         }
         const skuImage = images[2];
         if (skuImage.status == 'fulfilled') {
-            const imageDimensions = this.scaleToMax(600, 776, skuImage.value);
-            context.drawImage(skuImage.value, 450 - imageDimensions[0] / 2, 675 - imageDimensions[1] / 2, imageDimensions[0], imageDimensions[1]);
+            const imageDimensions = this.scaleToMax(900, 1350, skuImage.value);
+            context.drawImage(skuImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
         } else {
             logger.info('Failed to load sku image: ' + fromCertificate.stockKeepingUnitCode);
         }
         const brandImage = images[1];
         if (brandImage.status == 'fulfilled') {
-            const imageDimensions = this.scaleToMax(482, 312, brandImage.value);
-            context.drawImage(brandImage.value, 450 - imageDimensions[0] / 2, 230 - imageDimensions[1] / 2, imageDimensions[0], imageDimensions[1]);
+            const imageDimensions = this.scaleToMax(900, 1350, brandImage.value);
+            logger.info(imageDimensions);
+            context.drawImage(brandImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
         } else {
             logger.info('Failed to load brand image: ' + fromCertificate.brandCode);
         }
