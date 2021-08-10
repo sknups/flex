@@ -3,33 +3,38 @@ import {logger } from '../../logger'
 import {AuthenticationUtils} from "../../utils/authentication.utils";
 
 export interface CertificateDTO {
-    // FIX DTO
-    id: string;
-    gamerTag: string;
-    displayName: string;
-    saleQty: number;
-    maxQty: number;
-    stockKeepingUnitCode: string;
-    stockKeepingUnitName: string;
-    stockKeepingUnitImageName: string;
     brandCode: string;
-    brand: string;
+    brandName: string;
+    brandWholesalePrice: number;
+    brandWholesalerShare: number;
+    certVersion: string;
+    certificate: string;
+    certificateFee: number;
+    claimCode: string;
+    created: Date;
     description: string;
+    designItemCode: string;
+    designItemName: string;
+    displayName: string;
+    emailHash: string;
+    flexHost: string;
+    gamerTag: string;
+    isOwner: boolean;
+    maxQty: number;
     platformCode: string;
     platformName: string;
-    designItemCode: string;
-    skuImageUrl: string;
-    certImgUrl: string;
-    cardImgUrl: string;
-    backImgUrl: string;
-    thumbprint: string;
-    flexUrl: string;
-    certUrl: string;
+    platformWholesalePrice: number;
+    platformWholesalerShare: number;
+    recommendedRetailPrice: number;
+    saleQty: number;
+    sknappHost: string;
     sknappUrl: string;
-    certificate: string;
-    created: Date;
-    test?: boolean;
-    isOwner?: boolean;
+    state: string;
+    stockKeepingUnitCode: string;
+    stockKeepingUnitName: string;
+    stockKeepingUnitRarity: number;
+    thumbprint: string;
+    updated: Date;
 }
 
 export class CertificatesService {

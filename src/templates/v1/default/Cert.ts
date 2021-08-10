@@ -27,8 +27,8 @@ export class DefaultTemplate extends BrandTemplate {
         //Load all required images in parallel before drawing them on the canvas
         let images = await this.loadImages([
             './static/backgrounds/cert.front.default.v1.jpg',
-            `brand.v1.default.${fromCertificate.brandCode}.png`,
-            `sku.v1.default.${fromCertificate.stockKeepingUnitCode}.png`,
+            `brand.${fromCertificate.certVersion}.cert.${fromCertificate.brandCode}.png`,
+            `sku.${fromCertificate.certVersion}.cert.${fromCertificate.stockKeepingUnitCode}.png`,
         ]);
         //draw the images firstx
         const backgroundImage = images[0];
