@@ -10,7 +10,7 @@ export class DefaultTemplate extends BrandTemplate {
     async renderTemplate(fromCertificate: CertificateDTO, purpose: string): Promise<Canvas> {
         //find out if we're going to scale the image
         let scale = ImagesConfigs.SIZES.SCALE;
-        logger.debug(`Drawing card ${fromCertificate.id} purpose ${purpose}`);
+        logger.debug(`Drawing card ${fromCertificate.thumbprint} purpose ${purpose}`);
         const height = 1350;
         // Load Fonts
         this.loadDefaultFontsIntoCanvas();
@@ -23,9 +23,9 @@ export class DefaultTemplate extends BrandTemplate {
         //Load all required images in parallel before drawing them on the canvas
         let images = await this.loadImages([
             './static/backgrounds/card.front.default.v3.jpg',
-            `brand.v2.default.${fromCertificate.brandCode}.png`,
-            `sku.v1.default.${fromCertificate.stockKeepingUnitCode}.png`,
-            './static/backgrounds/card.front.glass.v2.png',
+            `brand.${fromCertificate.certVersion}.cardFront.${fromCertificate.brandCode}.png`,
+            `sku.${fromCertificate.certVersion}.cardFront.${fromCertificate.stockKeepingUnitCode}.png`,
+            './static/backgrounds/card.front.glass.v2png',
         ]);
         //.then((images) => {
         //draw the images first
