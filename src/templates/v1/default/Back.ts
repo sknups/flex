@@ -50,8 +50,8 @@ export class DefaultTemplate extends BrandTemplate {
         //Load all required images in parallel before drawing them on the canvas
         let images = await this.loadImages([
             './static/backgrounds/card.back.default.v3.jpg',
-            `brand.v2.default.${fromCertificate.brandCode}.png`,
-            `sku.v1.default.${fromCertificate.stockKeepingUnitCode}.png`,
+            `brand.${fromCertificate.certVersion}.cardBack.${fromCertificate.brandCode}.png`,
+            `sku.${fromCertificate.certVersion}.cardBack.${fromCertificate.stockKeepingUnitCode}.png`,
             './static/backgrounds/card.back.glass.v2.png',
         ]);
         const L_COL_L = 130;
