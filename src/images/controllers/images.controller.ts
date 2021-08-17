@@ -105,7 +105,7 @@ export class ImagesController {
                     logger.info(`ImagesController.getEntityImage with buffer.length=${buffer.length} and format ${format} and contentType $`);
                     response.writeHead(StatusCodes.OK, {
 
-                        'Content-Type': 'image/png',
+                        'Content-Type': contentType,
                         'Content-Length': buffer.length
                     });
                     response.write(buffer);
