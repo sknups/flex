@@ -39,7 +39,7 @@ export class ImagesController {
             const version = request.params.version;
             const format = request.params.format;
             let q = Number(request.query.q);
-            if(isNaN(q) || q <= 0 || q >= 1) {
+            if(isNaN(q) || q <= 0 || q > 1) {
                 q = ImagesConfigs.QUALITY;
             }
 
@@ -105,7 +105,7 @@ export class ImagesController {
                     logger.info(`ImagesController.getEntityImage with buffer.length=${buffer.length} and format ${format} and contentType $`);
                     response.writeHead(StatusCodes.OK, {
 
-                        'Content-Type': 'image/png',
+                        'Content-Type': contentType,
                         'Content-Length': buffer.length
                     });
                     response.write(buffer);
