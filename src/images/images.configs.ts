@@ -17,7 +17,8 @@ export class ImagesConfigs {
     static TTL = 604800;
     //Card text
     static TEXT_RGB = 'rgb(255,255,255)';
-    static QUALITY = 0.85;
+    static TEXT_TEST = 'rgb(1,214,166)';
+    static QUALITY = 0.5;
 
 }
 

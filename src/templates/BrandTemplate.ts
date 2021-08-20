@@ -50,7 +50,7 @@ export abstract class BrandTemplate {
     writeTestWatermark(context: CanvasRenderingContext2D) {
         if (process.env.ENVIRONMENT != 'live') {
             context.save();
-            context.fillStyle = 'rgb(118,188,127)';
+            context.fillStyle = ImagesConfigs.TEXT_TEST;
             context.font = '32pt OCR-A';
             context.textAlign = 'center';
             context.rotate(-Math.PI / 4);
