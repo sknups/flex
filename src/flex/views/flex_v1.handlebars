@@ -1,0 +1,176 @@
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />    
+    <title> {{title}} </title>
+    <link rel="shortcut icon" type="image/jpg" href="/static/favicon.ico"/>
+    <meta name="title" content="{{stockKeepingUnitName}}" />
+    <meta name="og:title" content="{{stockKeepingUnitName}}" />
+    <meta name="og:description" content="{{description}}" />
+    <meta name="og:image" content="{{ogImageUrl}}" />
+    <meta name="og:url" content="{{ogUrl}}" />
+    <meta name="og:type" content="website" />
+    <meta name="og:locale" content="en_GB" />
+    <meta name="theme-color" content="#01D6A6" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:image" content="{{twitterImageUrl}}" />
+    <meta name="twitter:url" content="{{twitterUrl}}" />
+    <meta name="twitter:text:title" content="{{stockKeepingUnitName}}" />
+    <meta name="twitter:site" content="@GgSknups" />
+    <meta name="twitter:title" content="{{stockKeepingUnitName}}" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+      crossorigin="anonymous"
+    />
+
+    <style>
+    body{ 
+      background-color: #151515; 
+    } 
+
+    .skns-background {
+      background: linear-gradient(#151515,rgba(1,214,166,.05),rgba(1,214,166,.1),rgba(1,214,166,.15),rgba(1,214,166,.2),rgba(1,214,166,.3),rgba(1,214,166,.5));
+      background-repeat: repeat;
+      height: 100%;
+      width: 100%;
+    }     
+            
+    .flip-wrapper.active .flip-content {
+        -webkit-transform: rotateY(-180deg);
+        -moz-transform: rotateY(-180deg);
+        -o-transform: rotateY(-180deg);
+        -ms-transform: rotateY(-180deg);
+        transform: rotateY(-180deg);
+    }
+
+    .highlight {
+        transform: scale3d(1, 1, 1);
+        transition: 0.6s;
+        -webkit-transition: 0.6s;
+        -moz-transition: 0.6s;
+        -o-transition: 0.6s;
+    }
+
+    .highlight:hover {
+        transform: scale3d(1.1, 1.1, 1.1);
+        transition: 0.6s;
+        -webkit-transition: 0.6s;
+        -moz-transition: 0.6s;
+        -o-transition: 0.6s;
+    }
+
+    .flip-content {
+        transition: 0.6s;
+        -webkit-transition: 0.6s;
+        -moz-transition: 0.6s;
+        -o-transition: 0.6s;
+        transform-style: preserve-3d;
+        -webkit-transform-style: preserve-3d;
+        position: relative;
+    }
+
+
+    .front,
+    .back {
+        -webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        backface-visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        transition: opacity 0.5s linear;
+    }
+
+
+    /* front pane, placed above back */
+    .front {
+        z-index: 2;
+        /* for firefox 31 */
+        -webkit-transform: rotateY(0deg);
+        -moz-transform: rotateY(0deg);
+        -o-transform: rotateY(0deg);
+        -ms-transform: rotateY(0deg);
+        transform: rotateY(0deg);
+    }
+
+    /* back, initially hidden pane */
+    .back {
+        -webkit-transform: rotateY(180deg);
+        -moz-transform: rotateY(180deg);
+        -o-transform: rotateY(180deg);
+        transform: rotateY(180deg);
+    }
+
+    .img-small {
+      filter: blur(30px);
+      /* this is needed so Safari keeps sharp edges */
+      transform: scale(1);
+    }
+
+    </style>
+  </head>
+  <body>
+<div class="skns-background">
+    <div class="d-flex justify-content-center ">
+      <div class="col-10 col-sm-8 col-md-6 col-lg-6 col-xl-3">
+        <div class="row">
+          <div class="col">
+            <a href="{{appURL}}" target="_blank">
+              <img
+                src="/static/sknups_logo_v1.jpg"
+                class="logo mx-auto d-block pt-3"
+              />
+            </a>
+          </div>
+        </div>
+        <div class="row  pt-5">
+          <div class="flip-wrapper highlight">
+            <div class="flip-content pb-3">
+              <div class="img-wrapper" data-large="{{cardImgUrl}}" >
+              <img               
+                src="{{cardThumbnailImgUrl}}"
+                class="front mx-auto d-block img-fluid img-small"
+              />
+              </div>
+
+              <img      
+                src="{{backImgUrl}}"
+                class="back mx-auto d-block img-fluid"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+    </div>
+    <script>
+      window.onload = function() {
+        var flipWrapper = document.querySelector('.flip-wrapper')   
+        flipWrapper.addEventListener('click', function() {
+          flipWrapper.classList.toggle('active');       
+        })
+     
+
+        var imgWrapper = document.querySelector('.img-wrapper')   
+        var imageSmall = document.querySelector('.img-small') 
+        var imgLarge = new Image();
+        imgLarge.src = imgWrapper.dataset.large; 
+        imgLarge.classList.add('front','mx-auto','d-block','img-fluid','img-full');          
+       
+        imgLarge.onload = function () {
+          imgWrapper.removeChild(imageSmall);    
+        }; 
+ 
+        imgWrapper.appendChild(imgLarge);
+ 
+      
+      
+      }
+    </script>
+  </body>
+
+</html>
