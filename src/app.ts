@@ -8,6 +8,9 @@ import {ImagesRoutesConfig} from "./images/routes/images.routes.config";
 import cors from "cors";
 import {AssetsRoutesConfig} from "./assets/routes/assets.routes.config";
 import { logger } from './logger'
+import { FlexRoutesConfig } from "./flex/routes/flex.routes.config";
+import exphbs from 'express-handlebars';
+import path from 'path';
 
 // Load into ENV Variables
 dotenv.config();
@@ -42,6 +45,15 @@ export const app: express.Application = ServerUtils.configureApp(
     isProduction
 );
 
+const hbs = exphbs.create()
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars');
+// view engine setup
+app.set('views', [    
+    // Flex
+    path.join(__dirname, './', 'flex', 'views')
+]);
+
 app.use(cors());
 
 const server: http.Server = ServerUtils.createServer(app);
@@ -52,7 +64,8 @@ const routes: Array<CommonRoutesConfig> = [
     // here we are adding the UserRoutes to our array,
     // after sending the Express.js application object to have the routes added to our app!    
     new ImagesRoutesConfig(app),
-    new AssetsRoutesConfig(app)
+    new AssetsRoutesConfig(app),
+    new FlexRoutesConfig(app)
 ];
 
 // Return empty OK response, used check app is up when deployed 
