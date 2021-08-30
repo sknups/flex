@@ -54,6 +54,10 @@ app.set('views', [
     path.join(__dirname, './', 'flex', 'views')
 ]);
 
+// Set view engine as EJS
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+
 app.use(cors());
 
 const server: http.Server = ServerUtils.createServer(app);
