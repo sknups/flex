@@ -31,7 +31,7 @@ WORKDIR /usr/src/app
 COPY --from=builder /usr/src/app/static ./static
 COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules ./node_modules
-COPY --from=builder /usr/src/app/src/views ./dist/views
+COPY --from=builder /usr/src/app/src/flex/views ./dist/flex/views
 
 RUN npm install canvas
 
