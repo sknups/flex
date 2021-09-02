@@ -41,7 +41,10 @@ export class FlexController {
         ogUrl: `${flexHost}/flex/v1/${thumbprint}.html`,
         twitterImageUrl: `${flexHost}/skn/${certVersion}/card/og/${thumbprint}.jpg`,
         twitterUrl: `${flexHost}/flex/v1/${thumbprint}.html`,
-        description : description
+        description : description,
+        copyrightYear: new Date().getFullYear(),
+        legalUrl: `${sknappHost}/skn/legal/use-sknapp`
+
       
     });
 
