@@ -13,6 +13,21 @@ export abstract class BrandTemplate {
     constructor() {
         this.imagesService = new ImagesService();
     }
+
+    /**
+     * Checks that rarity is an int and returns 1 if it isn't
+     * @param dto 
+     * @returns int 1 - 5
+     */
+    getRarity(dto: CertificateDTO){
+        if(Number.isInteger(dto.stockKeepingUnitRarity) && 1 <= dto.stockKeepingUnitRarity <= 5){
+            return dto.stockKeepingUnitRarity;
+        } else {
+            logger.warn(`${dto.stockKeepingUnitCode} has invalid rarity: returning 1`);
+            return 1;
+        }
+    }
+
     /**
      * What is the largets number of qtyAvailable we will show on a card?
      **/
