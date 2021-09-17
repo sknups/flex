@@ -20,7 +20,7 @@ export abstract class BrandTemplate {
      * @returns int 1 - 5
      */
     getRarity(dto: CertificateDTO){
-        if(Number.isInteger(dto.stockKeepingUnitRarity) && 1 <= dto.stockKeepingUnitRarity <= 5){
+        if(Number.isInteger(dto.stockKeepingUnitRarity) && 1 <= dto.stockKeepingUnitRarity && dto.stockKeepingUnitRarity <= 5){
             return dto.stockKeepingUnitRarity;
         } else {
             logger.warn(`${dto.stockKeepingUnitCode} has invalid rarity: returning 1`);
@@ -32,7 +32,7 @@ export abstract class BrandTemplate {
      * What is the largets number of qtyAvailable we will show on a card?
      **/
     getItemNumberText(maxQty: number, saleQty: number) {
-        return maxQty < this.MAX_DISPLAY_QTY ? saleQty + '/' + maxQty : saleQty + "";;
+        return maxQty < this.MAX_DISPLAY_QTY ? saleQty + '/' + maxQty : "Edition: " + saleQty;
     }
     /**
      * Function responsible for render the template according to the requirements of each brand
