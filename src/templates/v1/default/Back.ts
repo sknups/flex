@@ -47,9 +47,11 @@ export class DefaultTemplate extends BrandTemplate {
         context.patternQuality = 'good';
         context.quality = 'good';
 
+        const rarity = this.getRarity(fromCertificate);
+
         //Load all required images in parallel before drawing them on the canvas
         let images = await this.loadImages([
-            './static/backgrounds/card.back.default.v3.jpg',
+            `./static/backgrounds/card.back.rarity${rarity}.v3.jpg`,
             `brand.${fromCertificate.certVersion}.cardBack.${fromCertificate.brandCode}.png`,
             `sku.${fromCertificate.certVersion}.cardBack.${fromCertificate.stockKeepingUnitCode}.png`,
             './static/backgrounds/card.back.glass.v2.png',
