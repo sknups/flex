@@ -1,4 +1,5 @@
 import express from "express";
+import axios from 'axios';
 import { StatusCodes } from "http-status-codes";
 import { logger } from "../../logger";
 import {
@@ -50,7 +51,7 @@ export class FlexController {
 
     } catch (err) {
     
-      if (err.response && err.response.status === StatusCodes.NOT_FOUND) {
+      if (axios.isAxiosError(err) && err.response && err.response.status === StatusCodes.NOT_FOUND) {
         response.writeHead(StatusCodes.NOT_FOUND);
         response.write("Failed to get flex page - Certificate not found");
         response.end();

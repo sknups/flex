@@ -120,7 +120,7 @@ export class ImagesController {
                 });
         } catch (err) {
             logger.info(`ImagesController.getEntityImage ERROR. Failed to get. ${err}`);
-            response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR).send(err.message);
+            response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR).send('Error drawing image');
         }
     }
 
