@@ -48,7 +48,7 @@ export class ImagesService {
                 return templateController.renderTemplate(fromCertificate, use);
             } catch (error) {                
                 logger.error(`ImagesService.generateCanvasImage failed to load ../../templates/${version}/default/${typeToClassName}: ${error}`);
-                throw new error(`Failed to load ../../templates/${typeToClassName}/default/DefaultTemplate`);
+                throw new Error(`Failed to load ../../templates/${typeToClassName}/default/DefaultTemplate`);
             }
         //}
     }
