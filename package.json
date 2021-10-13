@@ -12,12 +12,12 @@
   },
   "dependencies": {
     "@google-cloud/logging-winston": "^4.1.1",
-    "@google-cloud/opentelemetry-cloud-trace-exporter": "^0.12.0",
-    "@google-cloud/storage": "^5.14.8",
+    "@google-cloud/opentelemetry-cloud-trace-exporter": "^1.0.0",
+    "@google-cloud/storage": "^5.15.1",
     "@opentelemetry/api": "^1.0.3",
     "@opentelemetry/node": "^0.24.0",
     "@opentelemetry/tracing": "^0.24.0",
-    "axios": "^0.22.0",
+    "axios": "^0.23.0",
     "canvas": "^2.8.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
@@ -41,18 +41,18 @@
     "@types/express-handlebars": "^5.3.1",
     "@types/http-errors": "^1.8.1",
     "@types/jest": "^27.0.2",
-    "@types/node": "^16.10.3",
+    "@types/node": "^16.10.5",
     "@types/supertest": "^2.0.11",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "jest": "^27.2.4",
+    "jest": "^27.2.5",
     "nodemon": "^2.0.13",
     "source-map-support": "^0.5.20",
     "superagent": "^6.1.0",
     "supertest": "^6.1.6",
     "ts-jest": "^27.0.5",
-    "ts-node": "^10.2.1",
+    "ts-node": "^10.3.0",
     "tslint": "^6.1.3",
-    "typescript": "^4.4.3"
+    "typescript": "^4.4.4"
   }
 }
