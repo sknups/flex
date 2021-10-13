@@ -17,7 +17,7 @@
     "@opentelemetry/api": "^1.0.3",
     "@opentelemetry/node": "^0.24.0",
     "@opentelemetry/tracing": "^0.24.0",
-    "axios": "^0.22.0",
+    "axios": "^0.23.0",
     "canvas": "^2.8.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
