@@ -106,7 +106,8 @@ export class ImagesController {
                     response.writeHead(StatusCodes.OK, {
 
                         'Content-Type': contentType,
-                        'Content-Length': buffer.length
+                        'Content-Length': buffer.length,
+                        'Cache-Control': `public, max-age=${ImagesConfigs.TTL}`
                     });
                     response.write(buffer);
                     response.end(null, 'binary');
