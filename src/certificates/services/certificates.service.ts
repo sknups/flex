@@ -15,10 +15,7 @@ export interface CertificateDTO {
     description: string;
     designItemCode: string;
     designItemName: string;
-    displayName: string;
-    emailHash: string;
     flexHost: string;
-    gamerTag: string;
     isOwner: boolean;
     maxQty: number;
     platformCode: string;
