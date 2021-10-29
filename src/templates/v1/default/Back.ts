@@ -82,7 +82,7 @@ export class DefaultTemplate extends BrandTemplate {
         }
         //write the text
         let y_shift = this.writeText(context, 'Item', fromCertificate.stockKeepingUnitName, L_COL_L, R_COL_L, 200);
-         this.writeText(context, 'Item number', this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty), L_COL_L, R_COL_L, 270 + y_shift);
+         this.writeText(context, 'Item number', '' + this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty, fromCertificate.stockKeepingUnitRarity), L_COL_L, R_COL_L, 270 + y_shift);
         this.writeText(context, 'Ownership token', fromCertificate.thumbprint, L_COL_L, R_COL_L, 340 + y_shift);
  
         this.writeText(context, 'Description', '', L_COL_L, R_COL_L, 410 + y_shift);
