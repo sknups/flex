@@ -57,7 +57,8 @@ export class DefaultTemplate extends BrandTemplate {
         context.font = '24pt OCR-A';
         let Y: number = MARGIN + 30;
         Y = Y + writeText(context, fromCertificate.stockKeepingUnitName, RCOL, Y);
-        Y = Y + writeText(context, 'ITEM ' + fromCertificate.saleQty + ' OF ' + fromCertificate.maxQty, RCOL, Y + SPACE);
+        var qty = this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty, fromCertificate.stockKeepingUnitRarity);
+        Y = Y + writeText(context, 'ITEM NUMBER ' + qty, RCOL, Y + SPACE);
         Y = Y + writeText(context, 'OWNERSHIP TOKEN ' + fromCertificate.thumbprint, RCOL, Y + SPACE * 2);
  
         if (fromCertificate.description.length > 250) { context.font = '22pt Minion'; } else { context.font = '24pt Minion'; }

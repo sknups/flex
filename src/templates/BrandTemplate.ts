@@ -7,7 +7,6 @@ import { ImagesService } from "../images/services/images.service";
 import { ImagesConfigs } from "../images/images.configs";
 
 export abstract class BrandTemplate {
-    private MAX_DISPLAY_QTY = 9999;
 
     private readonly imagesService: ImagesService;
     constructor() {
@@ -31,8 +30,8 @@ export abstract class BrandTemplate {
     /**
      * What is the largets number of qtyAvailable we will show on a card?
      **/
-    getItemNumberText(maxQty: number, saleQty: number) {
-        return maxQty < this.MAX_DISPLAY_QTY ? saleQty + '/' + maxQty : "Edition: " + saleQty;
+    getItemNumberText(maxQty: number, saleQty: number, rarity: number) {
+        return rarity > 1 ? saleQty + '/' + maxQty : saleQty;
     }
     /**
      * Function responsible for render the template according to the requirements of each brand
