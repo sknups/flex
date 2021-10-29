@@ -60,8 +60,8 @@ export class DefaultTemplate extends BrandTemplate {
         context.fillText(fromCertificate.stockKeepingUnitName, 100, 1040);
 
         context.font = '35pt OCR-A';
-        var qty = this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty);
-        context.fillText(qty, 100, 1100);
+        var qty = this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty, fromCertificate.stockKeepingUnitRarity);
+        context.fillText('' + qty, 100, 1100);
 
         this.writeTestWatermark(context);
 
