@@ -66,8 +66,11 @@ export class CertificatesService {
      * @param withEmail
      */
     async getCertificate(withId: any, withEmail?: any): Promise<AxiosResponse<CertificateDTO>> {
-        logger.debug(`CertificatesService.getCertificate withId:${withId} from ${this.drmServerUrl}/v1/api/assets/${withId}`);
-        const url = `${this.drmServerUrl}/v1/api/assets/${withId}`;
+        // endpoint /flex does not return all the necessary fields to render the image
+        // endpoint /retail is the safest existing endpoint, as it returns all the necessary fields IF item is UNBOXED
+        // if item is in state BOXED, some fields will be missing (such as all related to brand, to prevent spoilers)
+        const url = `${this.drmServerUrl}/api/v1/items/retail/${withId}`;
+        logger.info(`CertificatesService.getCertificate withId:${withId} from ${url}`);
         const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
 
         const drmOptions = {
