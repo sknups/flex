@@ -53,8 +53,7 @@ export class DefaultTemplate extends BrandTemplate {
         let images = await this.loadImages([
             `./static/backgrounds/card.back.rarity${rarity}.v3.jpg`,
             `brand.${fromCertificate.certVersion}.cardBack.${fromCertificate.brandCode}.png`,
-            `sku.${fromCertificate.certVersion}.cardBack.${fromCertificate.stockKeepingUnitCode}.png`,
-            './static/backgrounds/card.back.glass.v2.png',
+            `sku.${fromCertificate.certVersion}.cardBack.${fromCertificate.stockKeepingUnitCode}.png`
         ]);
         const L_COL_L = 130;
         const L_COL_C = L_COL_L + 305 / 2;
@@ -90,13 +89,6 @@ export class DefaultTemplate extends BrandTemplate {
         this.wrapText(context, fromCertificate.description, R_COL_L, 410 + y_shift, 340, 35);
 
         this.writeTestWatermark(context);
-
-        const glassImage = images[3];
-        if (glassImage.status == 'fulfilled') {
-            context.drawImage(glassImage.value, 0, 0);
-        } else {
-            logger.info('Failed to load glass image:');
-        }
 
         if (purpose == 'thumb') {
             canvas = this.convertToThumb(canvas);
