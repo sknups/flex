@@ -26,8 +26,7 @@ export class DefaultTemplate extends BrandTemplate {
         let images = await this.loadImages([
             `./static/backgrounds/card.front.rarity${rarity}.v3.jpg`,
             `brand.${fromCertificate.certVersion}.cardFront.${fromCertificate.brandCode}.png`,
-            `sku.${fromCertificate.certVersion}.cardFront.${fromCertificate.stockKeepingUnitCode}.png`,
-            './static/backgrounds/card.front.glass.v2.png',
+            `sku.${fromCertificate.certVersion}.cardFront.${fromCertificate.stockKeepingUnitCode}.png`
         ]);
         //.then((images) => {
         //draw the images first
@@ -64,13 +63,7 @@ export class DefaultTemplate extends BrandTemplate {
         context.fillText('' + qty, 100, 1100);
 
         this.writeTestWatermark(context);
-
-        const glassImage = images[3];
-        if (glassImage.status == 'fulfilled') {
-            context.drawImage(glassImage.value, 0, 0);
-        } else {
-            logger.info('Failed to load glass image:');
-        }
+   
 
         if (purpose == 'og') {
             canvas = this.convertToOg(canvas);
