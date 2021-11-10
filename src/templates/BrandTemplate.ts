@@ -6,7 +6,7 @@ import { IFlexImage } from "../models/IFlexImage";
 import { ImagesService } from "../images/services/images.service";
 import { ImagesConfigs } from "../images/images.configs";
 
-export abstract class BrandTemplate {
+export abstract class BrandTemplate<T> {
 
     private readonly imagesService: ImagesService;
     constructor() {
@@ -19,14 +19,17 @@ export abstract class BrandTemplate {
      * @returns int 1 - 5
      */
     getRarity(dto: CertificateDTO){
-        if(Number.isInteger(dto.stockKeepingUnitRarity) && 1 <= dto.stockKeepingUnitRarity && dto.stockKeepingUnitRarity <= 5){
-            return dto.stockKeepingUnitRarity;
+        return this.getSkuRarity(dto.stockKeepingUnitRarity, dto.stockKeepingUnitCode);
+    }
+
+    getSkuRarity(rarity: number, code: string){
+        if(Number.isInteger(rarity) && 1 <= rarity && rarity <= 5){
+            return rarity;
         } else {
-            logger.warn(`${dto.stockKeepingUnitCode} has invalid rarity: returning 1`);
+            logger.warn(`${code} has invalid rarity: returning 1`);
             return 1;
         }
     }
-
     /**
      * What is the largets number of qtyAvailable we will show on a card?
      **/
@@ -38,7 +41,7 @@ export abstract class BrandTemplate {
      * @param fromCertificate The DTO for the certificate
      * @param use The use intended for the image: handed in as part of the URL. default/any=full size: og=small square: 
      */
-    abstract renderTemplate(fromCertificate: CertificateDTO, purpose: string): Promise<Canvas>;
+    abstract renderTemplate(dto: T, purpose: string): Promise<Canvas>;
 
      /**
      * Try to load a "bunch" of images from a given design
