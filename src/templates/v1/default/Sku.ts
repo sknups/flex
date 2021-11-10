@@ -2,15 +2,15 @@ import { BrandTemplate } from "../../BrandTemplate";
 import { ImagesConfigs } from "../../../images/images.configs";
 import { Canvas, createCanvas, Image, loadImage, registerFont } from "canvas";
 import { logger } from '../../../logger'
-import { CertificateDTO } from "../../../certificates/services/certificates.service";
+import {CertificateDTO, SkuDTO} from "../../../certificates/services/certificates.service";
 import { Context } from "node:vm";
 
-export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
+export class DefaultTemplate extends BrandTemplate<SkuDTO> {
 
-    async renderTemplate(fromCertificate: CertificateDTO, purpose: string): Promise<Canvas> {
+    async renderTemplate(dto: SkuDTO, purpose: string): Promise<Canvas> {
         //find out if we're going to scale the image
         let scale = ImagesConfigs.SIZES.SCALE;
-        logger.debug(`Drawing card ${fromCertificate.thumbprint} purpose ${purpose}`);
+        logger.debug(`Drawing card of SKU ${dto.code} purpose ${purpose}`);
         const height = 1350;
         // Load Fonts
         this.loadDefaultFontsIntoCanvas();
@@ -20,13 +20,13 @@ export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
         context.patternQuality = 'good';
         context.quality = 'good';
 
-        const rarity = this.getRarity(fromCertificate);
+        const rarity = this.getSkuRarity(dto.rarity, dto.code);
 
         //Load all required images in parallel before drawing them on the canvas
         let images = await this.loadImages([
             `./static/backgrounds/card.front.rarity${rarity}.v3.jpg`,
-            `brand.${fromCertificate.certVersion}.cardFront.${fromCertificate.brandCode}.png`,
-            `sku.${fromCertificate.certVersion}.cardFront.${fromCertificate.stockKeepingUnitCode}.png`
+            `brand.v1.cardFront.${dto.brandCode}.png`,
+            `sku.v1.cardFront.${dto.code}.png`
         ]);
         //.then((images) => {
         //draw the images first
@@ -41,26 +41,25 @@ export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
             const imageDimensions = this.scaleToMax(900, 1350, skuImage.value);
             context.drawImage(skuImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
         } else {
-            logger.info('Failed to load sku image: ' + fromCertificate.stockKeepingUnitCode);
+            logger.info('Failed to load sku image: ' + dto.code);
         }
         const brandImage = images[1];
         if (brandImage.status == 'fulfilled') {
             const imageDimensions = this.scaleToMax(900, 1350, brandImage.value);
-            logger.info(imageDimensions);
             context.drawImage(brandImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
         } else {
-            logger.info('Failed to load brand image: ' + fromCertificate.brandCode);
+            logger.info('Failed to load brand image: ' + dto.brandCode);
         }
 
         //write the text
         context.fillStyle = ImagesConfigs.TEXT_RGB;
         context.font = '35pt JostSemi';
         context.textAlign = 'left';
-        context.fillText(fromCertificate.stockKeepingUnitName, 100, 1040);
+        context.fillText(dto.name, 100, 1040);
 
-        context.font = '35pt OCR-A';
-        var qty = this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty, fromCertificate.stockKeepingUnitRarity);
-        context.fillText('' + qty, 100, 1100);
+        // context.font = '35pt OCR-A';
+        // var qty = this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty, fromCertificate.stockKeepingUnitRarity);
+        // context.fillText('' + qty, 100, 1100);
 
         this.writeTestWatermark(context);
    

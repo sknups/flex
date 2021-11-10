@@ -34,8 +34,27 @@ export interface CertificateDTO {
     updated: Date;
 }
 
+export interface SkuDTO {
+    code: string;
+    name: string;
+    created: Date;
+    updated: Date;
+    maxQty: number;
+    description: string;
+    rarity: number;
+    brandCode: string;
+    brandName: string;
+    platformCode: string;
+    platformName: string;
+    designItemCode: string;
+    designItemName: string;
+    brandWholesalePrice: number;
+    platformWholesalePrice: number;
+    recommendedRetailPrice: number;
+}
+
 export class CertificatesService {
-    private readonly drmServerUrl: string = 'https://drm-dev.sknups.gg/';    
+    private readonly drmServerUrl: string = 'https://drm-service-dev.sknups.gg';
 
     constructor() {
         if (process.env.DRM_SERVER) this.drmServerUrl = [process.env.DRM_SERVER].join('/');        
@@ -65,5 +84,17 @@ export class CertificatesService {
         return axios.get<CertificateDTO>(url, drmOptions);
     }
 
+    async getSku(withId: any): Promise<AxiosResponse<SkuDTO>> {
+        const url = `${this.drmServerUrl}/api/v1/skus/${withId}`;
+        logger.info(`CertificatesService.getSku withId:${withId} from ${url}`);
+        const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
+
+        const drmOptions = {
+            headers: {
+                Authorization: `Bearer ${bearerToken}`,
+            }
+        };
+        return axios.get<SkuDTO>(url, drmOptions);
+    }
     
 }
