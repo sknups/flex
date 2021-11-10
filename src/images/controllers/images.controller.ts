@@ -3,7 +3,7 @@ import querystring from "querystring";
 import { StatusCodes } from "http-status-codes";
 import { logger } from '../../logger'
 import { ImagesService } from "../services/images.service";
-import { CertificateDTO, CertificatesService } from "../../certificates/services/certificates.service";
+import {CertificateDTO, CertificatesService, SkuDTO} from "../../certificates/services/certificates.service";
 import { ImagesConfigs } from "../images.configs";
 import { Canvas } from "canvas";
 import { BrandTemplate } from "templates/BrandTemplate";
@@ -32,21 +32,29 @@ export class ImagesController {
         try {
             // request the certificate information
             const type = request.params.type;
-            const certCode = request.params.certCode;
-            const certificateDTO = await this.getCertificate(certCode);
-            const brandCode = certificateDTO.brandCode;
+            const code = request.params.code;
+            let dto;
+            let brandCode = '';
+
+            if (type === 'sku') {
+                dto = await this.getSku(code);
+                brandCode = dto.brandCode;
+            } else {
+                dto = await this.getCertificate(code);
+                brandCode = dto.brandCode;
+            }
+
             const use = request.params.use;
             const version = request.params.version;
             const format = request.params.format;
             let q = Number(request.query.q);
-            if(isNaN(q) || q <= 0 || q > 1) {
+            if (isNaN(q) || q <= 0 || q > 1) {
                 q = ImagesConfigs.QUALITY;
             }
 
+            logger.info(`ImagesController.getImage version: ${version} type: ${type} purpose: ${use} from brand: ${brandCode} with certCode: ${code}`);
 
-            logger.info(`ImagesController.getImage version: ${version} type: ${type} purpose: ${use} from brand: ${brandCode} with certCode: ${certCode}`);
-
-            this.imagesService.generateCanvasImage(version, type, use, certificateDTO).then(canvas => {
+            this.imagesService.generateCanvasImage(version, type, use, dto, brandCode).then(canvas => {
                 if (format == 'png') {
                     var buffer = canvas.toBuffer();
                     logger.info(`ImagesController.getImage png with buffer.length=${buffer.length}`);
@@ -127,6 +135,11 @@ export class ImagesController {
 
     async getCertificate(withId: string): Promise<CertificateDTO> {
         const response = await this.certificateService.getCertificate(withId);
+        return response.data;
+    }
+
+    async getSku(withId: string): Promise<SkuDTO> {
+        const response = await this.certificateService.getSku(withId);
         return response.data;
     }
 
