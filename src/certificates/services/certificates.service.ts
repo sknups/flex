@@ -84,9 +84,9 @@ export class CertificatesService {
         return axios.get<CertificateDTO>(url, drmOptions);
     }
 
-    async getSku(withId: any): Promise<AxiosResponse<SkuDTO>> {
-        const url = `${this.drmServerUrl}/api/v1/skus/${withId}`;
-        logger.info(`CertificatesService.getSku withId:${withId} from ${url}`);
+    async getSku(id: any): Promise<AxiosResponse<SkuDTO>> {
+        const url = `${this.drmServerUrl}/api/v1/skus/${id}`;
+        logger.debug(`CertificatesService.getSku withId:${id} from ${url}`);
         const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
 
         const drmOptions = {
