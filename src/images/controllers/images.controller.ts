@@ -28,19 +28,19 @@ export class ImagesController {
         });
     }
 
-    getTemplate(use: string, type: string): string {
-        if (use === 'metaplex') {
-            return 'sku';
+    getTemplate(kind: string, type: string): string {
+        if (kind === 'sku') {
+            return kind;
         } else {
             return type;
         }
     }
 
-    async getImage(request: express.Request, response: express.Response) {
+    async getImage(request: express.Request, response: express.Response, kind: string) {
         try {
             const code = request.params.code;
             const use = request.params.use;
-            const tpl = this.getTemplate(use, request.params.type);
+            const tpl = this.getTemplate(kind, request.params.type);
 
             let dto;
             let brandCode = '';
