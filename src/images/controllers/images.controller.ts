@@ -28,15 +28,24 @@ export class ImagesController {
         });
     }
 
-    async getImage(request: express.Request, response: express.Response) {
+    getTemplate(kind: string, type: string): string {
+        if (kind === 'sku') {
+            return kind;
+        } else {
+            return type;
+        }
+    }
+
+    async getImage(request: express.Request, response: express.Response, kind: string) {
         try {
-            // request the certificate information
-            const type = request.params.type;
             const code = request.params.code;
+            const use = request.params.use;
+            const tpl = this.getTemplate(kind, request.params.type);
+
             let dto;
             let brandCode = '';
 
-            if (type === 'sku') {
+            if (tpl === 'sku') {
                 dto = await this.getSku(code);
                 brandCode = dto.brandCode;
             } else {
@@ -44,7 +53,6 @@ export class ImagesController {
                 brandCode = dto.brandCode;
             }
 
-            const use = request.params.use;
             const version = request.params.version;
             const format = request.params.format;
             let q = Number(request.query.q);
@@ -52,9 +60,9 @@ export class ImagesController {
                 q = ImagesConfigs.QUALITY;
             }
 
-            logger.info(`ImagesController.getImage version: ${version} type: ${type} purpose: ${use} from brand: ${brandCode} with certCode: ${code}`);
+            logger.info(`ImagesController.getImage version: ${version} tpl: ${tpl} purpose: ${use} from brand: ${brandCode} with certCode: ${code}`);
 
-            this.imagesService.generateCanvasImage(version, type, use, dto, brandCode).then(canvas => {
+            this.imagesService.generateCanvasImage(version, tpl, use, dto, brandCode).then(canvas => {
                 if (format == 'png') {
                     var buffer = canvas.toBuffer();
                     logger.info(`ImagesController.getImage png with buffer.length=${buffer.length}`);
