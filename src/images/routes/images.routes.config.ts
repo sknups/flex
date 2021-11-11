@@ -32,7 +32,7 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
             });
 
         this.getApp()
-            .route('/:type(sku)/:version/metaplex/:code.:format')
+            .route('/sku/:version/:type(card)/:use(metaplex)/:code.:format')
             .get((req, res) => {
                 logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)}`);
                 this.imagesController.getImage(req, res).then(() => {

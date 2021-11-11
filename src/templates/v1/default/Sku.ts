@@ -59,14 +59,6 @@ export class DefaultTemplate extends BrandTemplate<SkuDTO> {
 
         this.writeTestWatermark(context);
 
-        if (purpose === 'og') {
-            canvas = this.convertToOg(canvas);
-        }
-
-        if (purpose === 'thumb') {
-            canvas = this.convertToThumb(canvas);
-        }
-
         return canvas;
 
         //}).catch((err)=>{
