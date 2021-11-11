@@ -21,13 +21,23 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
             .get((req, res) => this.imagesController.index(req, res));
 
         this.getApp()
-            .route('/skn/:version/:type(card|back|cert)/:use/:certCode.:format')
+            .route('/skn/:version/:type(card|back|cert)/:use/:code.:format')
             .get((req, res) => {
                 logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)}`);
                 this.imagesController.getImage(req, res).then(() => {
                     //logger.info(`imagesController.getSknImage success`);
                 }).catch((err) => {
                     logger.info(`imagesController.getCertImage error: ${err}`);
+                });
+            });
+
+        this.getApp()
+            .route('/:type(sku)/:version/metaplex/:code.:format')
+            .get((req, res) => {
+                logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)}`);
+                this.imagesController.getImage(req, res).then(() => {
+                }).catch((err) => {
+                    logger.info(`imagesController.getImage error: ${err}`);
                 });
             });
 

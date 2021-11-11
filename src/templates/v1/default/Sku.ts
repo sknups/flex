@@ -2,74 +2,68 @@ import { BrandTemplate } from "../../BrandTemplate";
 import { ImagesConfigs } from "../../../images/images.configs";
 import { Canvas, createCanvas, Image, loadImage, registerFont } from "canvas";
 import { logger } from '../../../logger'
-import { CertificateDTO } from "../../../certificates/services/certificates.service";
+import {CertificateDTO, SkuDTO} from "../../../certificates/services/certificates.service";
 import { Context } from "node:vm";
 
-export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
+export class DefaultTemplate extends BrandTemplate<SkuDTO> {
 
-    async renderTemplate(fromCertificate: CertificateDTO, purpose: string): Promise<Canvas> {
+    async renderTemplate(sku: SkuDTO, purpose: string): Promise<Canvas> {
         //find out if we're going to scale the image
         let scale = ImagesConfigs.SIZES.SCALE;
-        logger.debug(`Drawing card ${fromCertificate.thumbprint} purpose ${purpose}`);
-        const height = 1350;
+        logger.debug(`Drawing card of SKU ${sku.code} purpose ${purpose}`);
+
         // Load Fonts
         this.loadDefaultFontsIntoCanvas();
-        let canvas = createCanvas(900, height);
+        let canvas = createCanvas(900, 1350);
 
         const context = canvas.getContext('2d');
         context.patternQuality = 'good';
         context.quality = 'good';
 
-        const rarity = this.getRarity(fromCertificate);
+        const rarity = this.getSkuRarity(sku.rarity, sku.code);
 
         //Load all required images in parallel before drawing them on the canvas
         let images = await this.loadImages([
             `./static/backgrounds/card.front.rarity${rarity}.v3.jpg`,
-            `brand.${fromCertificate.certVersion}.cardFront.${fromCertificate.brandCode}.png`,
-            `sku.${fromCertificate.certVersion}.cardFront.${fromCertificate.stockKeepingUnitCode}.png`
+            `brand.v1.cardFront.${sku.brandCode}.png`,
+            `sku.v1.cardFront.${sku.code}.png`
         ]);
         //.then((images) => {
         //draw the images first
         const backgroundImage = images[0];
-        if (backgroundImage.status == 'fulfilled') {
+        if (backgroundImage.status === 'fulfilled') {
             context.drawImage(backgroundImage.value, 0, 0);
         } else {
             logger.info('Failed to load background image image:');
         }
         const skuImage = images[2];
-        if (skuImage.status == 'fulfilled') {
+        if (skuImage.status === 'fulfilled') {
             const imageDimensions = this.scaleToMax(900, 1350, skuImage.value);
             context.drawImage(skuImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
         } else {
-            logger.info('Failed to load sku image: ' + fromCertificate.stockKeepingUnitCode);
+            logger.info('Failed to load sku image: ' + sku.code);
         }
         const brandImage = images[1];
-        if (brandImage.status == 'fulfilled') {
+        if (brandImage.status === 'fulfilled') {
             const imageDimensions = this.scaleToMax(900, 1350, brandImage.value);
-            logger.info(imageDimensions);
             context.drawImage(brandImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
         } else {
-            logger.info('Failed to load brand image: ' + fromCertificate.brandCode);
+            logger.info('Failed to load brand image: ' + sku.brandCode);
         }
 
         //write the text
         context.fillStyle = ImagesConfigs.TEXT_RGB;
         context.font = '35pt JostSemi';
         context.textAlign = 'left';
-        context.fillText(fromCertificate.stockKeepingUnitName, 100, 1040);
-
-        context.font = '35pt OCR-A';
-        var qty = this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty, fromCertificate.stockKeepingUnitRarity);
-        context.fillText('' + qty, 100, 1100);
+        context.fillText(sku.name, 100, 1040);
 
         this.writeTestWatermark(context);
-   
 
-        if (purpose == 'og') {
+        if (purpose === 'og') {
             canvas = this.convertToOg(canvas);
         }
 
-        if (purpose == 'thumb') {
+        if (purpose === 'thumb') {
             canvas = this.convertToThumb(canvas);
         }
 

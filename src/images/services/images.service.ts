@@ -27,9 +27,8 @@ export class ImagesService {
     }
 
     // This will return a promise wrapping a canvas on which the image is drawn,  The code to draw the canvas is selected according to the parameters passed.
-    async generateCanvasImage(version: string, type: string, use: string, fromCertificate: CertificateDTO): Promise<Canvas> {
-        
-        const brandCode = fromCertificate.brandCode;
+    async generateCanvasImage(version: string, type: string, use: string, dto: any, brandCode: string): Promise<Canvas> {
+
         const brandCodeToClassName = StringUtils.classify(brandCode.toLowerCase());
         const typeToClassName = StringUtils.classify(type);
 
@@ -45,14 +44,13 @@ export class ImagesService {
             try {
                 const defaultTemplateModule = await import(`../../templates/${version}/default/${typeToClassName}`);
                 const templateController = new defaultTemplateModule.DefaultTemplate();
-                return templateController.renderTemplate(fromCertificate, use);
-            } catch (error) {                
+                return templateController.renderTemplate(dto, use);
+            } catch (error) {
                 logger.error(`ImagesService.generateCanvasImage failed to load ../../templates/${version}/default/${typeToClassName}: ${error}`);
                 throw new Error(`Failed to load ../../templates/${typeToClassName}/default/DefaultTemplate`);
             }
         //}
     }
-
     async getBucketImage(name: string): Promise<Buffer> {
         const bucket = await this.bucket;
         const getRawBody = require('raw-body');

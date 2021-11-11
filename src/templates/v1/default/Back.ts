@@ -5,7 +5,7 @@ import { logger } from '../../../logger'
 import { CertificateDTO } from "../../../certificates/services/certificates.service";
 import { Context } from "node:vm";
 
-export class DefaultTemplate extends BrandTemplate {
+export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
 
     //If the text is wrapped, will return by how many pixels *additional* depth - 0 if on one line
     writeText(ctx: Context, title: String, body: String, lx: number, rx: number, y: number) {
