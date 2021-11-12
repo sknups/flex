@@ -4,34 +4,17 @@ import {AuthenticationUtils} from "../../utils/authentication.utils";
 
 export interface CertificateDTO {
     brandCode: string;
-    brandName: string;
-    brandWholesalePrice: number;
-    brandWholesalerShare: number;
     certVersion: string;
-    certificate: string;
-    certificateFee: number;
     claimCode: string;
-    created: Date;
     description: string;
-    designItemCode: string;
-    designItemName: string;
     flexHost: string;
-    isOwner: boolean;
     maxQty: number;
-    platformCode: string;
-    platformName: string;
-    platformWholesalePrice: number;
-    platformWholesalerShare: number;
-    recommendedRetailPrice: number;
     saleQty: number;
     sknappHost: string;
-    sknappUrl: string;
-    state: string;
     stockKeepingUnitCode: string;
     stockKeepingUnitName: string;
     stockKeepingUnitRarity: number;
     thumbprint: string;
-    updated: Date;
 }
 
 export interface SkuDTO {
@@ -57,7 +40,7 @@ export class CertificatesService {
     private readonly drmServerUrl: string = 'https://drm-service-dev.sknups.gg';
 
     constructor() {
-        if (process.env.DRM_SERVER) this.drmServerUrl = [process.env.DRM_SERVER].join('/');        
+        if (process.env.DRM_SERVER) this.drmServerUrl = [process.env.DRM_SERVER].join('/');
     }
 
     /**
