@@ -66,8 +66,8 @@ export class CertificatesService {
      * @param withEmail
      */
     async getCertificate(withId: any, withEmail?: any): Promise<AxiosResponse<CertificateDTO>> {
-        logger.debug(`CertificatesService.getCertificate withId:${withId} from ${this.drmServerUrl}/v1/api/assets/${withId}`);
-        const url = `${this.drmServerUrl}/v1/api/assets/${withId}`;
+        const url = `${this.drmServerUrl}/api/v1/items/flex/${withId}`;
+        logger.debug(`CertificatesService.getCertificate withId:${withId} from ${url}`);
         const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
 
         const drmOptions = {
@@ -93,5 +93,5 @@ export class CertificatesService {
         };
         return axios.get<SkuDTO>(url, drmOptions);
     }
-    
+
 }
