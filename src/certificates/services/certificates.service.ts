@@ -67,7 +67,7 @@ export class CertificatesService {
      */
     async getCertificate(withId: any, withEmail?: any): Promise<AxiosResponse<CertificateDTO>> {
         const url = `${this.drmServerUrl}/api/v1/items/flex/${withId}`;
-        logger.info(`CertificatesService.getCertificate withId:${withId} from ${url}`);
+        logger.debug(`CertificatesService.getCertificate withId:${withId} from ${url}`);
         const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
 
         const drmOptions = {
