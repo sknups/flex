@@ -13,6 +13,15 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
         this.imagesController = new ImagesController();
     }
 
+    handleImageRequest(req: express.Request, res: express.Response, kind: string) {
+        logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)} and kind ${kind}`);
+
+        this.imagesController.getImage(req, res, kind).then(() => {
+        }).catch((err) => {
+            logger.info(`imagesController.getImage error: ${err}`);
+        });
+    }
+
     configureRoutes(): express.Application {
         logger.info(`Images.routes.config`)
 
@@ -21,14 +30,16 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
             .get((req, res) => this.imagesController.index(req, res));
 
         this.getApp()
-            .route('/skn/:version/:type(card|back|cert)/:use/:certCode.:format')
+            .route('/skn/:version/:type(card|back|cert)/:use/:code.:format')
             .get((req, res) => {
-                logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)}`);
-                this.imagesController.getImage(req, res).then(() => {
-                    //logger.info(`imagesController.getSknImage success`);
-                }).catch((err) => {
-                    logger.info(`imagesController.getCertImage error: ${err}`);
-                });
+                this.handleImageRequest(req, res, 'skn');
+
+            });
+
+        this.getApp()
+            .route('/sku/:version/:type(card)/:use(metaplex)/:code.:format')
+            .get((req, res) => {
+                this.handleImageRequest(req, res, 'sku');
             });
 
         this.getApp()

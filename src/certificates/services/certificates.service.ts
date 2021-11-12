@@ -34,8 +34,27 @@ export interface CertificateDTO {
     updated: Date;
 }
 
+export interface SkuDTO {
+    code: string;
+    name: string;
+    created: Date;
+    updated: Date;
+    maxQty: number;
+    description: string;
+    rarity: number;
+    brandCode: string;
+    brandName: string;
+    platformCode: string;
+    platformName: string;
+    designItemCode: string;
+    designItemName: string;
+    brandWholesalePrice: number;
+    platformWholesalePrice: number;
+    recommendedRetailPrice: number;
+}
+
 export class CertificatesService {
-    private readonly drmServerUrl: string = 'https://drm-dev.sknups.gg/';    
+    private readonly drmServerUrl: string = 'https://drm-service-dev.sknups.gg';
 
     constructor() {
         if (process.env.DRM_SERVER) this.drmServerUrl = [process.env.DRM_SERVER].join('/');        
@@ -47,6 +66,8 @@ export class CertificatesService {
      * @param withEmail
      */
     async getCertificate(withId: any, withEmail?: any): Promise<AxiosResponse<CertificateDTO>> {
+        logger.debug(`CertificatesService.getCertificate withId:${withId} from ${this.drmServerUrl}/v1/api/assets/${withId}`);
+        const url = `${this.drmServerUrl}/v1/api/assets/${withId}`;
         // endpoint /flex does not return all the necessary fields to render the image
         // endpoint /retail is the safest existing endpoint, as it returns all the necessary fields IF item is UNBOXED
         // if item is in state BOXED, some fields will be missing (such as all related to brand, to prevent spoilers)
@@ -65,5 +86,17 @@ export class CertificatesService {
         return axios.get<CertificateDTO>(url, drmOptions);
     }
 
-    
+    async getSku(id: any): Promise<AxiosResponse<SkuDTO>> {
+        const url = `${this.drmServerUrl}/api/v1/skus/${id}`;
+        logger.debug(`CertificatesService.getSku withId:${id} from ${url}`);
+        const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
+
+        const drmOptions = {
+            headers: {
+                Authorization: `Bearer ${bearerToken}`,
+            }
+        };
+        return axios.get<SkuDTO>(url, drmOptions);
+    }
+
 }

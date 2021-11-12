@@ -6,7 +6,7 @@ import { logger } from '../../../logger'
 import { CertificateDTO } from "../../../certificates/services/certificates.service";
 import { Context } from "node:vm";
 
-export class DefaultTemplate extends BrandTemplate {
+export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
 
     async renderTemplate(fromCertificate: CertificateDTO, use: string): Promise<Canvas> {
 
