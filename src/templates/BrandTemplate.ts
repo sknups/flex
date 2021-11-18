@@ -65,7 +65,8 @@ export abstract class BrandTemplate<T> {
      * @returns 
      */
     writeTestWatermark(context: CanvasRenderingContext2D) {
-        if (process.env.ENVIRONMENT != 'live') {
+        //TODO DRM-1220 - the data to drive this should be returned by the api
+        if (process.env.ENVIRONMENT != 'prd') { 
             context.save();
             context.fillStyle = ImagesConfigs.TEXT_TEST;
             context.font = '32pt OCR-A';
