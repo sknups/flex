@@ -21,6 +21,8 @@ const {NodeTracerProvider} = require('@opentelemetry/node');
 const {SimpleSpanProcessor} = require('@opentelemetry/tracing');
 const {TraceExporter} = require('@google-cloud/opentelemetry-cloud-trace-exporter');
 
+const favicon = require('serve-favicon');
+
 // Enable OpenTelemetry exporters to export traces to Google Cloud Trace.
 // Exporters use Application Default Credentials (ADCs) to authenticate.
 // See https://developers.google.com/identity/protocols/application-default-credentials
@@ -56,6 +58,7 @@ app.set('views', [
 
 
 app.use(cors());
+app.use(favicon(path.join(__dirname, '../static', 'favicon.ico')))
 
 const server: http.Server = ServerUtils.createServer(app);
 const port = ServerUtils.normalizePort(process.env.PORT || '3000');
