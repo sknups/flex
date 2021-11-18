@@ -24,13 +24,15 @@ RUN apk add --update --no-cache \
         pango-dev
 
 ENV NODE_ENV=production
-
+ENV NO_COLOR=true
 # Create app directory
 WORKDIR /usr/src/app
 
+COPY package*.json ./
+RUN npm install --only=production
+
 COPY --from=builder /usr/src/app/static ./static
 COPY --from=builder /usr/src/app/dist ./dist
-COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/src/flex/views ./dist/flex/views
 
 RUN npm install canvas
