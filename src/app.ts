@@ -1,4 +1,3 @@
-import dotenv from "dotenv";
 import {CommonRoutesConfig} from './common/common.routes.config';
 import debug from 'debug';
 import {ServerUtils} from "./utils/server.utils";
@@ -9,11 +8,13 @@ import cors from "cors";
 import {AssetsRoutesConfig} from "./assets/routes/assets.routes.config";
 import { logger } from './logger'
 import { FlexRoutesConfig } from "./flex/routes/flex.routes.config";
-import exphbs from 'express-handlebars';
 import path from 'path';
+import cons from "consolidate";
 
 // Load into ENV Variables
-dotenv.config();
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 
 
 const opentelemetry = require('@opentelemetry/api');
@@ -45,8 +46,7 @@ export const app: express.Application = ServerUtils.configureApp(
     isProduction
 );
 
-const hbs = exphbs.create()
-app.engine('handlebars', hbs.engine);
+app.engine('handlebars', cons.handlebars);
 app.set('view engine', 'handlebars');
 // view engine setup
 app.set('views', [    
