@@ -41,6 +41,14 @@
         transform: rotateY(-180deg);
     }
 
+    .flip-wrapper.active .flip-content .front {
+        visibility: hidden;
+    }
+
+    .flip-wrapper.active .flip-content .back {
+        visibility: visible;   
+    }
+
 
     .flip-content {
         transition: 0.6s;
@@ -83,6 +91,7 @@
         -moz-transform: rotateY(180deg);
         -o-transform: rotateY(180deg);
         transform: rotateY(180deg);
+        visibility: hidden;
     }
 
     .img-small {
