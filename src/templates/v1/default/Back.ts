@@ -16,7 +16,7 @@ export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
         ctx.fillStyle = ImagesConfigs.TEXT_RGB;
         ctx.font = '23.5pt Jost';
         ctx.fillText(title.toUpperCase() + ':', lx, y);
-        ctx.font = '25pt OCR-A';
+        ctx.font = '25pt ShareTechMono-Regular';
         if (body.length > 15) {
             const words = body.split(' ');
             let line = '';
