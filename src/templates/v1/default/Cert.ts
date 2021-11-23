@@ -54,7 +54,7 @@ export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
 
         //write the text
         context.fillStyle = 'rgb(29,29,27)';
-        context.font = '24pt OCR-A';
+        context.font = '24pt ShareTechMono-Regular';
         let Y: number = MARGIN + 30;
         Y = Y + writeText(context, fromCertificate.stockKeepingUnitName, RCOL, Y);
         var qty = this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty, fromCertificate.stockKeepingUnitRarity);

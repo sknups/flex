@@ -68,7 +68,7 @@ export abstract class BrandTemplate<T> {
         if (process.env.ENVIRONMENT != 'live') {
             context.save();
             context.fillStyle = ImagesConfigs.TEXT_TEST;
-            context.font = '32pt OCR-A';
+            context.font = '32pt ShareTechMono-Regular';
             context.textAlign = 'center';
             context.rotate(-Math.PI / 4);
             context.fillText('TEST ONLY', -4, 140);
@@ -139,7 +139,7 @@ export abstract class BrandTemplate<T> {
         this.loadFontsIntoCanvas([
             { path: './static/fonts/Jost-Regular-400.ttf', fontFace: { family: "Jost" } },
             { path: './static/fonts/Jost-SemiBold-600.ttf', fontFace: { family: "JostSemi" } },
-            { path: './static/fonts/OCR-A.ttf', fontFace: { family: "OCR-A" } },
+            { path: './static/fonts/ShareTechMono-Regular.ttf', fontFace: { family: "ShareTechMono-Regular" } },
             { path: './static/fonts/CrimsonText-Regular.ttf', fontFace: { family: "Minion" } },
         ]);
     }
