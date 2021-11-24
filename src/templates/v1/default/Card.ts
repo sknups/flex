@@ -58,7 +58,7 @@ export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
         context.textAlign = 'left';
         context.fillText(fromCertificate.stockKeepingUnitName, 100, 1040);
 
-        context.font = '35pt OCR-A';
+        context.font = '35pt ShareTechMono-Regular';
         var qty = this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty, fromCertificate.stockKeepingUnitRarity);
         context.fillText('' + qty, 100, 1100);
 
