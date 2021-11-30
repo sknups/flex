@@ -56,7 +56,7 @@ export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
         context.fillStyle = 'rgb(29,29,27)';
         context.font = '24pt ShareTechMono-Regular';
         let Y: number = MARGIN + 30;
-        Y = Y + writeText(context, fromCertificate.stockKeepingUnitName, RCOL, Y);
+        Y = Y + writeText(context, fromCertificate.stockKeepingUnitName.toLocaleUpperCase(), RCOL, Y);
         var qty = this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty, fromCertificate.stockKeepingUnitRarity);
         Y = Y + writeText(context, 'ITEM NUMBER ' + qty, RCOL, Y + SPACE);
         Y = Y + writeText(context, 'OWNERSHIP TOKEN ' + fromCertificate.thumbprint, RCOL, Y + SPACE * 2);
@@ -82,16 +82,16 @@ export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
                 let line = '';
                 for (let n = 0; n < words.length; n++) {
                     if (line.length + words[n].length > 15) {
-                        context.fillText(line.toUpperCase(), x, y + wrap);
+                        context.fillText(line, x, y + wrap);
                         wrap = wrap + space;
                         line = words[n] + ' ';
                     } else {
                         line = line + words[n] + ' '
                     }
                 }
-                context.fillText(line.toUpperCase(), x, y + wrap);
+                context.fillText(line, x, y + wrap);
             } else {
-                context.fillText(text.toUpperCase(), x, y);
+                context.fillText(text, x, y);
             }
             return wrap;
         }
