@@ -11,33 +11,22 @@ import { FlexRoutesConfig } from "./flex/routes/flex.routes.config";
 import path from 'path';
 import cons from "consolidate";
 
-// Load into ENV Variables
-if (process.env.NODE_ENV !== 'production') {
+const isProductionMode = process.env.NODE_ENV === 'production'
+
+// Load into ENV Variables from dotenv if not running 
+//in production mode
+if (!isProductionMode) {
   require('dotenv').config();
 }
 
-
-const opentelemetry = require('@opentelemetry/api');
-const {NodeTracerProvider} = require('@opentelemetry/node');
-const {SimpleSpanProcessor} = require('@opentelemetry/tracing');
-const {TraceExporter} = require('@google-cloud/opentelemetry-cloud-trace-exporter');
+//Start GCP trace agent if running in production mode
+if (isProductionMode) {
+  require('@google-cloud/trace-agent').start();
+}
 
 const favicon = require('serve-favicon');
 
-// Enable OpenTelemetry exporters to export traces to Google Cloud Trace.
-// Exporters use Application Default Credentials (ADCs) to authenticate.
-// See https://developers.google.com/identity/protocols/application-default-credentials
-// for more details.
-const provider = new NodeTracerProvider();
 
-// Initialize the exporter. When your application is running on Google Cloud,
-// you don't need to provide auth credentials or a project id.
-const exporter = new TraceExporter();
-
-// Configure the span processor to send spans to the exporter
-provider.addSpanProcessor(new SimpleSpanProcessor(exporter));
-
-const isProduction = process.env.NODE_ENV === 'production'
 
 // Variables needed to start the server
 // We set a new instance of app
@@ -45,7 +34,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 // compress the response in case we are in prod mode
 export const app: express.Application = ServerUtils.configureApp(
     express(),    
-    isProduction
+    isProductionMode
 );
 
 app.engine('handlebars', cons.handlebars);
