@@ -15,23 +15,23 @@ export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
         ctx.textAlign = 'left';
         ctx.fillStyle = ImagesConfigs.TEXT_RGB;
         ctx.font = '23.5pt Jost';
-        ctx.fillText(title.toUpperCase() + ':', lx, y);
+        ctx.fillText(title + ':', lx, y);
         ctx.font = '25pt ShareTechMono-Regular';
         if (body.length > 15) {
             const words = body.split(' ');
             let line = '';
             for (let n = 0; n < words.length; n++) {
                 if (line.length + words[n].length > 15) {
-                    ctx.fillText(line.toUpperCase(), rx, y + wrap);
+                    ctx.fillText(line, rx, y + wrap);
                     wrap = wrap + space;
                     line = words[n] + ' ';
                 } else {
                     line = line + words[n] + ' '
                 }
             }
-            ctx.fillText(line.toUpperCase(), rx, y + wrap);
+            ctx.fillText(line, rx, y + wrap);
         } else {
-            ctx.fillText(body.toUpperCase(), rx, y);
+            ctx.fillText(body, rx, y);
         }
         return wrap;
     }
@@ -80,11 +80,11 @@ export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
             logger.info('Failed to load brand image: ' + fromCertificate.brandCode);
         }
         //write the text
-        let y_shift = this.writeText(context, 'Item', fromCertificate.stockKeepingUnitName, L_COL_L, R_COL_L, 200);
-         this.writeText(context, 'Item number', '' + this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty, fromCertificate.stockKeepingUnitRarity), L_COL_L, R_COL_L, 270 + y_shift);
-        this.writeText(context, 'Ownership token', fromCertificate.thumbprint, L_COL_L, R_COL_L, 340 + y_shift);
+        let y_shift = this.writeText(context, 'ITEM', fromCertificate.stockKeepingUnitName.toLocaleUpperCase(), L_COL_L, R_COL_L, 200);
+        this.writeText(context, 'ITEM NUMBER', '' + this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty, fromCertificate.stockKeepingUnitRarity), L_COL_L, R_COL_L, 270 + y_shift);
+        this.writeText(context, 'OWNERSHIP TOKEN', fromCertificate.thumbprint, L_COL_L, R_COL_L, 340 + y_shift);
  
-        this.writeText(context, 'Description', '', L_COL_L, R_COL_L, 410 + y_shift);
+        this.writeText(context, 'DESCRIPTION', '', L_COL_L, R_COL_L, 410 + y_shift);
         context.font = '18pt Minion';
         this.wrapText(context, fromCertificate.description, R_COL_L, 410 + y_shift, 340, 35);
 
