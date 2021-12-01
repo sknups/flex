@@ -118,9 +118,9 @@ export class ImagesController {
                     } else if (format == 'glb') {
                         contentType = 'model/gltf-binary';
                     }
-                    logger.info(`ImagesController.getEntityImage with buffer.length=${buffer.length} and format ${format} and contentType $`);
+                    logger.debug(`ImagesController.getEntityImage with buffer.length=${buffer.length} and format ${format} and contentType ${contentType}`);
+                  
                     response.writeHead(StatusCodes.OK, {
-
                         'Content-Type': contentType,
                         'Content-Length': buffer.length,
                         'Cache-Control': `public, max-age=${ImagesConfigs.TTL}`
