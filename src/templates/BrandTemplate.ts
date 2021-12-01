@@ -158,6 +158,12 @@ export abstract class BrandTemplate<T> {
         });
     }
 
+    
+
+    wrapTextCentered(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) {
+      return this.wrapText(context, text, x, y, maxWidth, lineHeight, true);
+    }
+
     /**
      * Will try to wrap the text
      * @param context
@@ -167,7 +173,7 @@ export abstract class BrandTemplate<T> {
      * @param maxWidth
      * @param lineHeight
      */
-    wrapText(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) {
+    wrapText(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number, center: boolean = false) {
         const words = text.split(' ');
         let line = '';
 
@@ -177,6 +183,9 @@ export abstract class BrandTemplate<T> {
             const testWidth = metrics.width;
 
             if (testWidth > maxWidth && n > 0) {
+                if (center) {
+                  context.textAlign = "center";
+                }
                 context.fillText(line, x, y);
                 line = words[n] + ' ';
                 y += lineHeight;
@@ -185,7 +194,13 @@ export abstract class BrandTemplate<T> {
             }
         }
 
+        const oldtextAlign = context.textAlign
+        if (center) {
+          context.textAlign = "center";
+        }
+
         context.fillText(line, x, y);
+        context.textAlign = oldtextAlign;
     }
 
     /**
