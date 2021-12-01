@@ -1,3 +1,15 @@
+const isProductionMode = process.env.NODE_ENV === 'production'
+
+//Start GCP trace agent if running in production mode
+if (isProductionMode) {  
+  require('@google-cloud/trace-agent').start({
+    logLevel: 4,
+    serviceContext: {
+        service: 'flex-ui'      
+    }
+  });
+}
+
 import {CommonRoutesConfig} from './common/common.routes.config';
 import debug from 'debug';
 import {ServerUtils} from "./utils/server.utils";
@@ -11,18 +23,12 @@ import { FlexRoutesConfig } from "./flex/routes/flex.routes.config";
 import path from 'path';
 import cons from "consolidate";
 
-const isProductionMode = process.env.NODE_ENV === 'production'
-
 // Load into ENV Variables from dotenv if not running 
 //in production mode
 if (!isProductionMode) {
   require('dotenv').config();
 }
 
-//Start GCP trace agent if running in production mode
-if (isProductionMode) {
-  require('@google-cloud/trace-agent').start();
-}
 
 const favicon = require('serve-favicon');
 
