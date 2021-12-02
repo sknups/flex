@@ -118,7 +118,7 @@ export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
         }
 
         context.fillStyle = 'rgb(29,29,27)';
-        context.font = '24pt ShareTechMono-Regular';
+        context.font = '23pt ShareTechMono-Regular';
         let Y = this.PRODUCT_IMG_PADDING_TOP + this.PRODUCT_IMG_HEIGHT + this.COLLECTABLE_DATA_PADDING_TOP + 26;
 
         Y = Y + writeTextCentered(context, fromCertificate.stockKeepingUnitName.toLocaleUpperCase(), this.CENTER_X , Y);
@@ -140,8 +140,8 @@ export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
         }
 
         Y = Y + this.BRAND_IMG_HEIGHT + this.PRODUCT_DESCRIPTION_PADDING_TOP + 26;
-        if (fromCertificate.description.length > 250) { context.font = '24pt Jost'; } else { context.font = '26pt Jost'; }
-        this.wrapTextCentered(context, fromCertificate.description, this.CENTER_X, Y , this.PRODUCT_DESCRIPTION_WIDTH , 40);
+        if (fromCertificate.description.length > 250) { context.font = '22pt Jost'; } else { context.font = '24pt Jost'; }
+        this.wrapTextCentered(context, fromCertificate.description, this.CENTER_X, Y , this.PRODUCT_DESCRIPTION_WIDTH , 45);
 
 
         this.writeTestWatermark(context);
