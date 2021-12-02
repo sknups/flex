@@ -3,7 +3,6 @@ const isProductionMode = process.env.NODE_ENV === 'production'
 //Start GCP trace agent if running in production mode
 if (isProductionMode) {  
   require('@google-cloud/trace-agent').start({
-    logLevel: 4,
     serviceContext: {
         service: 'flex-ui'      
     }
