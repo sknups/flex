@@ -54,7 +54,7 @@ export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
 
         //write the text
         context.fillStyle = ImagesConfigs.TEXT_RGB;
-        context.font = '35pt JostSemi';
+        context.font = '35pt Jost';
         context.textAlign = 'left';
         context.fillText(fromCertificate.stockKeepingUnitName, 100, 1040);
 
