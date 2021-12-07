@@ -171,6 +171,9 @@ export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
                 let line = '';
                 for (let n = 0; n < words.length; n++) {
                     if (line.length + words[n].length > 25) {
+                        if (center) {
+                            context.textAlign = "center";  
+                        }
                         context.fillText(line, x, y + wrap);
                         wrap = wrap + space;
                         line = words[n] + ' ';
