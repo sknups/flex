@@ -27,10 +27,20 @@ export class FlexController {
       logger.info(
         `FlexController.getPage version: ${version} type: ${type} from brand: ${brandCode} with certCode: ${certCode}`
       );
-
-     
+ 
+      const gaMeasurementId = process.env.GA_MEASUREMENT_ID;
+      const gaEnabled = gaMeasurementId && gaMeasurementId.length > 0;
+           
       const {sknappHost,flexHost,certVersion,thumbprint, stockKeepingUnitName, description } = certificateDTO;
+      const {claimCode,stockKeepingUnitCode } = certificateDTO;
+      
       response.status(StatusCodes.OK).render(`flex_${version}`, {
+        gaEnabled: gaEnabled,
+        gaMeasurementId: gaMeasurementId,
+        thumbprint: thumbprint,
+        claimCode: claimCode,
+        brandCode: brandCode,        
+        stockKeepingUnitCode: stockKeepingUnitCode,
         title: `${stockKeepingUnitName} - Sknups`,
         layout: false,
         appURL: `${sknappHost}/skn/home`,
