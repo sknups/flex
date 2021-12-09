@@ -19,13 +19,29 @@
     <meta name="twitter:text:title" content="{{stockKeepingUnitName}}" />
     <meta name="twitter:site" content="@sknupsgg" />
     <meta name="twitter:title" content="{{stockKeepingUnitName}}" />
+    {{#if gaEnabled }}      
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{gaMeasurementId}}"></script>
+    <script>
+         window.dataLayer = window.dataLayer || [];
+         function gtag(){dataLayer.push(arguments);}
+         gtag('js', new Date());
+         gtag('config', '{{gaMeasurementId}}');
+         gtag('event', 'flx_view', {'send_to': '{{gaMeasurementId}}',            
+            'event_label': 'Asset has been viewed',
+            'event_category': 'flx',
+            'asset': '{{ thumbprint }}',
+            'sku': '{{ stockKeepingUnitCode }}',
+            'brand': '{{ brandCode }}',
+            'claim': '{{ claimCode}}'
+         });      
+    </script>
+    {{/if}}
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
       crossorigin="anonymous"
     />
-
     <style>
     body{ 
       background: rgb(4,139,108);
