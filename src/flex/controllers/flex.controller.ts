@@ -43,7 +43,7 @@ export class FlexController {
         stockKeepingUnitCode: stockKeepingUnitCode,
         title: `${stockKeepingUnitName} - Sknups`,
         layout: false,
-        appURL: `${sknappHost}/skn/home?utm_source=flex`,
+        appURL: `${sknappHost}/?utm_source=flex`,
         cardImgUrl: `${flexHost}/skn/${certVersion}/card/default/${thumbprint}.jpg`,
         cardThumbnailImgUrl: `${flexHost}/skn/${certVersion}/card/thumb/${thumbprint}.jpg?q=0.1`,
         backImgUrl: `${flexHost}/skn/${certVersion}/back/default/${thumbprint}.jpg`,        
