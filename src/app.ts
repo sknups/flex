@@ -1,4 +1,5 @@
 const isProductionMode = process.env.NODE_ENV === 'production'
+const isProfilerEnabled = process.env.PROFILER_ENABLED === 'true'
 
 //Start GCP trace agent if running in production mode
 if (isProductionMode) {  
@@ -8,6 +9,16 @@ if (isProductionMode) {
     }
   });
 }
+
+if (isProfilerEnabled) { 
+require('@google-cloud/profiler').start({
+    serviceContext: {
+      service: 'flex-ui' 
+    },
+  });
+}
+
+const startTime = new Date().getTime();
 
 import {CommonRoutesConfig} from './common/common.routes.config';
 import debug from 'debug';
@@ -73,7 +84,8 @@ app.get('/', (req: express.Request, res: express.Response) => {
 
 // Start server and listen on port
 server.listen(port, () => {
-    logger.info(`Server running at ${port}`);    
+    const taken = Intl.NumberFormat().format(new Date().getTime() - startTime);
+    logger.info(`Server started in ${taken}ms, running on port ${port}`);    
     routes.forEach((route: CommonRoutesConfig) => {
         debugLog(`Routes configured for ${route.getName()}`);
     });
