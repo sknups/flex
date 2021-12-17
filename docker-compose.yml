@@ -1,0 +1,8 @@
+version: '3.9'
+services:
+  flex:
+    build: .
+    ports:
+      - 3000:3000
+    mem_limit: 1024m
+    cpus: 1.0

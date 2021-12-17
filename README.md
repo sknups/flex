@@ -69,4 +69,15 @@ docker run -e MYVAR1 --env MYVAR2=foo --env-file ./env.list IMAGE_NAME:VERSION
 ```
 
 
+### Start Docker image against GCP services
+This requires default application credentials to be configured.
+See: https://cloud.google.com/sdk/gcloud/reference/auth/application-default/login
 
+This will create a json file for auth, ie: `~/.config/gcloud/application_default_credentials.json`.
+
+Now run:
+```bash
+GOOGLE_APPLICATION_CREDENTIALS=~/.config/gcloud/application_default_credentials.json \
+GOOGLE_AUTH_TOKEN="$(gcloud auth print-identity-token)" \
+  docker-compose --env-file docker-compose-gcp.env up  --build
+```
