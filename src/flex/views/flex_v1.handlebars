@@ -48,69 +48,51 @@
     <style>
     body{ 
       background: rgb(4,139,108);
-      background: linear-gradient(0deg, rgba(4,139,108,1) 0%, rgba(3,59,46,1) 50%, rgba(4,4,4,1) 100%);
-      height: 100%;
+      background: linear-gradient(0deg, rgba(4,139,108,1) 0%, rgba(3,59,46,1) 50%, rgba(4,4,4,1) 100%);      
     }  
             
-    .flip-wrapper.active .flip-content {
-        -webkit-transform: rotateY(-180deg);
-        -moz-transform: rotateY(-180deg);
-        -o-transform: rotateY(-180deg);
-        -ms-transform: rotateY(-180deg);
-        transform: rotateY(-180deg);
+    .flip-wrapper.active * .back {
+        -webkit-transform: rotateY(0deg);
+        -moz-transform: rotateY(0deg);
+        -o-transform: rotateY(0deg);
+        -ms-transform: rotateY(0deg);
+        transform: rotateY(180deg);
     }
 
     .flip-wrapper.active .flip-content .front {
-        visibility: hidden;
+        display: none!important;
     }
 
     .flip-wrapper.active .flip-content .back {
-        visibility: visible;   
+        display: block!important;
     }
 
-
-    .flip-content {
-        transition: 0.6s;
-        -webkit-transition: 0.6s;
-        -moz-transition: 0.6s;
-        -o-transition: 0.6s;
-        transform-style: preserve-3d;
-        -webkit-transform-style: preserve-3d;
-        position: relative;
-    }
 
 
     .front,
     .back {
         -webkit-backface-visibility: hidden;
         -moz-backface-visibility: hidden;
-        backface-visibility: hidden;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
+        backface-visibility: hidden;   
+        width:100%;
         transition: opacity 0.5s linear;
+            transform-style: preserve-3d;
+        -webkit-transform-style: preserve-3d;  
     }
 
 
     /* front pane, placed above back */
     .front {
-        z-index: 2;
-        /* for firefox 31 */
-        -webkit-transform: rotateY(0deg);
-        -moz-transform: rotateY(0deg);
-        -o-transform: rotateY(0deg);
-        -ms-transform: rotateY(0deg);
-        transform: rotateY(0deg);
+        
     }
 
     /* back, initially hidden pane */
     .back {
-        -webkit-transform: rotateY(180deg);
-        -moz-transform: rotateY(180deg);
-        -o-transform: rotateY(180deg);
-        transform: rotateY(180deg);
-        visibility: hidden;
+        -webkit-transform: rotateY(-180deg);
+        -moz-transform: rotateY(-180deg);
+        -o-transform: rotateY(-180deg);
+        transform: rotateY(-180deg);
+        display: none!important;
     }
 
     .img-small {
@@ -128,14 +110,9 @@
       color: rgb(1, 214, 166);
     }
 
-    #page-content {
-      flex: 1 0 auto;
-    }
-
     </style>
   </head>    
-  <body class="d-flex flex-column ">    
-  <div id="page-content">
+  <body class="d-flex flex-column ">      
     <div class="container text-center">
       <div class="row justify-content-center">
         <div class="col-10 col-sm-8 col-md-6 col-lg-6 col-xl-6">
@@ -153,15 +130,13 @@
                   src="{{cardThumbnailImgUrl}}"
                   class="front mx-auto d-block img-fluid img-small"
                 />
-              </div>
-
+              </div>            
               <img
                 src="{{backImgUrl}}"
-                class="back mx-auto d-block img-fluid"
-              />
+                class="back mx-auto img-fluid"
+              />            
             </div>
-          </div>
-        </div>
+          </div>        
       </div>
     </div>
   </div>
@@ -178,7 +153,7 @@
     <script>
       window.onload = function() {
         var flipWrapper = document.querySelector('.flip-wrapper')   
-        flipWrapper.addEventListener('click', function() {
+        flipWrapper.addEventListener('click', function() {              
           flipWrapper.classList.toggle('active');       
         })
      
@@ -191,11 +166,8 @@
        
         imgLarge.onload = function () {
           imgWrapper.removeChild(imageSmall);    
+          imgWrapper.appendChild(imgLarge);
         }; 
- 
-        imgWrapper.appendChild(imgLarge);
- 
-      
       
       }
     </script>
