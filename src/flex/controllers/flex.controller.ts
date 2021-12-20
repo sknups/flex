@@ -30,11 +30,16 @@ export class FlexController {
  
       const gaMeasurementId = process.env.GA_MEASUREMENT_ID;
       const gaEnabled = gaMeasurementId && gaMeasurementId.length > 0;
+
+      const optimizeId = process.env.OPTIMIZE_ID;
+      const optimizeEnabled = optimizeId && optimizeId.length > 0;
            
       const {sknappHost,flexHost,certVersion,thumbprint, stockKeepingUnitName, description } = certificateDTO;
       const {claimCode,stockKeepingUnitCode } = certificateDTO;
       
       response.status(StatusCodes.OK).render(`flex_${version}`, {
+        optimizeId: optimizeId,
+        optimizeEnabled: optimizeEnabled,
         gaEnabled: gaEnabled,
         gaMeasurementId: gaMeasurementId,
         thumbprint: thumbprint,
