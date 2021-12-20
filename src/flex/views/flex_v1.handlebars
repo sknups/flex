@@ -46,131 +46,134 @@
       crossorigin="anonymous"
     />
     <style>
-    body{ 
-      background: rgb(4,139,108);
-      background: linear-gradient(0deg, rgba(4,139,108,1) 0%, rgba(3,59,46,1) 50%, rgba(4,4,4,1) 100%);      
-    }  
-            
-    .flip-wrapper.active * .back {
-        -webkit-transform: rotateY(0deg);
-        -moz-transform: rotateY(0deg);
-        -o-transform: rotateY(0deg);
-        -ms-transform: rotateY(0deg);
-        transform: rotateY(180deg);
+    html{
+      background-color: black;
+    }
+  
+    body {
+      background: rgb(4, 139, 108);
+      background: -webkit-gradient(linear, left bottom, left top, from(rgba(4, 139, 108, 1)), color-stop(50%, rgba(3, 59, 46, 1)), to(rgba(4, 4, 4, 1)));
+      background: -o-linear-gradient(bottom, rgba(4, 139, 108, 1) 0%, rgba(3, 59, 46, 1) 50%, rgba(4, 4, 4, 1) 100%);
+      background: linear-gradient(0deg, rgba(4, 139, 108, 1) 0%, rgba(3, 59, 46, 1) 50%, rgba(4, 4, 4, 1) 100%);
     }
 
-    .flip-wrapper.active .flip-content .front {
-        display: none!important;
+    .viewbox {
+      -webkit-perspective: 800px;
+      perspective: 800px;
     }
 
-    .flip-wrapper.active .flip-content .back {
-        display: block!important;
+    .viewbox.active .front {
+      -webkit-transform: rotateY(-180deg);
+      transform: rotateY(-180deg);
     }
 
-
-
-    .front,
-    .back {
-        -webkit-backface-visibility: hidden;
-        -moz-backface-visibility: hidden;
-        backface-visibility: hidden;   
-        width:100%;
-        transition: opacity 0.5s linear;
-            transform-style: preserve-3d;
-        -webkit-transform-style: preserve-3d;  
+    .viewbox.active .back {
+      -webkit-transform: rotateY(0deg);
+      transform: rotateY(0deg);
     }
 
+    .viewbox .back {
+      -webkit-transform: rotateY(180deg);
+      transform: rotateY(180deg);
+    }
 
-    /* front pane, placed above back */
+    .cards {
+      margin: 0;
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+    }
+
+    .skn-card {
+      width: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      -webkit-transition: -webkit-transform 0.6s;
+      transition: -webkit-transform 0.6s;
+      -o-transition: transform 0.6s;
+      transition: transform 0.6s;
+      transition: transform 0.6s, -webkit-transform 0.6s;
+    }
+
     .front {
-        
-    }
-
-    /* back, initially hidden pane */
-    .back {
-        -webkit-transform: rotateY(-180deg);
-        -moz-transform: rotateY(-180deg);
-        -o-transform: rotateY(-180deg);
-        transform: rotateY(-180deg);
-        display: none!important;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
 
     .img-small {
+      -webkit-filter: blur(30px);
       filter: blur(30px);
       /* this is needed so Safari keeps sharp edges */
+      -webkit-transform: scale(1);
+      -ms-transform: scale(1);
       transform: scale(1);
     }
 
-    .main-footer{
-      color: #fff;    
+    .main-footer {
+      color: #fff;
       font-size: 14px;
     }
 
-    a { 
+    a,
+    a:hover,
+    a:visited {
       color: rgb(1, 214, 166);
     }
+  </style>
+</head>
 
-    </style>
-  </head>    
-  <body class="d-flex flex-column ">      
-    <div class="container text-center">
-      <div class="row justify-content-center">
-        <div class="col-10 col-sm-8 col-md-6 col-lg-6 col-xl-6">
-          <a href="{{appURL}}" target="_blank">
-            <img
-              src="/static/sknups_logo_v1.jpg"
-              class="logo mx-auto d-block pt-3"
-            />
-          </a>
+<body>
+  <div class="d-flex flex-column">
+    <div class="flex-shrink-0">
+      <div class="container text-center">
+        <div class="row justify-content-center">
+          <div class="col-10 col-sm-8 col-md-6 col-lg-6 col-xl-6">
+            <a href="{{appURL}}" target="_blank">
+              <img src="/static/sknups_logo_v1.jpg" class="logo mx-auto d-block pt-3" />
+            </a>
 
-          <div class="flip-wrapper pt-5">
-            <div class="flip-content pb-3">
-              <div class="img-wrapper" data-large="{{cardImgUrl}}">
-                <img
-                  src="{{cardThumbnailImgUrl}}"
-                  class="front mx-auto d-block img-fluid img-small"
-                />
-              </div>            
-              <img
-                src="{{backImgUrl}}"
-                class="back mx-auto img-fluid"
-              />            
+            <div class="viewbox pb-3 pt-5">
+              <figure class="cards">
+                <img class="skn-card front mx-auto img-fluid img-small" data-large="{{cardImgUrl}}"
+                  src="{{cardThumbnailImgUrl}}" />
+                <img class="skn-card back mx-auto img-fluid" src="{{backImgUrl}}" />
+              </figure>
             </div>
-          </div>        
+          </div>
+        </div>
       </div>
     </div>
+
+    <footer class="mt-auto py-3 main-footer">
+      <div class="container text-center">
+        <small>&copy;
+          {{copyrightYear}}
+          Upskins Ltd -
+          <a href="{{legalUrl}}" target="_blank">T&amp;C</a></small>
+      </div>
+    </footer>
   </div>
+  <script>
+    window.onload = function () {
+      var viewbox = document.querySelector('.viewbox')
+      viewbox.addEventListener('click', function () {
+        viewbox.classList.toggle('active');
+      })
 
-  <footer class="flex-shrink-0 py-4 main-footer">
-    <div class="container text-center">
-      <small>&copy;
-        {{copyrightYear}}
-        Upskins Ltd -
-        <a href="{{legalUrl}}" target="_blank">T&amp;C</a></small>
-    </div>
-  </footer>
+
+      var imageSmall = document.querySelector('.img-small')
+      var imgLarge = new Image();
+      imgLarge.src = imageSmall.dataset.large;
+      imgLarge.classList.add('skn-card', 'front', 'mx-auto', 'img-fluid');
+
+      var cards = document.querySelector('.cards')
+      imgLarge.onload = function () {
+        cards.removeChild(imageSmall);
+        cards.appendChild(imgLarge);
+      };
+
+    }
+  </script>
 </body>
-    <script>
-      window.onload = function() {
-        var flipWrapper = document.querySelector('.flip-wrapper')   
-        flipWrapper.addEventListener('click', function() {              
-          flipWrapper.classList.toggle('active');       
-        })
-     
-
-        var imgWrapper = document.querySelector('.img-wrapper')   
-        var imageSmall = document.querySelector('.img-small') 
-        var imgLarge = new Image();
-        imgLarge.src = imgWrapper.dataset.large; 
-        imgLarge.classList.add('front','mx-auto','d-block','img-fluid','img-full');          
-       
-        imgLarge.onload = function () {
-          imgWrapper.removeChild(imageSmall);    
-          imgWrapper.appendChild(imgLarge);
-        }; 
-      
-      }
-    </script>
-  </body>
 
 </html>
