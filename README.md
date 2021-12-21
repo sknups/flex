@@ -58,6 +58,22 @@ GCP_LOG=0
 
 # Link to be used to communicate with DRM server
 DRM_SERVER=
+
+#Optional: set the Goggle Analytics Id.
+#if not set Goggle Analytics is not loaded 
+GA_MEASUREMENT_ID=
+
+#Optional: set the Legacy Goggle Analytics Id, 
+#
+#If not set data is not sent to the legacy Goggle Analytics property.
+#This requires GA_MEASUREMENT_ID to be set
+#This data is used by Optimize
+GA_LEGACY_MEASUREMENT_ID=
+
+#Optional: set the Goggle Optimize Id, 
+#
+#If not set Goggle Optimize is not loaded 
+OPTIMIZE_ID=
 ```
 
 Example on how to start a docker image with env variables from the command line or defining a file:

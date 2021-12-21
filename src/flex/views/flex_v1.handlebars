@@ -26,7 +26,10 @@
          function gtag(){dataLayer.push(arguments);}
          gtag('js', new Date());
          gtag('config', '{{gaMeasurementId}}');
-         gtag('event', 'flx_view', {'send_to': '{{gaMeasurementId}}',            
+         {{#if gaLegacyEnabled }}      
+         gtag('config', '{{gaLegacyMeasurementId}}');
+         {{/if}}
+         gtag('event', 'flx_view', {            
             'event_label': 'Asset has been viewed',
             'event_category': 'flx',
             'asset': '{{ thumbprint }}',
