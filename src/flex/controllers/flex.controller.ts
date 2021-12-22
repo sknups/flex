@@ -31,6 +31,9 @@ export class FlexController {
       const gaMeasurementId = process.env.GA_MEASUREMENT_ID;
       const gaEnabled = gaMeasurementId && gaMeasurementId.length > 0;
 
+      const gaLegacyMeasurementId = process.env.GA_LEGACY_MEASUREMENT_ID;
+      const gaLegacyEnabled = gaEnabled && gaLegacyMeasurementId && gaLegacyMeasurementId.length > 0;
+
       const optimizeId = process.env.OPTIMIZE_ID;
       const optimizeEnabled = optimizeId && optimizeId.length > 0;
            
@@ -42,6 +45,8 @@ export class FlexController {
         optimizeEnabled: optimizeEnabled,
         gaEnabled: gaEnabled,
         gaMeasurementId: gaMeasurementId,
+        gaLegacyEnabled: gaLegacyEnabled,
+        gaLegacyMeasurementId: gaLegacyMeasurementId,
         thumbprint: thumbprint,
         claimCode: claimCode,
         brandCode: brandCode,        
