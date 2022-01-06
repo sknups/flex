@@ -51,8 +51,7 @@ export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
 
         //Load all required images in parallel before drawing them on the canvas
         let images = await this.loadImages([
-            `./static/backgrounds/card.back.rarity${rarity}.v3.jpg`,
-            `brand.${fromCertificate.certVersion}.cardBack.${fromCertificate.brandCode}.png`,
+            `./static/backgrounds/card.back.rarity${rarity}.v3.jpg`,           
             `sku.${fromCertificate.certVersion}.cardBack.${fromCertificate.stockKeepingUnitCode}.png`
         ]);
         const L_COL_L = 130;
@@ -65,20 +64,14 @@ export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
         } else {
             logger.info('Failed to load background image image:');
         }
-        const skuImage = images[2];
+        const skuImage = images[1];
         if (skuImage.status == 'fulfilled') {
             const imageDimensions = this.scaleToMax(900, 1350, skuImage.value);
             context.drawImage(skuImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
         } else {
             logger.info('Failed to load sku image: ' + fromCertificate.stockKeepingUnitCode);
         }
-        const brandImage = images[1];
-        if (brandImage.status == 'fulfilled') {
-            const imageDimensions = this.scaleToMax(900, 1350, brandImage.value);
-            context.drawImage(brandImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
-        } else {
-            logger.info('Failed to load brand image: ' + fromCertificate.brandCode);
-        }
+     
         //write the text
         let y_shift = this.writeText(context, 'ITEM', fromCertificate.stockKeepingUnitName.toLocaleUpperCase(), L_COL_L, R_COL_L, 200);
         this.writeText(context, 'ITEM NUMBER', '' + this.getItemNumberText(fromCertificate.maxQty, fromCertificate.saleQty, fromCertificate.stockKeepingUnitRarity), L_COL_L, R_COL_L, 270 + y_shift);
