@@ -24,8 +24,7 @@ export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
 
         //Load all required images in parallel before drawing them on the canvas
         let images = await this.loadImages([
-            `./static/backgrounds/card.front.rarity${rarity}.v3.jpg`,
-            `brand.${fromCertificate.certVersion}.cardFront.${fromCertificate.brandCode}.png`,
+            `./static/backgrounds/card.front.rarity${rarity}.v3.jpg`,            
             `sku.${fromCertificate.certVersion}.cardFront.${fromCertificate.stockKeepingUnitCode}.png`
         ]);
         //.then((images) => {
@@ -36,22 +35,14 @@ export class DefaultTemplate extends BrandTemplate<CertificateDTO> {
         } else {
             logger.info('Failed to load background image image:');
         }
-        const skuImage = images[2];
+        const skuImage = images[1];
         if (skuImage.status == 'fulfilled') {
             const imageDimensions = this.scaleToMax(900, 1350, skuImage.value);
             context.drawImage(skuImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
         } else {
             logger.info('Failed to load sku image: ' + fromCertificate.stockKeepingUnitCode);
         }
-        const brandImage = images[1];
-        if (brandImage.status == 'fulfilled') {
-            const imageDimensions = this.scaleToMax(900, 1350, brandImage.value);
-            logger.info(imageDimensions);
-            context.drawImage(brandImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
-        } else {
-            logger.info('Failed to load brand image: ' + fromCertificate.brandCode);
-        }
-
+  
         //write the text
         context.fillStyle = ImagesConfigs.TEXT_RGB;
         context.font = '35pt Jost';
