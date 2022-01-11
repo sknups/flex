@@ -19,7 +19,7 @@ on:
 
 env:
   GOOGLE_PROJECT: dev-drm-admin-5548
-  IMAGE: flex-ui
+  IMAGE: flex
 
 jobs:
   setup-build-publish:
@@ -45,10 +45,7 @@ jobs:
     - name: Build
       run: |-
         docker build \
-          --tag "eu.gcr.io/$GOOGLE_PROJECT/$IMAGE:$GITHUB_SHA" \
-          --build-arg GITHUB_SHA="$GITHUB_SHA" \
-          --build-arg GITHUB_REF="$GITHUB_REF" \
-          .
+          --tag "eu.gcr.io/$GOOGLE_PROJECT/$IMAGE:$GITHUB_SHA" .
     # Push the Docker image to Google Container Registry
     - name: Publish
       run: |-
