@@ -2,7 +2,7 @@
 
 ## Intro
 
-Image server which generates cards and certificates for assets, and also serves non-static images for hte app - eg, SKU images and models, non-default backgrounds, videos
+Image server which generates cards for items and skus, and also serves non-static images for hte app - eg, SKU images and models, non-default backgrounds, videos
 
 ## Brief explanation
 

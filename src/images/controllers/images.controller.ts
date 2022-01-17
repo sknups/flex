@@ -3,19 +3,17 @@ import querystring from "querystring";
 import { StatusCodes } from "http-status-codes";
 import { logger } from '../../logger'
 import { ImagesService } from "../services/images.service";
-import {CertificateDTO, CertificatesService, SkuDTO} from "../../certificates/services/certificates.service";
+import {ItemDTO, EntitiesService, SkuDTO} from "../../entities/services/entities.service";
 import { ImagesConfigs } from "../images.configs";
-import { Canvas } from "canvas";
-import { BrandTemplate } from "templates/BrandTemplate";
 
 export class ImagesController {
 
     private readonly imagesService: ImagesService;
-    private readonly certificateService: CertificatesService;
+    private readonly entitiesService: EntitiesService;
 
     constructor() {
         this.imagesService = new ImagesService();
-        this.certificateService = new CertificatesService();
+        this.entitiesService = new EntitiesService();
     }
 
     index(request: express.Request, response: express.Response) {
@@ -49,7 +47,7 @@ export class ImagesController {
                 dto = await this.getSku(code);
                 brandCode = dto.brandCode;
             } else {
-                dto = await this.getCertificate(code);
+                dto = await this.getItem(code);
                 brandCode = dto.brandCode;
             }
 
@@ -60,7 +58,7 @@ export class ImagesController {
                 q = ImagesConfigs.QUALITY;
             }
 
-            logger.info(`ImagesController.getImage version: ${version} tpl: ${tpl} purpose: ${use} from brand: ${brandCode} with certCode: ${code}`);
+            logger.info(`ImagesController.getImage version: ${version} tpl: ${tpl} purpose: ${use} from brand: ${brandCode} with id: ${code}`);
 
             this.imagesService.generateCanvasImage(version, tpl, use, dto, brandCode).then(canvas => {
                 if (format == 'png') {
@@ -141,13 +139,13 @@ export class ImagesController {
         }
     }
 
-    async getCertificate(withId: string): Promise<CertificateDTO> {
-        const response = await this.certificateService.getCertificate(withId);
+    async getItem(withId: string): Promise<ItemDTO> {
+        const response = await this.entitiesService.getItem(withId);
         return response.data;
     }
 
     async getSku(withId: string): Promise<SkuDTO> {
-        const response = await this.certificateService.getSku(withId);
+        const response = await this.entitiesService.getSku(withId);
         return response.data;
     }
 
