@@ -3,29 +3,29 @@ import axios from 'axios';
 import { StatusCodes } from "http-status-codes";
 import { logger } from "../../logger";
 import {
-  CertificateDTO,
-  CertificatesService,
-} from "../../certificates/services/certificates.service";
+  ItemDTO,
+  EntitiesService,
+} from "../../entities/services/entities.service";
 
 export class FlexController {
-  private readonly certificateService: CertificatesService;
+  private readonly entitiesService: EntitiesService;
 
   constructor() {
-    this.certificateService = new CertificatesService();
+    this.entitiesService = new EntitiesService();
   }
 
 
   async getPage(request: express.Request, response: express.Response) {
     const type = request.params.type;
-    const certCode = request.params.certCode;
+    const itemId = request.params.id;
 
     try {
-      const certificateDTO = await this.getCertificate(certCode);
-      const brandCode = certificateDTO.brandCode;
+      const dto = await this.getItem(itemId);
+      const brandCode = dto.brandCode;
       const version = request.params.version;
 
       logger.info(
-        `FlexController.getPage version: ${version} type: ${type} from brand: ${brandCode} with certCode: ${certCode}`
+        `FlexController.getPage version: ${version} type: ${type} from brand: ${brandCode} with itemId: ${itemId}`
       );
  
       const gaMeasurementId = process.env.GA_MEASUREMENT_ID;
@@ -37,8 +37,8 @@ export class FlexController {
       const optimizeId = process.env.OPTIMIZE_ID;
       const optimizeEnabled = optimizeId && optimizeId.length > 0;
            
-      const {sknappHost,flexHost,certVersion,thumbprint, stockKeepingUnitName, description } = certificateDTO;
-      const {claimCode,stockKeepingUnitCode } = certificateDTO;
+      const {sknappHost,flexHost,certVersion,thumbprint, stockKeepingUnitName, description } = dto;
+      const {claimCode,stockKeepingUnitCode } = dto;
       
       response.status(StatusCodes.OK).render(`flex_${version}`, {
         optimizeId: optimizeId,
@@ -84,8 +84,8 @@ export class FlexController {
     }
   }
 
-  async getCertificate(withId: string): Promise<CertificateDTO> {
-    const response = await this.certificateService.getCertificate(withId);
+  async getItem(withId: string): Promise<ItemDTO> {
+    const response = await this.entitiesService.getItem(withId);
     return response.data;
   }
 }

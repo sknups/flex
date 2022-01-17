@@ -2,7 +2,7 @@ import { BrandTemplate } from "../../BrandTemplate";
 import { ImagesConfigs } from "../../../images/images.configs";
 import { Canvas, createCanvas, Image, loadImage, registerFont } from "canvas";
 import { logger } from '../../../logger'
-import {CertificateDTO, SkuDTO} from "../../../certificates/services/certificates.service";
+import { SkuDTO } from "../../../entities/services/entities.service";
 import { Context } from "node:vm";
 
 export class DefaultTemplate extends BrandTemplate<SkuDTO> {

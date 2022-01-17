@@ -1,4 +1,4 @@
-import { CertificateDTO } from "../../certificates/services/certificates.service";
+import { ItemDTO } from "../../entities/services/entities.service";
 import { StringUtils } from "../../utils/string.utils";
 import {logger } from '../../logger'
 import { BrandTemplate } from "../../templates/BrandTemplate";
