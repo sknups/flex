@@ -16,7 +16,7 @@ export class FlexRoutesConfig extends CommonRoutesConfig {
     configureRoutes(): express.Application {       
 
         this.getApp()
-            .route('/flex/:version/:certCode.html')
+            .route('/flex/:version/:id.html')
             .get((req, res) => {                
                 this.flexController.getPage(req, res).catch((err) => {
                     logger.error(`FlexRoutesConfig.getPage error: ${err}`);
