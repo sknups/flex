@@ -1,4 +1,4 @@
-import {CertificateDTO, SkuDTO} from "../certificates/services/certificates.service";
+import {ItemDTO, SkuDTO} from "../entities/services/entities.service";
 import { logger } from '../logger'
 import { Canvas, Image, registerFont, createCanvas } from "canvas";
 import { IFont } from "../models/IFont";
@@ -18,7 +18,7 @@ export abstract class BrandTemplate<T> {
      * @param dto 
      * @returns int 1 - 5
      */
-    getRarity(dto: CertificateDTO){
+    getRarity(dto: ItemDTO){
         return this.getSkuRarity(dto.stockKeepingUnitRarity, dto.stockKeepingUnitCode);
     }
 
@@ -38,7 +38,7 @@ export abstract class BrandTemplate<T> {
     }
     /**
      * Function responsible for render the template according to the requirements of each brand
-     * @param fromCertificate The DTO for the certificate
+     * @param dto The DTO for the entity
      * @param use The use intended for the image: handed in as part of the URL. default/any=full size: og=small square: 
      */
     abstract renderTemplate(dto: T, purpose: string): Promise<Canvas>;

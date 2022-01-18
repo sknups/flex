@@ -2,7 +2,7 @@ import axios, { AxiosResponse} from "axios";
 import {logger } from '../../logger'
 import {AuthenticationUtils} from "../../utils/authentication.utils";
 
-export interface CertificateDTO {
+export interface ItemDTO {
     brandCode: string;
     certVersion: string;
     claimCode: string;
@@ -36,7 +36,7 @@ export interface SkuDTO {
     recommendedRetailPrice: number;
 }
 
-export class CertificatesService {
+export class EntitiesService {
     private readonly drmServerUrl: string = 'https://drm-service-dev.sknups.gg';
 
     constructor() {
@@ -44,13 +44,13 @@ export class CertificatesService {
     }
 
     /**
-     * Get a certificate from ID
+     * Get an item from ID
      * @param withId
      * @param withEmail
      */
-    async getCertificate(withId: any, withEmail?: any): Promise<AxiosResponse<CertificateDTO>> {
+    async getItem(withId: any, withEmail?: any): Promise<AxiosResponse<ItemDTO>> {
         const url = `${this.drmServerUrl}/api/v1/items/flex/${withId}`;
-        logger.debug(`CertificatesService.getCertificate withId:${withId} from ${url}`);
+        logger.debug(`EntitiesService.getItem withId:${withId} from ${url}`);
         const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
 
         const drmOptions = {
@@ -61,12 +61,12 @@ export class CertificatesService {
                 email: withEmail
             }
         };
-        return axios.get<CertificateDTO>(url, drmOptions);
+        return axios.get<ItemDTO>(url, drmOptions);
     }
 
     async getSku(id: any): Promise<AxiosResponse<SkuDTO>> {
         const url = `${this.drmServerUrl}/api/v1/skus/${id}`;
-        logger.debug(`CertificatesService.getSku withId:${id} from ${url}`);
+        logger.debug(`EntitiesService.getSku withId:${id} from ${url}`);
         const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
 
         const drmOptions = {

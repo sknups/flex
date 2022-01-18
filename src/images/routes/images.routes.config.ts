@@ -30,7 +30,7 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
             .get((req, res) => this.imagesController.index(req, res));
 
         this.getApp()
-            .route('/skn/:version/:type(card|back|cert)/:use/:code.:format')
+            .route('/skn/:version/:type(card|back)/:use/:code.:format')
             .get((req, res) => {
                 this.handleImageRequest(req, res, 'skn');
 
