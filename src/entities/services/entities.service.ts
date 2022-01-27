@@ -46,9 +46,8 @@ export class EntitiesService {
     /**
      * Get an item from ID
      * @param withId
-     * @param withEmail
      */
-    async getItem(withId: any, withEmail?: any): Promise<AxiosResponse<ItemDTO>> {
+    async getItem(withId: any): Promise<AxiosResponse<ItemDTO>> {
         const url = `${this.drmServerUrl}/api/v1/items/flex/${withId}`;
         logger.debug(`EntitiesService.getItem withId:${withId} from ${url}`);
         const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
@@ -56,9 +55,6 @@ export class EntitiesService {
         const drmOptions = {
             headers: {
                 Authorization: `Bearer ${bearerToken}`,
-            },
-            params: {
-                email: withEmail
             }
         };
         return axios.get<ItemDTO>(url, drmOptions);
