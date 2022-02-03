@@ -20,20 +20,9 @@ export interface ItemDTO {
 export interface SkuDTO {
     code: string;
     name: string;
-    created: Date;
-    updated: Date;
-    maxQty: number;
-    description: string;
     rarity: number;
     brandCode: string;
     brandName: string;
-    platformCode: string;
-    platformName: string;
-    designItemCode: string;
-    designItemName: string;
-    brandWholesalePrice: number;
-    platformWholesalePrice: number;
-    recommendedRetailPrice: number;
 }
 
 export class EntitiesService {
