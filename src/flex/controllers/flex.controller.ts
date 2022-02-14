@@ -51,7 +51,7 @@ export class FlexController {
         claimCode: claimCode,
         brandCode: brandCode,        
         stockKeepingUnitCode: stockKeepingUnitCode,
-        title: `${stockKeepingUnitName} - Sknups`,
+        title: `${stockKeepingUnitName} | SKNUPS`,
         layout: false,
         appURL: `${sknappHost}/?utm_source=flex`,
         cardImgUrl: `${flexHost}/skn/${certVersion}/card/default/${thumbprint}.jpg`,
