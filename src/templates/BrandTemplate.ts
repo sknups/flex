@@ -82,15 +82,31 @@ export abstract class BrandTemplate<T> {
      * @param context 
      */
     convertToOg(canvas: Canvas): Canvas {
+        return this.convertToSquare(canvas, ImagesConfigs.SIZES.OG);
+    }
+
+     /**
+     * This will convert the image to a ImagesConfigs.SIZES.SNAP px square
+     * @param context 
+     */
+    convertToSnapchatSticker(canvas: Canvas): Canvas {
+      return this.convertToSquare(canvas, ImagesConfigs.SIZES.SNAP_STICKER);
+    }
+
+     /**
+     * This will convert the image to a square of size
+     * @param context 
+     * @param size
+     */
+    convertToSquare(canvas: Canvas, size: number): Canvas {
         try {
-            //cache the image on a temp canvas as resizing the canvas will
-            const tempCanvas = createCanvas(ImagesConfigs.SIZES.OG, ImagesConfigs.SIZES.OG);
-            var scaled = this.scaleToMax(ImagesConfigs.SIZES.OG, ImagesConfigs.SIZES.OG, canvas);
-            tempCanvas.getContext("2d").drawImage(canvas, (ImagesConfigs.SIZES.OG - scaled[0]) / 2, 0, scaled[0], scaled[1]);
-            logger.info("Converted to OG");
+            const tempCanvas = createCanvas(size, size);
+            var scaled = this.scaleToMax(size,size, canvas);
+            tempCanvas.getContext("2d").drawImage(canvas, (size - scaled[0]) / 2, 0, scaled[0], scaled[1]);
+            logger.info(`Converted to square ${size}`);
             return tempCanvas;
         } catch (error) {
-            logger.error("Failed to convert canvas to OG: " + error);
+            logger.error("Failed to convert canvas to SNAP_STICKER: " + error);
             return canvas;
         }
     }

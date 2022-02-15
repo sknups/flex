@@ -60,6 +60,10 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
             canvas = this.convertToOg(canvas);
         }
 
+        if (purpose == 'snapsticker') {
+            canvas = this.convertToSnapchatSticker(canvas);
+        }
+
         if (purpose == 'thumb') {
             canvas = this.convertToThumb(canvas);
         }
