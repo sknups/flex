@@ -64,9 +64,8 @@ export class FlexController {
         twitterUrl: `${flexHost}/flex/v1/${thumbprint}.html`,
         description : description,
         copyrightYear: new Date().getFullYear(),
-        legalUrl: `${sknappHost}/skn/legal/use-sknapp`
-
-      
+        legalUrl: `${sknappHost}/skn/legal/use-sknapp`,
+        snapStickerImageUrl: `${flexHost}/skn/${certVersion}/card/snapsticker/${thumbprint}.png`
     });
 
     } catch (err) {
