@@ -21,6 +21,8 @@ env:
   GOOGLE_PROJECT: dev-drm-admin-5548
   IMAGE: flex
 
+concurrency: ci-${{ github.ref }}
+
 jobs:
   setup-build-publish:
     name: Setup, Build, Publish
