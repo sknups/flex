@@ -18,7 +18,45 @@ In this sense, we are eventually going to have some or all of the following for 
 
 ## How to start
 
-It's a common Node app, so, before start, make sure you install all dependencies `npm install`
+Nodejs should **never** be installed directly, that creates a versioning nightmare.
+
+Instead, install Node Version Manager (nvm):
+
+https://github.com/nvm-sh/nvm#installing-and-updating
+
+Use nvm to install the supported Nodejs version:
+
+```shell
+nvm install 14.18.2
+nvm alias default 14.18.2
+```
+
+Confirm the correct Nodejs version is installed:
+
+```shell
+% node -v
+v14.18.2
+```
+
+Configure npm:
+
+```shell
+npm config set update-notifier false
+npm config set audit false
+npm config set fund false
+```
+
+If your architecture is Apple Silicon, e.g. MacBook Air M1, you will need build dependencies for npm package `canvas` to exist:
+
+```shell
+brew install pkg-config cairo pango libpng jpeg giflib librsvg
+```
+
+Install npm dependencies:
+
+```shell
+npm install
+```
 
 ### Development
 
@@ -26,14 +64,19 @@ To start in development mode run: `npm run dev`
 
 If you want to run the flex server against dev DRM and Asset servers (which is the best way, as you'll be using proper authentication) then set environment variables before starting: for powershell,
 
-//Set the target API for retreiving the asset DTO
+```
+//Set the target API for retrieving the asset DTO
 $env:DRM_SERVER="https://drm-service-dev.sknups.gg"
-//Set the target bucket for retreiving the images, though it will default to dev
+
+//Set the target bucket for retrieving the images, though it will default to dev
 $env:ENVIRONMENT="dev"
+
 //Set the auth token used when calling secured API: nb, this token will expire after an hour
 $env:GOOGLE_AUTH_TOKEN=(gcloud auth print-identity-token)
-//Set the JWT used when authenticating agaisnt 
+
+//Set the JWT used when authenticating against 
 $env:GOOGLE_APPLICATION_CREDENTIALS="C:\Users\Alist\Documents\drm-apps-01-43b0-ce1a4533a7c6.json"
+```
 
 ### Build
 
