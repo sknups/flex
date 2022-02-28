@@ -2,16 +2,16 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />    
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title> {{title}} </title>
     <link rel="shortcut icon" type="image/jpg" href="/static/favicon.ico"/>
     <meta name="title" content="{{stockKeepingUnitName}}" />
-    <meta name="og:title" content="{{stockKeepingUnitName}}" />
-    <meta name="og:description" content="{{description}}" />
-    <meta name="og:image" content="{{ogImageUrl}}" />
-    <meta name="og:url" content="{{ogUrl}}" />
-    <meta name="og:type" content="website" />
-    <meta name="og:locale" content="en_GB" />
+    <meta property="og:title" content="{{stockKeepingUnitName}}" />
+    <meta property="og:description" content="{{description}}" />
+    <meta property="og:image" content="{{ogImageUrl}}" />
+    <meta property="og:url" content="{{ogUrl}}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_GB" />
     <meta name="theme-color" content="#01D6A6" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:image" content="{{twitterImageUrl}}" />
@@ -20,27 +20,27 @@
     <meta name="twitter:site" content="@sknupsgg" />
     <meta name="twitter:title" content="{{stockKeepingUnitName}}" />
     <meta property="snap:sticker" content="{{snapStickerImageUrl}}" />
-    {{#if gaEnabled }}      
+    {{#if gaEnabled }}
     <script async src="https://www.googletagmanager.com/gtag/js?id={{gaMeasurementId}}"></script>
     <script>
          window.dataLayer = window.dataLayer || [];
          function gtag(){dataLayer.push(arguments);}
          gtag('js', new Date());
          gtag('config', '{{gaMeasurementId}}');
-         {{#if gaLegacyEnabled }}      
+         {{#if gaLegacyEnabled }}
          gtag('config', '{{gaLegacyMeasurementId}}');
          {{/if}}
-         gtag('event', 'flx_view', {            
+         gtag('event', 'flx_view', {
             'event_label': 'Asset has been viewed',
             'event_category': 'flx',
             'asset': '{{ thumbprint }}',
             'sku': '{{ stockKeepingUnitCode }}',
             'brand': '{{ brandCode }}',
             'claim': '{{ claimCode}}'
-         });      
+         });
     </script>
     {{/if}}
-    {{#if optimizeEnabled }}      
+    {{#if optimizeEnabled }}
     <script src="https://www.googleoptimize.com/optimize.js?id={{optimizeId}}"></script>
     {{/if}}
     <link
@@ -53,7 +53,7 @@
     html{
       background-color: black;
     }
-  
+
     body {
       background: rgb(4, 139, 108);
       background: -webkit-gradient(linear, left bottom, left top, from(rgba(4, 139, 108, 1)), color-stop(50%, rgba(3, 59, 46, 1)), to(rgba(4, 4, 4, 1)));
