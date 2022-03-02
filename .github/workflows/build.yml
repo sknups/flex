@@ -59,7 +59,7 @@ jobs:
      
     # Call the API to trigger the workflow that updates the version in DRM_Apps_Deply 
     - name: Deploy
-      uses: sknups/deploy-action@v1.1
+      uses: sknups/deploy-action@v1.2
       with:
         image: ${{ env.IMAGE }}
         tag: ${{ github.sha }}
