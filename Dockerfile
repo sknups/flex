@@ -1,6 +1,4 @@
-FROM node:14.18.2@sha256:8e0a8ee16dcc4775aad34142aae2cd8183fba12e1ff2fccb1011b9942e3c1cb6 as builder
-
-ENV CLOUDSDK_PYTHON=/usr/bin/python3
+FROM node:16.13.1@sha256:534004248435dea5cecf3667232f800fc6bd101768306aecf6b87d78067b0563 as builder
 
 WORKDIR /usr/src/app
 COPY . .
@@ -8,9 +6,7 @@ COPY . .
 RUN npm install &&\
     npm run build
 
-FROM node:14.18.2-alpine3.14@sha256:4bcf68e202e0b5abc21c674a73c55c87fcae17bcfb7ffa552ef8220114481124
-
-ENV CLOUDSDK_PYTHON=/usr/bin/python3
+FROM node:16.13.1-alpine3.14@sha256:8569c8f07454ec42501e5e40a680e49d3f9aabab91a6c149e309bac63a3c8d54
 
 RUN apk add --no-cache --virtual .build-deps \
         build-base=0.5-r2 \ 
