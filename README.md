@@ -27,15 +27,15 @@ https://github.com/nvm-sh/nvm#installing-and-updating
 Use nvm to install the supported Nodejs version:
 
 ```shell
-nvm install 14.18.2
-nvm alias default 14.18.2
+nvm install 16.13.1
+nvm alias default 16.13.1
 ```
 
 Confirm the correct Nodejs version is installed:
 
 ```shell
 % node -v
-v14.18.2
+v16.13.1
 ```
 
 Configure npm:
