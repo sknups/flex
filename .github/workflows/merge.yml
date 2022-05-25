@@ -1,0 +1,52 @@
+name: Merge to main
+
+on:
+  push:
+    branches:
+    - 'main'
+
+env:
+  GOOGLE_PROJECT: dev-drm-admin-5548
+  IMAGE: flex
+
+concurrency: ci-${{ github.ref }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Authenticate GCloud
+      id: 'auth'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: '${{ secrets.GCP_DEV_DRM_SA_KEY }}'
+
+    - name: Setup GCloud
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        project_id: ${{ env.GOOGLE_PROJECT }}
+
+    - name: Build Docker image
+      run: |-
+        docker build --tag "eu.gcr.io/$GOOGLE_PROJECT/$IMAGE:$GITHUB_SHA" .
+  
+    - name: Authenticate Docker
+      run: |-
+        gcloud --quiet auth configure-docker
+ 
+    - name: Push Docker image
+      run: |-
+        docker push "eu.gcr.io/$GOOGLE_PROJECT/$IMAGE:$GITHUB_SHA"
+ 
+    - name: Deploy to dev environment
+      uses: sknups/deploy-action@v1.2
+      with:
+        image: ${{ env.IMAGE }}
+        tag: ${{ github.sha }}
+        auth: ${{ secrets.DEPLOY_TOKEN }}
+        url: ${{ secrets.DEPLOY_API_URL }}
