@@ -9,16 +9,16 @@ RUN npm install &&\
 FROM node:16.13.1-alpine3.14@sha256:8569c8f07454ec42501e5e40a680e49d3f9aabab91a6c149e309bac63a3c8d54
 
 RUN apk add --no-cache --virtual .build-deps \
-        build-base=0.5-r2 \ 
-        g++=10.3.1_git20210424-r2 &&\
+        build-base \ 
+        g++ &&\
         apk add --no-cache \
-        libpng=1.6.37-r1 \
-        libpng-dev=1.6.37-r1 \
-        jpeg-dev=9d-r1 \
-        libjpeg-turbo-dev=2.1.0-r0 \
-        cairo-dev=1.16.0-r5 \
-        giflib-dev=5.2.1-r0 \
-        pango-dev=1.48.5-r0
+        libpng \
+        libpng-dev \
+        jpeg-dev \
+        libjpeg-turbo-dev \
+        cairo-dev \
+        giflib-dev \
+        pango-dev
 
 ENV NODE_ENV=production
 ENV NO_COLOR=true
