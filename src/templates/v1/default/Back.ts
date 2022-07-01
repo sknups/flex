@@ -51,7 +51,7 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
 
         //Load all required images in parallel before drawing them on the canvas
         let images = await this.loadImages([
-            `./static/backgrounds/card.back.rarity${rarity}.v3.jpg`,           
+            `./static/backgrounds/card.back.rarity${rarity}.v3.jpg`,
             `sku.${dto.certVersion}.cardBack.${dto.stockKeepingUnitCode}.png`
         ]);
         const L_COL_L = 130;
@@ -71,12 +71,14 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         } else {
             logger.info('Failed to load sku image: ' + dto.stockKeepingUnitCode);
         }
-     
+
         //write the text
         let y_shift = this.writeText(context, 'ITEM', dto.stockKeepingUnitName.toLocaleUpperCase(), L_COL_L, R_COL_L, 200);
-        this.writeText(context, 'ITEM NUMBER', '' + this.getItemNumberText(dto.maxQty, dto.saleQty, dto.stockKeepingUnitRarity), L_COL_L, R_COL_L, 270 + y_shift);
+        if (dto.stockKeepingUnitRarity >= 1) {
+            this.writeText(context, 'ITEM NUMBER', '' + this.getItemNumberText(dto.maxQty, dto.saleQty, dto.stockKeepingUnitRarity), L_COL_L, R_COL_L, 270 + y_shift);
+        }
         this.writeText(context, 'OWNERSHIP TOKEN', dto.thumbprint, L_COL_L, R_COL_L, 340 + y_shift);
- 
+
         this.writeText(context, 'DESCRIPTION', '', L_COL_L, R_COL_L, 410 + y_shift);
         context.font = '18pt Minion';
         this.wrapText(context, dto.description, R_COL_L, 410 + y_shift, 340, 35);
