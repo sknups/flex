@@ -15,31 +15,32 @@ export abstract class BrandTemplate<T> {
 
     /**
      * Checks that rarity is an int and returns 1 if it isn't
-     * @param dto 
-     * @returns int 1 - 5
+     * @param dto
+     * @returns int 0 - 5
      */
     getRarity(dto: ItemDTO){
         return this.getSkuRarity(dto.stockKeepingUnitRarity, dto.stockKeepingUnitCode);
     }
 
     getSkuRarity(rarity: number, code: string){
-        if(Number.isInteger(rarity) && 1 <= rarity && rarity <= 5){
+        if(Number.isInteger(rarity) && 0 <= rarity && rarity <= 5){
             return rarity;
         } else {
             logger.warn(`${code} has invalid rarity: returning 1`);
             return 1;
         }
     }
-    /**
-     * What is the largets number of qtyAvailable we will show on a card?
-     **/
-    getItemNumberText(maxQty: number, saleQty: number, rarity: number) {
-        return rarity > 1 ? saleQty + '/' + maxQty : saleQty;
+
+    getItemNumberText(maximum: number, issue: number, rarity: number) {
+        if (rarity === 0) return ''
+        if (rarity === 1) return issue
+        if (rarity > 1) return issue + '/' + maximum
     }
+
     /**
      * Function responsible for render the template according to the requirements of each brand
      * @param dto The DTO for the entity
-     * @param use The use intended for the image: handed in as part of the URL. default/any=full size: og=small square: 
+     * @param use The use intended for the image: handed in as part of the URL. default/any=full size: og=small square:
      */
     abstract renderTemplate(dto: T, purpose: string): Promise<Canvas>;
 
@@ -47,7 +48,7 @@ export abstract class BrandTemplate<T> {
      * Try to load a "bunch" of images from a given design
      * Images with 'static' in the name will be loaded locally
      * All other images will be loaded from the bucket
-     * 
+     *
      * @param imagesPaths
      */
     loadImages(imagesPaths: string[]): Promise<PromiseSettledResult<Image | void>[]> {
@@ -60,12 +61,12 @@ export abstract class BrandTemplate<T> {
     }
 
     /**
-     * 
-     * @param canvas 
-     * @returns 
+     *
+     * @param canvas
+     * @returns
      */
-    writeTestWatermark(context: CanvasRenderingContext2D) {        
-        if (process.env.SHOW_TEST_ONLY_WATERMARK === 'true') { 
+    writeTestWatermark(context: CanvasRenderingContext2D) {
+        if (process.env.SHOW_TEST_ONLY_WATERMARK === 'true') {
             context.save();
             context.fillStyle = ImagesConfigs.TEXT_TEST;
             context.font = '32pt ShareTechMono-Regular';
@@ -78,7 +79,7 @@ export abstract class BrandTemplate<T> {
 
     /**
      * This will convert the image to a ImagesConfigs.SIZES.OG px square with the a transparent background and the image vertically centered
-     * @param context 
+     * @param context
      */
     convertToOg(canvas: Canvas): Canvas {
         return this.convertToSquare(canvas, ImagesConfigs.SIZES.OG);
@@ -86,7 +87,7 @@ export abstract class BrandTemplate<T> {
 
      /**
      * This will convert the image to a ImagesConfigs.SIZES.SNAP px square
-     * @param context 
+     * @param context
      */
     convertToSnapchatSticker(canvas: Canvas): Canvas {
       return this.convertToSquare(canvas, ImagesConfigs.SIZES.SNAP_STICKER);
@@ -94,7 +95,7 @@ export abstract class BrandTemplate<T> {
 
      /**
      * This will convert the image to a square of size
-     * @param context 
+     * @param context
      * @param size
      */
     convertToSquare(canvas: Canvas, size: number): Canvas {
@@ -112,7 +113,7 @@ export abstract class BrandTemplate<T> {
 
     /**
      * This will scale the image by ImagesConfigs.SIZES.THUMB
-     * @param context 
+     * @param context
      */
     convertToThumb(canvas: Canvas): Canvas {
         return this.scale(canvas, ImagesConfigs.SIZES.THUMB);
@@ -120,7 +121,7 @@ export abstract class BrandTemplate<T> {
 
     /**
      * This will scale the image by ImagesConfigs.SIZES.THUMB
-     * @param context 
+     * @param context
      */
     scale(canvas: Canvas, scale: number): Canvas {
         try {
@@ -138,10 +139,10 @@ export abstract class BrandTemplate<T> {
 
     /**
      * Utility method to work out the maximum size of an image we are scaling
-     * @param maxWidth 
-     * @param maxHeight 
-     * @param image 
-     * @returns 
+     * @param maxWidth
+     * @param maxHeight
+     * @param image
+     * @returns
      */
     scaleToMax(maxWidth: number, maxHeight: number, image: any): number[] {
         const boxAspectRatio: number = maxWidth / maxHeight;
@@ -173,7 +174,7 @@ export abstract class BrandTemplate<T> {
         });
     }
 
-    
+
 
     wrapTextCentered(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) {
       return this.wrapText(context, text, x, y, maxWidth, lineHeight, true);
