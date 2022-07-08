@@ -1,9 +1,9 @@
 import express from "express";
-import { StatusCodes } from "http-status-codes";
-import { logger } from '../../logger'
-import { ImagesService } from "../services/images.service";
-import {ItemDTO, EntitiesService, SkuDTO} from "../../entities/services/entities.service";
-import { ImagesConfigs } from "../images.configs";
+import {StatusCodes} from "http-status-codes";
+import {logger} from '../../logger'
+import {ImagesService} from "../services/images.service";
+import {EntitiesService} from "../../entities/services/entities.service";
+import {ImagesConfigs} from "../images.configs";
 
 export class ImagesController {
 
@@ -43,10 +43,10 @@ export class ImagesController {
             let brandCode: string;
 
             if (template === 'sku') {
-                dto = await this.getSku(code);
+                dto = await this.entitiesService.getSku(code);
                 brandCode = dto.brandCode;
             } else {
-                dto = await this.getItem(code);
+                dto = await this.entitiesService.getItem(code);
                 brandCode = dto.brandCode;
             }
 
@@ -137,16 +137,6 @@ export class ImagesController {
             logger.info(`ImagesController.getEntityImage ERROR. Failed to get. ${err}`);
             response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR).send('Error drawing image');
         }
-    }
-
-    async getItem(withId: string): Promise<ItemDTO> {
-        const response = await this.entitiesService.getItem(withId);
-        return response.data;
-    }
-
-    async getSku(withId: string): Promise<SkuDTO> {
-        const response = await this.entitiesService.getSku(withId);
-        return response.data;
     }
 
 }
