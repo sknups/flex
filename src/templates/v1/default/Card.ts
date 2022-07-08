@@ -24,7 +24,7 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
 
         //Load all required images in parallel before drawing them on the canvas
         let images = await this.loadImages([
-            `./static/backgrounds/card.front.rarity${rarity}.v3.jpg`,            
+            `./static/backgrounds/card.front.rarity${rarity}.v3.jpg`,
             `sku.${dto.certVersion}.cardFront.${dto.stockKeepingUnitCode}.png`
         ]);
         //.then((images) => {
@@ -42,9 +42,9 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         } else {
             logger.info('Failed to load sku image: ' + dto.stockKeepingUnitCode);
         }
-  
+
         //write the text
-        context.fillStyle = ImagesConfigs.TEXT_RGB;
+        context.fillStyle = ImagesConfigs.TEXT_COLOR;
         context.font = '35pt Jost';
         context.textAlign = 'left';
         context.fillText(dto.stockKeepingUnitName, 100, 1040);
@@ -54,7 +54,7 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         context.fillText('' + qty, 100, 1100);
 
         this.writeTestWatermark(context);
-   
+
 
         if (purpose == 'og') {
             canvas = this.convertToOg(canvas);
