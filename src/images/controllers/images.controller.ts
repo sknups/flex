@@ -5,6 +5,9 @@ import {ImagesService} from "../services/images.service";
 import {EntitiesService} from "../../entities/services/entities.service";
 import {ImagesConfigs} from "../images.configs";
 
+type ImageType = 'card' | 'back'
+type Template = 'sku' | ImageType;
+
 export class ImagesController {
 
     private readonly imagesService: ImagesService;
@@ -15,19 +18,19 @@ export class ImagesController {
         this.entitiesService = new EntitiesService();
     }
 
-    getTemplate(kind: string, type: string): string {
-        if (kind === 'sku') {
-            return kind;
-        } else {
-            return type;
-        }
+    async getSkuImage(request: express.Request, response: express.Response) {
+        return this.getImage(request, response, 'sku')
     }
 
-    async getImage(request: express.Request, response: express.Response, kind: string) {
+    async getItemImage(request: express.Request, response: express.Response) {
+        const type: ImageType = <'card'|'back'> request.params.type;
+        return this.getImage(request, response, type)
+    }
+
+    async getImage(request: express.Request, response: express.Response, template: Template) {
         try {
             const code = request.params.code;
             const use = request.params.use;
-            const template = this.getTemplate(kind, request.params.type);
 
             let dto;
             let brandCode: string;
