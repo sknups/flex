@@ -15,16 +15,6 @@ export class ImagesController {
         this.entitiesService = new EntitiesService();
     }
 
-    index(request: express.Request, response: express.Response) {
-
-        logger.info(`ImagesController.index`);
-
-        response.status(StatusCodes.OK).render('index', {
-            title: 'ImagesController',
-            message: 'Hello World from ImagesController'
-        });
-    }
-
     getTemplate(kind: string, type: string): string {
         if (kind === 'sku') {
             return kind;
