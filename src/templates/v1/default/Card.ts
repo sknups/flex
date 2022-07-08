@@ -9,7 +9,6 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
 
     async renderTemplate(dto: ItemDTO, purpose: string): Promise<Canvas> {
         //find out if we're going to scale the image
-        let scale = ImagesConfigs.SIZES.SCALE;
         logger.debug(`Drawing card ${dto.thumbprint} purpose ${purpose}`);
         const height = 1350;
         // Load Fonts
