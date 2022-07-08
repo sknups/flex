@@ -1,11 +1,8 @@
 import express from "express";
 import axios from 'axios';
-import { StatusCodes } from "http-status-codes";
-import { logger } from "../../logger";
-import {
-  ItemDTO,
-  EntitiesService,
-} from "../../entities/services/entities.service";
+import {StatusCodes} from "http-status-codes";
+import {logger} from "../../logger";
+import {EntitiesService, ItemDTO,} from "../../entities/services/entities.service";
 
 export class FlexController {
   private readonly entitiesService: EntitiesService;
@@ -20,14 +17,14 @@ export class FlexController {
     const itemId = request.params.id;
 
     try {
-      const dto = await this.getItem(itemId);
+      const dto = await this.entitiesService.getItem(itemId);
       const brandCode = dto.brandCode;
       const version = request.params.version;
 
       logger.info(
         `FlexController.getPage version: ${version} type: ${type} from brand: ${brandCode} with itemId: ${itemId}`
       );
- 
+
       const gaMeasurementId = process.env.GA_MEASUREMENT_ID;
       const gaEnabled = gaMeasurementId && gaMeasurementId.length > 0;
 
@@ -36,10 +33,10 @@ export class FlexController {
 
       const optimizeId = process.env.OPTIMIZE_ID;
       const optimizeEnabled = optimizeId && optimizeId.length > 0;
-           
+
       const {sknappHost,flexHost,certVersion,thumbprint, stockKeepingUnitName, description } = dto;
       const {claimCode,stockKeepingUnitCode } = dto;
-      
+
       response.status(StatusCodes.OK).render(`flex_${version}`, {
         optimizeId: optimizeId,
         optimizeEnabled: optimizeEnabled,
@@ -49,14 +46,14 @@ export class FlexController {
         gaLegacyMeasurementId: gaLegacyMeasurementId,
         thumbprint: thumbprint,
         claimCode: claimCode,
-        brandCode: brandCode,        
+        brandCode: brandCode,
         stockKeepingUnitCode: stockKeepingUnitCode,
         title: `${stockKeepingUnitName} | SKNUPS`,
         layout: false,
         appURL: `${sknappHost}/?utm_source=flex`,
         cardImgUrl: `${flexHost}/skn/${certVersion}/card/default/${thumbprint}.jpg`,
         cardThumbnailImgUrl: `${flexHost}/skn/${certVersion}/card/thumb/${thumbprint}.jpg?q=0.1`,
-        backImgUrl: `${flexHost}/skn/${certVersion}/back/default/${thumbprint}.jpg`,        
+        backImgUrl: `${flexHost}/skn/${certVersion}/back/default/${thumbprint}.jpg`,
         stockKeepingUnitName: stockKeepingUnitName,
         ogImageUrl: `${flexHost}/skn/${certVersion}/card/og/${thumbprint}.png`,
         ogUrl: `${flexHost}/flex/v1/${thumbprint}.html`,
@@ -69,22 +66,17 @@ export class FlexController {
     });
 
     } catch (err) {
-    
+
       if (axios.isAxiosError(err) && err.response && err.response.status === StatusCodes.NOT_FOUND) {
         response.writeHead(StatusCodes.NOT_FOUND);
         response.write("Failed to get flex page - Certificate not found");
         response.end();
         return;
-      }      
+      }
       logger.error(err);
       response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR);
       response.write("Failed to get flex page");
       response.end();
     }
-  }
-
-  async getItem(withId: string): Promise<ItemDTO> {
-    const response = await this.entitiesService.getItem(withId);
-    return response.data;
   }
 }
