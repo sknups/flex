@@ -19,21 +19,12 @@ export class DefaultTemplate extends BrandTemplate<SkuDTO> {
         context.patternQuality = 'good';
         context.quality = 'good';
 
-        const rarity = this.getSkuRarity(sku.rarity, sku.code);
-
         //Load all required images in parallel before drawing them on the canvas
         let images = await this.loadImages([
-            `./static/backgrounds/card.front.rarity${rarity}.v3.jpg`,
             `sku.v1.cardFront.${sku.code}.png`
         ]);
 
-        const backgroundImage = images[0];
-        if (backgroundImage.status === 'fulfilled') {
-            context.drawImage(backgroundImage.value, 0, 0);
-        } else {
-            logger.info('Failed to load background image image:');
-        }
-        const skuImage = images[1];
+        const skuImage = images[0];
         if (skuImage.status === 'fulfilled') {
             const imageDimensions = this.scaleToMax(900, 1350, skuImage.value);
             context.drawImage(skuImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
