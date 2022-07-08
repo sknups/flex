@@ -9,7 +9,6 @@ export class DefaultTemplate extends BrandTemplate<SkuDTO> {
 
     async renderTemplate(sku: SkuDTO, purpose: string): Promise<Canvas> {
         //find out if we're going to scale the image
-        let scale = ImagesConfigs.SIZES.SCALE;
         logger.debug(`Drawing card of SKU ${sku.code} purpose ${purpose}`);
 
         // Load Fonts

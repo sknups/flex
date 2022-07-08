@@ -6,7 +6,6 @@ export class ImagesConfigs {
         SNAP_STICKER: 400,
         OG: 383,
         TWITTER: 280,
-        SCALE: 1,
         THUMB: 10
     }
 
