@@ -18,18 +18,18 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
         this.getApp()
             .route('/skn/:version/:type(card|back)/:use/:code.:format')
             .get((req, res) => {
-                logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)} and kind ${'skn'}`);
-                this.imagesController.getImage(req, res, 'skn').catch((err) => {
-                    logger.info(`imagesController.getImage error: ${err}`);
+                logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)} and kind SKN`);
+                this.imagesController.getItemImage(req, res).catch((err) => {
+                    logger.info(`imagesController.getSknImage error: ${err}`);
                 });
             });
 
         this.getApp()
             .route('/sku/:version/:type(card)/:use(metaplex)/:code.:format')
             .get((req, res) => {
-                logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)} and kind ${'sku'}`);
-                this.imagesController.getImage(req, res, 'sku').catch((err) => {
-                    logger.info(`imagesController.getImage error: ${err}`);
+                logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)} and kind SKU`);
+                this.imagesController.getSkuImage(req, res).catch((err) => {
+                    logger.info(`imagesController.getSkuImage error: ${err}`);
                 });
             });
 
