@@ -25,10 +25,6 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
     configureRoutes(): express.Application {
         logger.info(`Images.routes.config`)
 
-        // Root of Request
-        this.getApp().route(`/img`)
-            .get((req, res) => this.imagesController.index(req, res));
-
         this.getApp()
             .route('/skn/:version/:type(card|back)/:use/:code.:format')
             .get((req, res) => {
