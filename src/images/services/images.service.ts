@@ -1,18 +1,15 @@
-import { ItemDTO } from "../../entities/services/entities.service";
-import { StringUtils } from "../../utils/string.utils";
 import {logger } from '../../logger'
-import { BrandTemplate } from "../../templates/BrandTemplate";
 import { Storage } from "@google-cloud/storage";
 import { Canvas, Image, loadImage } from "canvas";
 import {Template} from "../model";
+import {ItemDTO, SkuDTO} from "../../entities/services/entities.service";
 
 export class ImagesService {
 
-    private bucket;
+    private readonly bucket;
 
     constructor() {
-        let srv: String;
-        switch (process.env.ENVIRONMENT) {
+      switch (process.env.ENVIRONMENT) {
             case null:
                 logger.warn("Warn - no env var ENVIRONMENT - defaulting to DEV");
                 this.bucket = new Storage().bucket('assets-dev.sknups.gg');
@@ -23,14 +20,18 @@ export class ImagesService {
             default:
                 this.bucket = new Storage().bucket(`assets-${process.env.ENVIRONMENT}.sknups.gg`);
                 break;
-
         }
     }
 
-    // This will return a promise wrapping a canvas on which the image is drawn,  The code to draw the canvas is selected according to the parameters passed.
-    async generateCanvasImage(version: string, template: Template, use: string, dto: any): Promise<Canvas> {
+    private static capitalize(str: string): string {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
 
-        const className = StringUtils.classify(template);
+
+    // This will return a promise wrapping a canvas on which the image is drawn,  The code to draw the canvas is selected according to the parameters passed.
+    async generateCanvasImage(version: string, template: Template, use: string, dto: SkuDTO | ItemDTO): Promise<Canvas> {
+
+        const className = ImagesService.capitalize(template);
 
             try {
                 const defaultTemplateModule = await import(`../../templates/${version}/default/${className}`);
@@ -43,7 +44,6 @@ export class ImagesService {
 
     }
     async getBucketImage(name: string): Promise<Buffer> {
-        const bucket = await this.bucket;
         const getRawBody = require('raw-body');
         const file = this.bucket.file(name);
         return getRawBody(file.createReadStream());
