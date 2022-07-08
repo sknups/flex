@@ -1,5 +1,4 @@
 import express from "express";
-import querystring from "querystring";
 import { StatusCodes } from "http-status-codes";
 import { logger } from '../../logger'
 import { ImagesService } from "../services/images.service";
@@ -38,12 +37,12 @@ export class ImagesController {
         try {
             const code = request.params.code;
             const use = request.params.use;
-            const tpl = this.getTemplate(kind, request.params.type);
+            const template = this.getTemplate(kind, request.params.type);
 
             let dto;
-            let brandCode = '';
+            let brandCode: string;
 
-            if (tpl === 'sku') {
+            if (template === 'sku') {
                 dto = await this.getSku(code);
                 brandCode = dto.brandCode;
             } else {
@@ -58,11 +57,12 @@ export class ImagesController {
                 q = ImagesConfigs.DEFAULT_IMAGE_QUALITY;
             }
 
-            logger.info(`ImagesController.getImage version: ${version} tpl: ${tpl} purpose: ${use} from brand: ${brandCode} with id: ${code}`);
+            logger.info(`ImagesController.getImage version: ${version} tpl: ${template} purpose: ${use} from brand: ${brandCode} with id: ${code}`);
 
-            this.imagesService.generateCanvasImage(version, tpl, use, dto, brandCode).then(canvas => {
+            this.imagesService.generateCanvasImage(version, template, use, dto, brandCode).then(canvas => {
+                let buffer: Buffer;
                 if (format == 'png') {
-                    var buffer = canvas.toBuffer();
+                    buffer = canvas.toBuffer();
                     logger.info(`ImagesController.getImage png with buffer.length=${buffer.length}`);
                     response.writeHead(StatusCodes.OK, {
                         'Content-Type': 'image/png',
@@ -72,7 +72,7 @@ export class ImagesController {
                     response.write(buffer);
                     response.end(null, 'binary');
                 } else {
-                    var buffer = canvas.toBuffer('image/jpeg', { quality: q });
+                    buffer = canvas.toBuffer('image/jpeg', {quality: q});
                     logger.info(`ImagesController.getImage jpeg with quality ${q} buffer.length=${buffer.length}`);
                     response.writeHead(StatusCodes.OK, {
                         'Content-Type': 'image/jpeg',
