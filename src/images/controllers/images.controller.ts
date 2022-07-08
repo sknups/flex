@@ -4,9 +4,7 @@ import {logger} from '../../logger'
 import {ImagesService} from "../services/images.service";
 import {EntitiesService, ItemDTO, SkuDTO} from "../../entities/services/entities.service";
 import {ImagesConfigs} from "../images.configs";
-
-type ImageType = 'card' | 'back'
-type Template = 'sku' | ImageType;
+import {ImageType, Template} from "../model";
 
 export class ImagesController {
 
