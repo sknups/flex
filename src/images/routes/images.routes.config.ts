@@ -1,7 +1,7 @@
-import { CommonRoutesConfig } from "../../common/common.routes.config";
+import {CommonRoutesConfig} from "../../common/common.routes.config";
 import express from "express";
-import { ImagesController } from "../controllers/images.controller";
-import { logger } from '../../logger'
+import {ImagesController} from "../controllers/images.controller";
+import {logger} from '../../logger'
 
 export class ImagesRoutesConfig extends CommonRoutesConfig {
 
@@ -9,17 +9,7 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
 
     constructor(app: express.Application) {
         super(app, 'Images Routes');
-
         this.imagesController = new ImagesController();
-    }
-
-    handleImageRequest(req: express.Request, res: express.Response, kind: string) {
-        logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)} and kind ${kind}`);
-
-        this.imagesController.getImage(req, res, kind).then(() => {
-        }).catch((err) => {
-            logger.info(`imagesController.getImage error: ${err}`);
-        });
     }
 
     configureRoutes(): express.Application {
@@ -28,14 +18,19 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
         this.getApp()
             .route('/skn/:version/:type(card|back)/:use/:code.:format')
             .get((req, res) => {
-                this.handleImageRequest(req, res, 'skn');
-
+                logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)} and kind ${'skn'}`);
+                this.imagesController.getImage(req, res, 'skn').catch((err) => {
+                    logger.info(`imagesController.getImage error: ${err}`);
+                });
             });
 
         this.getApp()
             .route('/sku/:version/:type(card)/:use(metaplex)/:code.:format')
             .get((req, res) => {
-                this.handleImageRequest(req, res, 'sku');
+                logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)} and kind ${'sku'}`);
+                this.imagesController.getImage(req, res, 'sku').catch((err) => {
+                    logger.info(`imagesController.getImage error: ${err}`);
+                });
             });
 
         this.getApp()
