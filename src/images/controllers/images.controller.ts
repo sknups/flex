@@ -55,7 +55,7 @@ export class ImagesController {
             const format = request.params.format;
             let q = Number(request.query.q);
             if (isNaN(q) || q <= 0 || q > 1) {
-                q = ImagesConfigs.QUALITY;
+                q = ImagesConfigs.DEFAULT_IMAGE_QUALITY;
             }
 
             logger.info(`ImagesController.getImage version: ${version} tpl: ${tpl} purpose: ${use} from brand: ${brandCode} with id: ${code}`);
@@ -117,7 +117,7 @@ export class ImagesController {
                         contentType = 'model/gltf-binary';
                     }
                     logger.debug(`ImagesController.getEntityImage with buffer.length=${buffer.length} and format ${format} and contentType ${contentType}`);
-                  
+
                     response.writeHead(StatusCodes.OK, {
                         'Content-Type': contentType,
                         'Content-Length': buffer.length,

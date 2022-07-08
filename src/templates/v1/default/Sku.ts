@@ -27,7 +27,7 @@ export class DefaultTemplate extends BrandTemplate<SkuDTO> {
             `./static/backgrounds/card.front.rarity${rarity}.v3.jpg`,
             `sku.v1.cardFront.${sku.code}.png`
         ]);
-    
+
         const backgroundImage = images[0];
         if (backgroundImage.status === 'fulfilled') {
             context.drawImage(backgroundImage.value, 0, 0);
@@ -40,10 +40,10 @@ export class DefaultTemplate extends BrandTemplate<SkuDTO> {
             context.drawImage(skuImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
         } else {
             logger.info('Failed to load sku image: ' + sku.code);
-        }     
+        }
 
         //write the text
-        context.fillStyle = ImagesConfigs.TEXT_RGB;
+        context.fillStyle = ImagesConfigs.TEXT_COLOR;
         context.font = '35pt JostSemi';
         context.textAlign = 'left';
         context.fillText(sku.name, 100, 1040);

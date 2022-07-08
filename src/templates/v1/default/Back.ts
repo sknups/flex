@@ -13,7 +13,7 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         let wrap = 0;
         const space = 34;
         ctx.textAlign = 'left';
-        ctx.fillStyle = ImagesConfigs.TEXT_RGB;
+        ctx.fillStyle = ImagesConfigs.TEXT_COLOR;
         ctx.font = '23.5pt Jost';
         ctx.fillText(title + ':', lx, y);
         ctx.font = '25pt ShareTechMono-Regular';
