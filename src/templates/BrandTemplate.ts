@@ -1,6 +1,5 @@
-import { ItemDTO } from "../entities/services/entities.service";
 import { CanvasRenderingContext2D, Canvas, Image, registerFont, createCanvas } from "canvas";
-import {logger } from '../logger'
+import { logger } from '../logger'
 import { IFont } from "../models/IFont";
 import { ImagesService } from "../images/services/images.service";
 import { ImagesConfigs } from "../images/images.configs";
@@ -10,24 +9,6 @@ export abstract class BrandTemplate<T> {
     private readonly imagesService: ImagesService;
     constructor() {
         this.imagesService = new ImagesService();
-    }
-
-    /**
-     * Checks that rarity is an int and returns 1 if it isn't
-     * @param dto
-     * @returns int 0 - 5
-     */
-    getRarity(dto: ItemDTO){
-        return this.getSkuRarity(dto.stockKeepingUnitRarity, dto.stockKeepingUnitCode);
-    }
-
-    getSkuRarity(rarity: number, code: string){
-        if(Number.isInteger(rarity) && 0 <= rarity && rarity <= 5){
-            return rarity;
-        } else {
-            logger.warn(`${code} has invalid rarity: returning 1`);
-            return 1;
-        }
     }
 
     getItemNumberText(maximum: number, issue: number, rarity: number) {
