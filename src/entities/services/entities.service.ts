@@ -1,5 +1,5 @@
-import axios, { AxiosResponse} from "axios";
-import {logger } from '../../logger'
+import axios from "axios";
+import {logger} from '../../logger'
 import {AuthenticationUtils} from "../../utils/authentication.utils";
 
 export interface ItemDTO {
@@ -34,32 +34,26 @@ export class EntitiesService {
 
     /**
      * Get an item from ID
-     * @param withId
+     * @param id
      */
-    async getItem(withId: any): Promise<AxiosResponse<ItemDTO>> {
-        const url = `${this.drmServerUrl}/api/v1/items/flex/${withId}`;
-        logger.debug(`EntitiesService.getItem withId:${withId} from ${url}`);
-        const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
-
-        const drmOptions = {
-            headers: {
-                Authorization: `Bearer ${bearerToken}`,
-            }
-        };
-        return axios.get<ItemDTO>(url, drmOptions);
+    async getItem(id: any): Promise<ItemDTO> {
+        logger.debug(`EntitiesService.getItem ${id}`);
+        const token = await AuthenticationUtils.getServiceBearerToken(this.drmServerUrl);
+        const response = await axios.get<ItemDTO>(
+            `${this.drmServerUrl}/api/v1/items/flex/${id}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        return response.data
     }
 
-    async getSku(id: any): Promise<AxiosResponse<SkuDTO>> {
-        const url = `${this.drmServerUrl}/api/v1/skus/${id}`;
-        logger.debug(`EntitiesService.getSku withId:${id} from ${url}`);
-        const bearerToken = await AuthenticationUtils.getServiceBearerToken(url);
-
-        const drmOptions = {
-            headers: {
-                Authorization: `Bearer ${bearerToken}`,
-            }
-        };
-        return axios.get<SkuDTO>(url, drmOptions);
+    async getSku(id: any): Promise<SkuDTO> {
+        logger.debug(`EntitiesService.getSku ${id}`);
+        const token = await AuthenticationUtils.getServiceBearerToken(this.drmServerUrl);
+        const response = await axios.get<SkuDTO>(
+            `${this.drmServerUrl}/api/v1/skus/${id}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        return response.data
     }
     
 }
