@@ -2,7 +2,7 @@ import express from "express";
 import {StatusCodes} from "http-status-codes";
 import {logger} from '../../logger'
 import {ImagesService} from "../services/images.service";
-import {EntitiesService} from "../../entities/services/entities.service";
+import {EntitiesService, ItemDTO, SkuDTO} from "../../entities/services/entities.service";
 import {ImagesConfigs} from "../images.configs";
 
 type ImageType = 'card' | 'back'
@@ -32,15 +32,12 @@ export class ImagesController {
             const code = request.params.code;
             const use = request.params.use;
 
-            let dto;
-            let brandCode: string;
+            let dto: SkuDTO | ItemDTO;
 
             if (template === 'sku') {
                 dto = await this.entitiesService.getSku(code);
-                brandCode = dto.brandCode;
             } else {
                 dto = await this.entitiesService.getItem(code);
-                brandCode = dto.brandCode;
             }
 
             const version = request.params.version;
@@ -50,9 +47,9 @@ export class ImagesController {
                 q = ImagesConfigs.DEFAULT_IMAGE_QUALITY;
             }
 
-            logger.info(`ImagesController.getImage version: ${version} tpl: ${template} purpose: ${use} from brand: ${brandCode} with id: ${code}`);
+            logger.info(`ImagesController.getImage version: ${version} tpl: ${template} purpose: ${use} with id: ${code}`);
 
-            this.imagesService.generateCanvasImage(version, template, use, dto, brandCode).then(canvas => {
+            this.imagesService.generateCanvasImage(version, template, use, dto).then(canvas => {
                 let buffer: Buffer;
                 if (format == 'png') {
                     buffer = canvas.toBuffer();
