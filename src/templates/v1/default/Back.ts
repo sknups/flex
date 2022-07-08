@@ -48,23 +48,15 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         context.patternQuality = 'good';
         context.quality = 'good';
 
-        const rarity = this.getRarity(dto);
-
         //Load all required images in parallel before drawing them on the canvas
         let images = await this.loadImages([
-            `./static/backgrounds/card.back.rarity${rarity}.v3.jpg`,
             `sku.${dto.certVersion}.cardBack.${dto.stockKeepingUnitCode}.png`
         ]);
         const L_COL_L = 130;
         const R_COL_L = 470;
         //draw the images first
-        const backgroundImage = images[0];
-        if (backgroundImage.status == 'fulfilled') {
-            context.drawImage(backgroundImage.value, 0, 0);
-        } else {
-            logger.info('Failed to load background image image:');
-        }
-        const skuImage = images[1];
+
+        const skuImage = images[0];
         if (skuImage.status == 'fulfilled') {
             const imageDimensions = this.scaleToMax(900, 1350, skuImage.value);
             context.drawImage(skuImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
