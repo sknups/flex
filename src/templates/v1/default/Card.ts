@@ -1,10 +1,10 @@
 import { BrandTemplate } from "../../BrandTemplate";
 import { ImagesConfigs } from "../../../images/images.configs";
-import { Canvas, createCanvas, Image, loadImage, registerFont } from "canvas";
+import { Canvas, createCanvas } from "canvas";
 import { logger } from '../../../logger'
 import { ItemDTO } from "../../../entities/services/entities.service";
-import { Context } from "node:vm";
 
+// noinspection JSUnusedGlobalSymbols
 export class DefaultTemplate extends BrandTemplate<ItemDTO> {
 
     async renderTemplate(dto: ItemDTO, purpose: string): Promise<Canvas> {
@@ -49,7 +49,7 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         context.fillText(dto.stockKeepingUnitName, 100, 1040);
 
         context.font = '35pt ShareTechMono-Regular';
-        var qty = this.getItemNumberText(dto.maxQty, dto.saleQty, dto.stockKeepingUnitRarity);
+        const qty = this.getItemNumberText(dto.maxQty, dto.saleQty, dto.stockKeepingUnitRarity);
         context.fillText('' + qty, 100, 1100);
 
         this.writeTestWatermark(context);
