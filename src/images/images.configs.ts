@@ -2,10 +2,8 @@
 export class ImagesConfigs {
 
     static SIZES = {
-        DEFAULT: 1024,
         SNAP_STICKER: 400,
         OG: 383,
-        TWITTER: 280,
         THUMB: 10
     }
 
