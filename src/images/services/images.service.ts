@@ -27,19 +27,10 @@ export class ImagesService {
     }
 
     // This will return a promise wrapping a canvas on which the image is drawn,  The code to draw the canvas is selected according to the parameters passed.
-    async generateCanvasImage(version: string, tpl: string, use: string, dto: any, brandCode: string): Promise<Canvas> {
+    async generateCanvasImage(version: string, tpl: string, use: string, dto: any): Promise<Canvas> {
 
         const className = StringUtils.classify(tpl);
 
-        //If you add brand templates you will need to uncomment this lot :-) but for speed and clearer logging:
-        //logger.info(`ImagesService.generateCanvasImage Will try to load version ${version} type ${typeToClassName} for brandCode: ${brandCode} template with name ${brandCodeToClassName}`)
-        //try {
-        //    const brandModule = await import(`../../templates/${version}/${brandCodeToClassName}/${typeToClassName}`);
-        //    const brandTemplateController: BrandTemplate = new brandModule[brandCodeToClassName];
-
-        //    return brandTemplateController.renderTemplate(fromCertificate, use);
-        //} catch (error) {
-            //logger.info(`ImagesService.generateCanvasImage Unable to get the ${typeToClassName} Template for ${brandCode}:${brandCodeToClassName}`);
             try {
                 const defaultTemplateModule = await import(`../../templates/${version}/default/${className}`);
                 const templateController = new defaultTemplateModule.DefaultTemplate();
@@ -48,7 +39,7 @@ export class ImagesService {
                 logger.error(`ImagesService.generateCanvasImage failed to load ../../templates/${version}/default/${className}: ${error}`);
                 throw new Error(`Failed to load ../../templates/${className}/default/DefaultTemplate`);
             }
-        //}
+
     }
     async getBucketImage(name: string): Promise<Buffer> {
         const bucket = await this.bucket;
