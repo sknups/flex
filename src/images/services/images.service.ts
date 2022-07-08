@@ -4,6 +4,7 @@ import {logger } from '../../logger'
 import { BrandTemplate } from "../../templates/BrandTemplate";
 import { Storage } from "@google-cloud/storage";
 import { Canvas, Image, loadImage } from "canvas";
+import {Template} from "../model";
 
 export class ImagesService {
 
@@ -27,9 +28,9 @@ export class ImagesService {
     }
 
     // This will return a promise wrapping a canvas on which the image is drawn,  The code to draw the canvas is selected according to the parameters passed.
-    async generateCanvasImage(version: string, tpl: string, use: string, dto: any): Promise<Canvas> {
+    async generateCanvasImage(version: string, template: Template, use: string, dto: any): Promise<Canvas> {
 
-        const className = StringUtils.classify(tpl);
+        const className = StringUtils.classify(template);
 
             try {
                 const defaultTemplateModule = await import(`../../templates/${version}/default/${className}`);
