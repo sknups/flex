@@ -1,10 +1,10 @@
 import { BrandTemplate } from "../../BrandTemplate";
 import { ImagesConfigs } from "../../../images/images.configs";
-import { Canvas, createCanvas, Image, loadImage, registerFont } from "canvas";
+import { Canvas, createCanvas } from "canvas";
 import { logger } from '../../../logger'
 import { SkuDTO } from "../../../entities/services/entities.service";
-import { Context } from "node:vm";
 
+// noinspection JSUnusedGlobalSymbols
 export class DefaultTemplate extends BrandTemplate<SkuDTO> {
 
     async renderTemplate(sku: SkuDTO, purpose: string): Promise<Canvas> {

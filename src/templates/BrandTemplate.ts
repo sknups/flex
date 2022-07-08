@@ -1,8 +1,7 @@
-import {ItemDTO, SkuDTO} from "../entities/services/entities.service";
+import {ItemDTO} from "../entities/services/entities.service";
 import { logger } from '../logger'
 import { Canvas, Image, registerFont, createCanvas } from "canvas";
 import { IFont } from "../models/IFont";
-import { IFlexImage } from "../models/IFlexImage";
 import { ImagesService } from "../images/services/images.service";
 import { ImagesConfigs } from "../images/images.configs";
 
@@ -37,10 +36,12 @@ export abstract class BrandTemplate<T> {
         if (rarity > 1) return issue + '/' + maximum
     }
 
+    // this is invoked "reflectively" from ImagesService.generateCanvasImage
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Function responsible for render the template according to the requirements of each brand
      * @param dto The DTO for the entity
-     * @param use The use intended for the image: handed in as part of the URL. default/any=full size: og=small square:
+     * @param purpose The use intended for the image: handed in as part of the URL. default/any=full size: og=small square:
      */
     abstract renderTemplate(dto: T, purpose: string): Promise<Canvas>;
 
@@ -60,11 +61,6 @@ export abstract class BrandTemplate<T> {
         return Promise.allSettled(imagesPromises);
     }
 
-    /**
-     *
-     * @param canvas
-     * @returns
-     */
     writeTestWatermark(context: CanvasRenderingContext2D) {
         if (process.env.SHOW_TEST_ONLY_WATERMARK === 'true') {
             context.save();
@@ -79,7 +75,6 @@ export abstract class BrandTemplate<T> {
 
     /**
      * This will convert the image to a ImagesConfigs.SIZES.OG px square with the a transparent background and the image vertically centered
-     * @param context
      */
     convertToOg(canvas: Canvas): Canvas {
         return this.convertToSquare(canvas, ImagesConfigs.SIZES.OG);
@@ -87,7 +82,6 @@ export abstract class BrandTemplate<T> {
 
      /**
      * This will convert the image to a ImagesConfigs.SIZES.SNAP px square
-     * @param context
      */
     convertToSnapchatSticker(canvas: Canvas): Canvas {
       return this.convertToSquare(canvas, ImagesConfigs.SIZES.SNAP_STICKER);
@@ -95,13 +89,11 @@ export abstract class BrandTemplate<T> {
 
      /**
      * This will convert the image to a square of size
-     * @param context
-     * @param size
      */
     convertToSquare(canvas: Canvas, size: number): Canvas {
         try {
             const tempCanvas = createCanvas(size, size);
-            var scaled = this.scaleToMax(size,size, canvas);
+            const scaled = this.scaleToMax(size, size, canvas);
             tempCanvas.getContext("2d").drawImage(canvas, (size - scaled[0]) / 2, 0, scaled[0], scaled[1]);
             logger.info(`Converted to square ${size}`);
             return tempCanvas;
@@ -113,7 +105,6 @@ export abstract class BrandTemplate<T> {
 
     /**
      * This will scale the image by ImagesConfigs.SIZES.THUMB
-     * @param context
      */
     convertToThumb(canvas: Canvas): Canvas {
         return this.scale(canvas, ImagesConfigs.SIZES.THUMB);
@@ -121,7 +112,6 @@ export abstract class BrandTemplate<T> {
 
     /**
      * This will scale the image by ImagesConfigs.SIZES.THUMB
-     * @param context
      */
     scale(canvas: Canvas, scale: number): Canvas {
         try {
@@ -174,21 +164,6 @@ export abstract class BrandTemplate<T> {
         });
     }
 
-
-
-    wrapTextCentered(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) {
-      return this.wrapText(context, text, x, y, maxWidth, lineHeight, true);
-    }
-
-    /**
-     * Will try to wrap the text
-     * @param context
-     * @param text
-     * @param x
-     * @param y
-     * @param maxWidth
-     * @param lineHeight
-     */
     wrapText(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number, center: boolean = false) {
         const words = text.split(' ');
         let line = '';
@@ -219,12 +194,4 @@ export abstract class BrandTemplate<T> {
         context.textAlign = oldtextAlign;
     }
 
-    /**
-     *
-     * @param object key value pair where key and value are strings
-     * @param value the string value
-     */
-    getKeyByValue(object: { [key: string]: string }, value: string) {
-        return Object.keys(object).find(key => object[key] === value);
-    }
 }

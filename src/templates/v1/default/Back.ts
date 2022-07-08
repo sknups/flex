@@ -1,10 +1,11 @@
 import { BrandTemplate } from "../../BrandTemplate";
 import { ImagesConfigs } from "../../../images/images.configs";
-import { Canvas, CanvasRenderingContext2D, createCanvas, Image, loadImage, registerFont } from "canvas";
+import { Canvas, createCanvas } from "canvas";
 import { logger } from '../../../logger'
 import { ItemDTO } from "../../../entities/services/entities.service";
 import { Context } from "node:vm";
 
+// noinspection JSUnusedGlobalSymbols
 export class DefaultTemplate extends BrandTemplate<ItemDTO> {
 
     //If the text is wrapped, will return by how many pixels *additional* depth - 0 if on one line
@@ -55,7 +56,6 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
             `sku.${dto.certVersion}.cardBack.${dto.stockKeepingUnitCode}.png`
         ]);
         const L_COL_L = 130;
-        const L_COL_C = L_COL_L + 305 / 2;
         const R_COL_L = 470;
         //draw the images first
         const backgroundImage = images[0];
