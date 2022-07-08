@@ -68,7 +68,7 @@ export abstract class BrandTemplate<T> {
     writeTestWatermark(context: CanvasRenderingContext2D) {
         if (process.env.SHOW_TEST_ONLY_WATERMARK === 'true') {
             context.save();
-            context.fillStyle = ImagesConfigs.TEXT_TEST;
+            context.fillStyle = ImagesConfigs.WATERMARK_COLOR;
             context.font = '32pt ShareTechMono-Regular';
             context.textAlign = 'center';
             context.rotate(-Math.PI / 4);
