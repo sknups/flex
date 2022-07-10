@@ -141,7 +141,7 @@ export abstract class BrandTemplate<T> {
         }
     }
 
-    wrapText(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number, center: boolean = false) {
+    wrapText(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) {
         const words = text.split(' ');
         let line = '';
 
@@ -151,9 +151,6 @@ export abstract class BrandTemplate<T> {
             const testWidth = metrics.width;
 
             if (testWidth > maxWidth && n > 0) {
-                if (center) {
-                  context.textAlign = "center";
-                }
                 context.fillText(line, x, y);
                 line = words[n] + ' ';
                 y += lineHeight;
@@ -162,13 +159,7 @@ export abstract class BrandTemplate<T> {
             }
         }
 
-        const oldtextAlign = context.textAlign
-        if (center) {
-          context.textAlign = "center";
-        }
-
         context.fillText(line, x, y);
-        context.textAlign = oldtextAlign;
     }
 
 }
