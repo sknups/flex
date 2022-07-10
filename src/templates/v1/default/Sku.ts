@@ -8,10 +8,8 @@ import { SkuDTO } from "../../../entities/services/entities.service";
 export class DefaultTemplate extends BrandTemplate<SkuDTO> {
 
     async renderTemplate(sku: SkuDTO, purpose: string): Promise<Canvas> {
-        //find out if we're going to scale the image
         logger.debug(`Drawing card of SKU ${sku.code} purpose ${purpose}`);
 
-        // Load Fonts
         this.loadDefaultFontsIntoCanvas();
         let canvas = createCanvas(900, 1350);
 
@@ -19,7 +17,6 @@ export class DefaultTemplate extends BrandTemplate<SkuDTO> {
         context.patternQuality = 'good';
         context.quality = 'good';
 
-        //Load all required images in parallel before drawing them on the canvas
         let images = await this.loadImages([
             `sku.v1.cardFront.${sku.code}.png`
         ]);
@@ -32,7 +29,6 @@ export class DefaultTemplate extends BrandTemplate<SkuDTO> {
             logger.info('Failed to load sku image: ' + sku.code);
         }
 
-        //write the text
         context.fillStyle = ImagesConfigs.TEXT_COLOR;
         context.font = '35pt JostSemi';
         context.textAlign = 'left';
