@@ -8,9 +8,11 @@ import { ItemDTO } from "../../../entities/services/entities.service";
 export class DefaultTemplate extends BrandTemplate<ItemDTO> {
 
     async renderTemplate(dto: ItemDTO, purpose: string): Promise<Canvas> {
+
+        BrandTemplate.registerFonts();
+
         logger.debug(`Drawing card ${dto.thumbprint} purpose ${purpose}`);
         const height = 1350;
-        this.loadDefaultFontsIntoCanvas();
         let canvas = createCanvas(900, height);
 
         const context = canvas.getContext('2d');
