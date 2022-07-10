@@ -1,8 +1,7 @@
 {
-  "name": "flex-ui",
+  "name": "flex",
   "version": "0.0.1",
-  "description": "",
-  "license": "UNLICENSED",
+  "private": true,
   "scripts": {
     "build": "tsc",
     "start": "node ./dist/app.js",
@@ -13,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:SknUps/flex_ui.git"
+    "url": "git@github.com:SknUps/flex.git"
   },
   "engines": {
     "node": ">=16"
