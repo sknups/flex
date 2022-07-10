@@ -40,7 +40,6 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
     async renderTemplate(dto: ItemDTO, purpose: string): Promise<Canvas> {
 
         const height = 1350;
-        // Load Fonts
         this.loadDefaultFontsIntoCanvas();
         let canvas = createCanvas(900, height);
 
@@ -48,13 +47,11 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         context.patternQuality = 'good';
         context.quality = 'good';
 
-        //Load all required images in parallel before drawing them on the canvas
         let images = await this.loadImages([
             `sku.${dto.certVersion}.cardBack.${dto.stockKeepingUnitCode}.png`
         ]);
         const L_COL_L = 130;
         const R_COL_L = 470;
-        //draw the images first
 
         const skuImage = images[0];
         if (skuImage.status == 'fulfilled') {
@@ -64,7 +61,6 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
             logger.info('Failed to load sku image: ' + dto.stockKeepingUnitCode);
         }
 
-        //write the text
         let y_shift = this.writeText(context, 'ITEM', dto.stockKeepingUnitName.toLocaleUpperCase(), L_COL_L, R_COL_L, 200);
         if (dto.stockKeepingUnitRarity >= 1) {
             this.writeText(context, 'ITEM NUMBER', '' + this.getItemNumberText(dto.maxQty, dto.saleQty, dto.stockKeepingUnitRarity), L_COL_L, R_COL_L, 270 + y_shift);
