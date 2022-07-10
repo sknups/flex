@@ -54,65 +54,61 @@ export abstract class BrandTemplate<T> {
     }
 
     /**
-     * This will convert the image to a ImagesConfigs.SIZES.OG px square with the a transparent background and the image vertically centered
+     * Convert the image to a 383px square.
      */
     convertToOg(canvas: Canvas): Canvas {
         return this.convertToSquare(canvas, ImagesConfigs.SIZES.OG);
     }
 
      /**
-     * This will convert the image to a ImagesConfigs.SIZES.SNAP px square
+     * Convert the image to a 400px square.
      */
     convertToSnapchatSticker(canvas: Canvas): Canvas {
       return this.convertToSquare(canvas, ImagesConfigs.SIZES.SNAP_STICKER);
     }
 
      /**
-     * This will convert the image to a square of size
+     * Convert the image to square with specified edge length.
      */
-    convertToSquare(canvas: Canvas, size: number): Canvas {
+    convertToSquare(canvas: Canvas, length: number): Canvas {
         try {
-            const tempCanvas = createCanvas(size, size);
-            const scaled = this.scaleToMax(size, size, canvas);
-            tempCanvas.getContext("2d").drawImage(canvas, (size - scaled[0]) / 2, 0, scaled[0], scaled[1]);
-            logger.info(`Converted to square ${size}`);
+            const tempCanvas = createCanvas(length, length);
+            const scaled = this.scaleToMax(length, length, canvas);
+            tempCanvas.getContext("2d").drawImage(canvas, (length - scaled[0]) / 2, 0, scaled[0], scaled[1]);
+            logger.debug(`Converted to square ${length}×${length}`);
             return tempCanvas;
         } catch (error) {
-            logger.error("Failed to convert canvas to SNAP_STICKER: " + error);
+            logger.error("Failed to convert canvas to square! " + error);
             return canvas;
         }
     }
 
     /**
-     * This will scale the image by ImagesConfigs.SIZES.THUMB
+     * Reduce size of specified image by factor 10×
      */
     convertToThumb(canvas: Canvas): Canvas {
-        return this.scale(canvas, ImagesConfigs.SIZES.THUMB);
+        return this.reduce(canvas, ImagesConfigs.SIZES.THUMB);
     }
 
     /**
-     * This will scale the image by ImagesConfigs.SIZES.THUMB
+     * Reduce size of specified image by specified factor
      */
-    scale(canvas: Canvas, scale: number): Canvas {
+    reduce(canvas: Canvas, factor: number): Canvas {
         try {
-            const w = canvas.width / scale;
-            const h = canvas.height / scale;
+            const w = canvas.width / factor;
+            const h = canvas.height / factor;
             const tempCanvas = createCanvas(w, h);
             tempCanvas.getContext("2d").drawImage(canvas, 0, 0, w, h);
-            logger.info("Converted to thumb");
+            logger.info(`Converted to thumb ${w}×${h}`);
             return tempCanvas;
         } catch (error) {
-            logger.error("Failed to convert canvas to thumb: " + error);
+            logger.error("Failed to convert canvas to thumb! " + error);
             return canvas;
         }
     }
 
     /**
      * Utility method to work out the maximum size of an image we are scaling
-     * @param maxWidth
-     * @param maxHeight
-     * @param image
-     * @returns
      */
     scaleToMax(maxWidth: number, maxHeight: number, image: any): number[] {
         const boxAspectRatio: number = maxWidth / maxHeight;
