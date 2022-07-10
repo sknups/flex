@@ -8,9 +8,10 @@ import { SkuDTO } from "../../../entities/services/entities.service";
 export class DefaultTemplate extends BrandTemplate<SkuDTO> {
 
     async renderTemplate(sku: SkuDTO, purpose: string): Promise<Canvas> {
-        logger.debug(`Drawing card of SKU ${sku.code} purpose ${purpose}`);
 
-        this.loadDefaultFontsIntoCanvas();
+        BrandTemplate.registerFonts();
+
+        logger.debug(`Drawing card of SKU ${sku.code} purpose ${purpose}`);
         let canvas = createCanvas(900, 1350);
 
         const context = canvas.getContext('2d');

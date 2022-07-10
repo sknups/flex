@@ -1,6 +1,5 @@
 import { logger } from '../logger'
 import { Canvas, Image, registerFont, createCanvas } from "canvas";
-import { IFont } from "../models/IFont";
 import { ImagesService } from "../images/services/images.service";
 import { ImagesConfigs } from "../images/images.configs";
 
@@ -123,26 +122,27 @@ export abstract class BrandTemplate<T> {
         return [image.width * scaleFactor, image.height * scaleFactor];
     }
 
-    loadDefaultFontsIntoCanvas() {
-        this.loadFontsIntoCanvas([
-            { path: './static/fonts/Jost-Regular-400.ttf', fontFace: { family: "Jost" } },
-            { path: './static/fonts/Jost-SemiBold-600.ttf', fontFace: { family: "JostSemi" } },
-            { path: './static/fonts/ShareTechMono-Regular.ttf', fontFace: { family: "ShareTechMono-Regular" } },
-            { path: './static/fonts/CrimsonText-Regular.ttf', fontFace: { family: "Minion" } },
-        ]);
-    }
+    private static FONTS_REGISTERED = false;
+
     /**
-     *
-     * Will load the desired fonts into canvas
+     * Register (non-system) fonts for subsequent use in canvas drawing.
      */
-    loadFontsIntoCanvas(fontsPaths: IFont[]): void {
-        fontsPaths.forEach((font) => {
-            try {
-                registerFont(font.path, font.fontFace);
-            } catch (err) {
-                logger.info(`Font error: ${font.path} ${err}`);
+    public static registerFonts() {
+        if (!BrandTemplate.FONTS_REGISTERED) {
+            for (const font of [
+                {path: './static/fonts/Jost-Regular-400.ttf', family: 'Jost'},
+                {path: './static/fonts/Jost-SemiBold-600.ttf', family: 'JostSemi'},
+                {path: './static/fonts/ShareTechMono-Regular.ttf', family: 'ShareTechMono-Regular'},
+                {path: './static/fonts/CrimsonText-Regular.ttf', family: 'Minion'},
+            ]) {
+                try {
+                    registerFont(font.path, {family: font.family});
+                } catch (err) {
+                    logger.error(`Cannot register font! ${font.path} ${err}`);
+                }
             }
-        });
+            BrandTemplate.FONTS_REGISTERED = true
+        }
     }
 
     wrapText(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number, center: boolean = false) {
