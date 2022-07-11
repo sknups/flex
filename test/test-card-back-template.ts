@@ -59,6 +59,21 @@ describe('Card Back template', () => {
 
   }
 
+  interface WriteTextTestParameters extends LineBreakTestParameters {
+    title?: string,
+    body: string,
+  }
+
+  class WriteTextTest extends LineBreakTest<WriteTextTestParameters> {
+
+    private static readonly DEFAULT_TITLE = "ITEM";
+
+    protected print(context: CanvasRenderingContext2D): void {
+      new DefaultTemplate().writeText(context, this.params.title ?? WriteTextTest.DEFAULT_TITLE, this.params.body, 0, 0, 0);
+    }
+
+  }
+
   before(() => {
     DefaultTemplate.registerFonts();
   })
@@ -126,5 +141,44 @@ describe('Card Back template', () => {
           "supercalifragilisticexpialidocious "
     }).execute();
   });
+
+  it('writeText(...) writes names for Legacy SKU', () => {
+
+    const tests: WriteTextTest[] = [
+        new WriteTextTest({
+          body:
+              "Baker Crown Juicy",
+          expectation: "ITEM:\n" +
+              "Baker Crown \n" +
+              "Juicy ",
+        }),
+        new WriteTextTest({
+          body:
+              "DEEPS BACKPACK: DEEP COVER",
+          expectation: "ITEM:\n" +
+              "DEEPS BACKPACK: \n" +
+              "DEEP COVER ",
+        }),
+        new WriteTextTest({
+          body:
+              "What's In Your Bag | Scenic",
+          expectation: "ITEM:\n" +
+              "What's In Your \n" +
+              "Bag | Scenic ",
+        }),
+        new WriteTextTest({
+          body:
+              "Wonky Dome Moo Moo",
+          expectation: "ITEM:\n" +
+              "Wonky Dome Moo \n" +
+              "Moo ",
+        }),
+    ];
+
+    for (const test of tests) {
+      test.execute();
+    }
+
+  })
 
 })
