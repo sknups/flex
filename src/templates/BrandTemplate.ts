@@ -1,7 +1,7 @@
-import { logger } from '../logger'
-import { Canvas, Image, registerFont, createCanvas } from "canvas";
-import { ImagesService } from "../images/services/images.service";
-import { ImagesConfigs } from "../images/images.configs";
+import {logger} from '../logger'
+import {Canvas, createCanvas, Image, registerFont} from "canvas";
+import {ImagesService} from "../images/services/images.service";
+import {ImagesConfigs} from "../images/images.configs";
 
 export abstract class BrandTemplate<T> {
 
@@ -141,25 +141,34 @@ export abstract class BrandTemplate<T> {
         }
     }
 
-    public wrapText(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) {
-        const words = text.split(' ');
-        let line = '';
+    public wrapText(context: CanvasRenderingContext2D, input: string, x: number, y: number, maxWidth: number, lineHeight: number) {
 
-        for (let n = 0; n < words.length; n++) {
-            const testLine = line + words[n] + ' ';
-            const metrics = context.measureText(testLine);
-            const testWidth = metrics.width;
+        let buffer = '';
+        let first = true;
 
-            if (testWidth > maxWidth && n > 0) {
-                context.fillText(line, x, y);
-                line = words[n] + ' ';
+        for (const word of input.split(' ')) {
+
+            const proposed = buffer + word + ' ';
+            const width = context.measureText(proposed).width;
+
+            if (width > maxWidth && !first) {
+                // buffer would overflow
+                // print buffer contents
+                context.fillText(buffer, x, y);
+                // carriage return
                 y += lineHeight;
+                buffer = word + ' ';
             } else {
-                line = testLine;
+                // buffer would not overflow
+                // (or it's the very first word)
+                buffer = proposed;
             }
+
+            first = false;
+
         }
 
-        context.fillText(line, x, y);
+        context.fillText(buffer, x, y);
     }
 
 }
