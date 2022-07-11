@@ -187,6 +187,34 @@ describe('Card Back template', () => {
 
     });
 
+    it('writes a single line of fewer than 15 characters', () => {
+      new WriteTextTest({
+        body:
+            "foo",
+        expectation: "ITEM:\n" +
+            "foo"
+      }).execute();
+    });
+
+    it('allows a large word on the first line to exceed maximum width', () => {
+      new WriteTextTest({
+        body:
+            "LongerThanFifteen",
+        expectation: "ITEM:\n" +
+            "LongerThanFifteen "
+      }).execute();
+    });
+
+    it('allows a large word on a subsequent line to exceed maximum width', () => {
+      new WriteTextTest({
+        body:
+            "next word is LongerThanFifteen",
+        expectation: "ITEM:\n" +
+            "next word is \n" +
+            "LongerThanFifteen "
+      }).execute();
+    });
+
   });
 
 })

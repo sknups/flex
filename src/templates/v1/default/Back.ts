@@ -32,6 +32,8 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         }
 
         let buffer = '';
+        let first = true;
+
         let lineNumber = 0;
 
         for (const word of value.split(' ')) {
@@ -39,7 +41,7 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
             const proposed = buffer + word + ' ';
             const width = proposed.length; // monospaced characters
 
-            if (width > 16) {
+            if (width > 16 && !first) {
                 // buffer would overflow
                 // print buffer contents
                 context.fillText(buffer, value_x, y + (lineNumber * LINE_HEIGHT));
@@ -48,8 +50,12 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
                 buffer = word + ' ';
             } else {
                 // buffer would not overflow
+                // (or it's the very first word)
                 buffer = proposed;
             }
+
+            first = false;
+
         }
 
         context.fillText(buffer, value_x, y + (lineNumber * LINE_HEIGHT));
