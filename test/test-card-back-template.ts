@@ -1,23 +1,14 @@
 const expect = require('chai').expect
 
-import {BrandTemplate} from '../src/templates/BrandTemplate';
-import {Canvas, createCanvas} from 'canvas';
+import {DefaultTemplate} from '../src/templates/v1/default/Back';
+import {createCanvas} from 'canvas';
 
 const sinon = require("sinon");
 
-/**
- * Permit abstract BrandTemplate to be instantiated.
- */
-class TestTemplate extends BrandTemplate<void> {
-  renderTemplate(dto: void, purpose: string): Promise<Canvas> {
-    throw new Error('Not implemented!');
-  }
-}
-
-describe('BrandTemplate.wrapText', () => {
+describe('Card Back template', () => {
 
   before(() => {
-    BrandTemplate.registerFonts();
+    DefaultTemplate.registerFonts();
   })
 
   interface WrapTest {
@@ -35,7 +26,7 @@ describe('BrandTemplate.wrapText', () => {
     const fake = sinon.replace(context, "fillText", sinon.fake(context.fillText));
 
     context.font = test.font;
-    new TestTemplate().wrapText(context, test.text, 0, 0, test.width, 0);
+    new DefaultTemplate().wrapText(context, test.text, 0, 0, test.width, 0);
 
     const printed: string[] = []
     for (const invocation of fake.getCalls()) {
@@ -46,7 +37,7 @@ describe('BrandTemplate.wrapText', () => {
 
   }
 
-  it('writes descriptions for Legacy SKU', () => {
+  it('wrapText(...) writes descriptions for Legacy SKU', () => {
 
     const tests: WrapTest[] = [
       {
@@ -91,7 +82,7 @@ describe('BrandTemplate.wrapText', () => {
 
   });
 
-  it('allows a large word on the first line to exceed maximum width', () => {
+  it('wrapText(...) allows a large word on the first line to exceed maximum width', () => {
     execute({
       font: "18pt Minion",
       width: 10,
@@ -102,7 +93,7 @@ describe('BrandTemplate.wrapText', () => {
     });
   });
 
-  it('allows a large word on a subsequent line to exceed maximum width', () => {
+  it('wrapText(...) allows a large word on a subsequent line to exceed maximum width', () => {
     execute({
       font: "18pt Minion",
       width: 280,
