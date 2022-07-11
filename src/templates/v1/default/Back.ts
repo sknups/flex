@@ -1,40 +1,60 @@
-import { BrandTemplate } from "../../BrandTemplate";
-import { ImagesConfigs } from "../../../images/images.configs";
-import { Canvas, createCanvas } from "canvas";
-import { logger } from '../../../logger'
-import { ItemDTO } from "../../../entities/services/entities.service";
-import { Context } from "node:vm";
+import {BrandTemplate} from "../../BrandTemplate";
+import {ImagesConfigs} from "../../../images/images.configs";
+import {Canvas, createCanvas} from "canvas";
+import {logger} from '../../../logger'
+import {ItemDTO} from "../../../entities/services/entities.service";
+import {Context} from "node:vm";
 
 // noinspection JSUnusedGlobalSymbols
 export class DefaultTemplate extends BrandTemplate<ItemDTO> {
 
-    //If the text is wrapped, will return by how many pixels *additional* depth - 0 if on one line
-    writeText(ctx: Context, title: String, body: String, lx: number, rx: number, y: number) {
+    /**
+     * @returns {number} additional vertical pixels consumed due to multiline
+     */
+    writeText(context: Context, key: String, value: String, key_x: number, value_x: number, y: number) {
 
-        let wrap = 0;
-        const space = 34;
-        ctx.textAlign = 'left';
-        ctx.fillStyle = ImagesConfigs.TEXT_COLOR;
-        ctx.font = '23.5pt Jost';
-        ctx.fillText(title + ':', lx, y);
-        ctx.font = '25pt ShareTechMono-Regular';
-        if (body.length > 15) {
-            const words = body.split(' ');
-            let line = '';
-            for (let n = 0; n < words.length; n++) {
-                if (line.length + words[n].length > 15) {
-                    ctx.fillText(line, rx, y + wrap);
-                    wrap = wrap + space;
-                    line = words[n] + ' ';
-                } else {
-                    line = line + words[n] + ' '
-                }
-            }
-            ctx.fillText(line, rx, y + wrap);
-        } else {
-            ctx.fillText(body, rx, y);
+        const LINE_HEIGHT = 34; // pixels
+        const KEY_FONT = '23.5pt Jost';
+        const VALUE_FONT = '25pt ShareTechMono-Regular';
+
+        context.textAlign = 'left';
+        context.fillStyle = ImagesConfigs.TEXT_COLOR;
+
+        context.font = KEY_FONT;
+        context.fillText(key + ':', key_x, y);
+
+        context.font = VALUE_FONT;
+
+        // short-circuit
+        if (value.length <= 15) {
+            context.fillText(value, value_x, y);
+            return 0;
         }
-        return wrap;
+
+        let buffer = '';
+        let lineNumber = 0;
+
+        for (const word of value.split(' ')) {
+
+            const proposed = buffer + word + ' ';
+            const width = proposed.length; // monospaced characters
+
+            if (width > 16) {
+                // buffer would overflow
+                // print buffer contents
+                context.fillText(buffer, value_x, y + (lineNumber * LINE_HEIGHT));
+                // carriage return
+                lineNumber += 1;
+                buffer = word + ' ';
+            } else {
+                // buffer would not overflow
+                buffer = proposed;
+            }
+        }
+
+        context.fillText(buffer, value_x, y + (lineNumber * LINE_HEIGHT));
+        return (lineNumber * LINE_HEIGHT);
+
     }
 
     public wrapText(context: CanvasRenderingContext2D, input: string, x: number, y: number, maxWidth: number, lineHeight: number) {
@@ -47,7 +67,7 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         for (const word of input.split(' ')) {
 
             const proposed = buffer + word + ' ';
-            const width = context.measureText(proposed).width;
+            const width = context.measureText(proposed).width; // pixels
 
             if (width > maxWidth && !first) {
                 // buffer would overflow
@@ -96,6 +116,9 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
 
         let y_shift = this.writeText(context, 'ITEM', dto.stockKeepingUnitName.toLocaleUpperCase(), L_COL_L, R_COL_L, 200);
         if (dto.stockKeepingUnitRarity >= 1) {
+            // there's an assumption that this call returns zero
+            // meaning this call only writes a single row of text
+            // which will be true if getItemNumberText returns ≤ 15 characters
             this.writeText(context, 'ITEM NUMBER', '' + this.getItemNumberText(dto.maxQty, dto.saleQty, dto.stockKeepingUnitRarity), L_COL_L, R_COL_L, 270 + y_shift);
         }
         this.writeText(context, 'OWNERSHIP TOKEN', dto.thumbprint, L_COL_L, R_COL_L, 340 + y_shift);
