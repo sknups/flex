@@ -141,34 +141,4 @@ export abstract class BrandTemplate<T> {
         }
     }
 
-    public wrapText(context: CanvasRenderingContext2D, input: string, x: number, y: number, maxWidth: number, lineHeight: number) {
-
-        let buffer = '';
-        let first = true;
-
-        for (const word of input.split(' ')) {
-
-            const proposed = buffer + word + ' ';
-            const width = context.measureText(proposed).width;
-
-            if (width > maxWidth && !first) {
-                // buffer would overflow
-                // print buffer contents
-                context.fillText(buffer, x, y);
-                // carriage return
-                y += lineHeight;
-                buffer = word + ' ';
-            } else {
-                // buffer would not overflow
-                // (or it's the very first word)
-                buffer = proposed;
-            }
-
-            first = false;
-
-        }
-
-        context.fillText(buffer, x, y);
-    }
-
 }
