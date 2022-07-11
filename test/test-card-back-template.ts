@@ -7,51 +7,74 @@ const sinon = require("sinon");
 
 describe('Card Back template', () => {
 
+  interface LineBreakTestParameters {
+    expectation: string,
+    font?: string,
+  }
+
+  abstract class LineBreakTest<P extends LineBreakTestParameters> {
+
+    private static readonly DEFAULT_FONT = "18pt Minion";
+
+    public constructor(protected params: P) {}
+
+    public execute() {
+
+      const canvas = createCanvas(0, 0);
+      const context = canvas.getContext('2d');
+
+      const fake = sinon.replace(context, "fillText", sinon.fake(context.fillText));
+
+      context.font = this.params.font ?? LineBreakTest.DEFAULT_FONT;
+      this.print(context);
+
+      const printed: string[] = []
+      for (const invocation of fake.getCalls()) {
+        printed.push(invocation.args[0]);
+      }
+
+      expect(printed.join('\n')).to.equal(this.params.expectation);
+
+    }
+
+    protected abstract print(context: CanvasRenderingContext2D): void;
+
+  }
+
+  interface WrapTextTestParameters extends LineBreakTestParameters {
+    text: string,
+    width?: number // pixels
+  }
+
+  /**
+   * Defines an executable unit test for the wrapText(...) method in Card Back Template.
+   */
+  class WrapTextTest extends LineBreakTest<WrapTextTestParameters> {
+
+    private static readonly DEFAULT_WIDTH = 340; // pixels
+
+    protected print(context: CanvasRenderingContext2D): void {
+      new DefaultTemplate().wrapText(context, this.params.text, 0, 0, this.params.width ?? WrapTextTest.DEFAULT_WIDTH, 0);
+    }
+
+  }
+
   before(() => {
     DefaultTemplate.registerFonts();
   })
 
-  interface WrapTest {
-    font: string,
-    width: number,
-    text: string,
-    expectation: string
-  }
-
-  function execute(test: WrapTest) {
-
-    const canvas = createCanvas(0, 0);
-    const context = canvas.getContext('2d');
-
-    const fake = sinon.replace(context, "fillText", sinon.fake(context.fillText));
-
-    context.font = test.font;
-    new DefaultTemplate().wrapText(context, test.text, 0, 0, test.width, 0);
-
-    const printed: string[] = []
-    for (const invocation of fake.getCalls()) {
-      printed.push(invocation.args[0]);
-    }
-
-    expect(printed.join('\n')).to.equal(test.expectation);
-
-  }
-
   it('wrapText(...) writes descriptions for Legacy SKU', () => {
 
-    const tests: WrapTest[] = [
-      {
-        font: "18pt Minion",
-        width: 340,
+    const tests: WrapTextTest[] = [
+      new WrapTextTest({
         text:
             "Sculpted from the finest digital Marquina marble and accented with gold.",
         expectation:
             "Sculpted from the finest digital \n" +
             "Marquina marble and accented with \n" +
             "gold. "
-      }, {
-        font: "18pt Minion",
-        width: 340,
+      }),
+      new WrapTextTest({
         text:
             "The Dao-Disk gloves are the key to unlocking Cybermonk's inner journey. They provide insulation and protection from the elements. However, the most important function is the Dao-Disk, which serves as a digital prayer wheel.",
         expectation:
@@ -62,9 +85,8 @@ describe('Card Back template', () => {
             "However, the most important \n" +
             "function is the Dao-Disk, which \n" +
             "serves as a digital prayer wheel. "
-      }, {
-        font: "18pt Minion",
-        width: 340,
+      }),
+      new WrapTextTest({
         text:
             "Feel the faux fur fuzz. This Fuzz Dome hat in Fuchsia colourway is one of six designs for Benny Andallo's first-ever digital collection.",
         expectation:
@@ -73,30 +95,28 @@ describe('Card Back template', () => {
             "one of six designs for Benny \n" +
             "Andallo's first-ever digital \n" +
             "collection. "
-      }
+      })
     ];
 
     for (const test of tests) {
-      execute(test);
+      test.execute()
     }
 
   });
 
   it('wrapText(...) allows a large word on the first line to exceed maximum width', () => {
-    execute({
-      font: "18pt Minion",
-      width: 10,
+    new WrapTextTest({
+      width: 10, // pixels
       text:
           "supercalifragilisticexpialidocious",
       expectation:
           "supercalifragilisticexpialidocious "
-    });
+    }).execute();
   });
 
   it('wrapText(...) allows a large word on a subsequent line to exceed maximum width', () => {
-    execute({
-      font: "18pt Minion",
-      width: 280,
+    new WrapTextTest({
+      width: 280, // pixels
       text:
           "If you say it loud enough you'll always sound precocious, supercalifragilisticexpialidocious",
       expectation:
@@ -104,7 +124,7 @@ describe('Card Back template', () => {
           "you'll always sound \n" +
           "precocious, \n" +
           "supercalifragilisticexpialidocious "
-    });
-  })
+    }).execute();
+  });
 
 })
