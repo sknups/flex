@@ -192,7 +192,7 @@ describe('Card Back template', () => {
         body:
             "foo",
         expectation: "ITEM:\n" +
-            "foo"
+            "foo "
       }).execute();
     });
 
