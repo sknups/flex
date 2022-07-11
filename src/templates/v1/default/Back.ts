@@ -25,12 +25,6 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
 
         context.font = VALUE_FONT;
 
-        // short-circuit
-        if (value.length <= 15) {
-            context.fillText(value, value_x, y);
-            return 0;
-        }
-
         let buffer = '';
         let first = true;
 
