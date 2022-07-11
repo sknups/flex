@@ -42,6 +42,8 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         let buffer = '';
         let first = true;
 
+        let lineNumber = 0;
+
         for (const word of input.split(' ')) {
 
             const proposed = buffer + word + ' ';
@@ -50,9 +52,9 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
             if (width > maxWidth && !first) {
                 // buffer would overflow
                 // print buffer contents
-                context.fillText(buffer, x, y);
+                context.fillText(buffer, x, y + (lineNumber * lineHeight));
                 // carriage return
-                y += lineHeight;
+                lineNumber += 1;
                 buffer = word + ' ';
             } else {
                 // buffer would not overflow
@@ -64,7 +66,7 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
 
         }
 
-        context.fillText(buffer, x, y);
+        context.fillText(buffer, x, y + (lineNumber * lineHeight));
     }
 
     async renderTemplate(dto: ItemDTO, purpose: string): Promise<Canvas> {
