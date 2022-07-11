@@ -141,7 +141,7 @@ export abstract class BrandTemplate<T> {
         }
     }
 
-    wrapText(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) {
+    public wrapText(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) {
         const words = text.split(' ');
         let line = '';
 
