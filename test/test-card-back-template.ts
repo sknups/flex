@@ -160,10 +160,164 @@ describe('Card Back template', () => {
         }),
         new WriteTextTest({
           body:
+              "Baker Crown Leopard",
+          expectation: "ITEM:\n" +
+              "Baker Crown \n" +
+              "Leopard ",
+        }),
+        new WriteTextTest({
+          body:
+              "Boiling Point | Scenic",
+          expectation: "ITEM:\n" +
+              "Boiling Point | \n" +
+              "Scenic ",
+        }),
+        new WriteTextTest({
+          body:
+              "Boiling Point",
+          expectation: "ITEM:\n" +
+              "Boiling Point ",
+        }),
+        new WriteTextTest({
+          body:
+              "DAPHNE DRESS: THE ESCAPE",
+          expectation: "ITEM:\n" +
+              "DAPHNE DRESS: \n" +
+              "THE ESCAPE ",
+        }),
+        new WriteTextTest({
+          body:
               "DEEPS BACKPACK: DEEP COVER",
           expectation: "ITEM:\n" +
               "DEEPS BACKPACK: \n" +
               "DEEP COVER ",
+        }),
+        new WriteTextTest({
+          body:
+              "DEEPS BACKPACK: DEEP OCEAN",
+          expectation: "ITEM:\n" +
+              "DEEPS BACKPACK: \n" +
+              "DEEP OCEAN ",
+        }),
+        new WriteTextTest({
+          body:
+              "DG Welcome",
+          expectation: "ITEM:\n" +
+              "DG Welcome ",
+        }),
+        new WriteTextTest({
+          body:
+              "Dao-Disk Gloves",
+          expectation: "ITEM:\n" +
+              "Dao-Disk Gloves ",
+        }),
+        new WriteTextTest({
+          body:
+              "Daphne Silver Dress",
+          expectation: "ITEM:\n" +
+              "Daphne Silver \n" +
+              "Dress ",
+        }),
+        new WriteTextTest({
+          body:
+              "Fuzz Dome Fuchsia",
+          expectation: "ITEM:\n" +
+              "Fuzz Dome \n" +
+              "Fuchsia ",
+        }),
+        new WriteTextTest({
+          body:
+              "Fuzz Dome Purple",
+          expectation: "ITEM:\n" +
+              "Fuzz Dome \n" +
+              "Purple ",
+        }),
+        new WriteTextTest({
+          body:
+              "Geode Marble Jacket",
+          expectation: "ITEM:\n" +
+              "Geode Marble \n" +
+              "Jacket ",
+        }),
+        new WriteTextTest({
+          body:
+              "Kap-Tec Helmet",
+          expectation: "ITEM:\n" +
+              "Kap-Tec Helmet ",
+        }),
+        new WriteTextTest({
+          body:
+              "Luna Geta-boots",
+          expectation: "ITEM:\n" +
+              "Luna Geta-boots ",
+        }),
+        new WriteTextTest({
+          body:
+              "OLYMPUS SNEAKER: HADES",
+          expectation: "ITEM:\n" +
+              "OLYMPUS \n" +
+              "SNEAKER: HADES ",
+        }),
+        new WriteTextTest({
+          body:
+              "OLYMPUS SNEAKER: HERA",
+          expectation: "ITEM:\n" +
+              "OLYMPUS \n" +
+              "SNEAKER: HERA ",
+        }),
+        new WriteTextTest({
+          body:
+              "OLYMPUS SNEAKER: KHRONOS",
+          expectation: "ITEM:\n" +
+              "OLYMPUS \n" +
+              "SNEAKER: \n" +
+              "KHRONOS ",
+        }),
+        new WriteTextTest({
+          body:
+              "Olympus Black Gloss",
+          expectation: "ITEM:\n" +
+              "Olympus Black \n" +
+              "Gloss ",
+        }),
+        new WriteTextTest({
+          body:
+              "Olympus Black Matte",
+          expectation: "ITEM:\n" +
+              "Olympus Black \n" +
+              "Matte ",
+        }),
+        new WriteTextTest({
+          body:
+              "Olympus White Matte",
+          expectation: "ITEM:\n" +
+              "Olympus White \n" +
+              "Matte ",
+        }),
+        new WriteTextTest({
+          body:
+              "SCRAPS | Scenic",
+          expectation: "ITEM:\n" +
+              "SCRAPS | Scenic ",
+        }),
+        new WriteTextTest({
+          body:
+              "SCRAPS",
+          expectation: "ITEM:\n" +
+              "SCRAPS ",
+        }),
+        new WriteTextTest({
+          body:
+              "Tactiquilt Robe",
+          expectation: "ITEM:\n" +
+              "Tactiquilt Robe ",
+        }),
+        new WriteTextTest({
+          body:
+              "Timo Rusall Hoodie",
+          expectation: "ITEM:\n" +
+              "Timo Rusall \n" +
+              "Hoodie ",
         }),
         new WriteTextTest({
           body:
@@ -174,10 +328,23 @@ describe('Card Back template', () => {
         }),
         new WriteTextTest({
           body:
+              "What's In Your Bag",
+          expectation: "ITEM:\n" +
+              "What's In Your \n" +
+              "Bag ",
+        }),
+        new WriteTextTest({
+          body:
               "Wonky Dome Moo Moo",
           expectation: "ITEM:\n" +
               "Wonky Dome Moo \n" +
               "Moo ",
+        }),
+        new WriteTextTest({
+          body:
+              "Wonky Dome Acid",
+          expectation: "ITEM:\n" +
+              "Wonky Dome Acid ",
         }),
       ];
 
