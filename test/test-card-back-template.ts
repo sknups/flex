@@ -1,22 +1,19 @@
 const expect = require('chai').expect
 
-import {DefaultTemplate} from '../src/templates/v1/default/Back';
-import {createCanvas, NodeCanvasRenderingContext2D} from 'canvas';
+import {Style, DefaultTemplate} from '../src/templates/v1/default/Back';
+import {createCanvas} from 'canvas';
 
 const sinon = require("sinon");
 
 describe('Card Back template', () => {
 
-  interface LineBreakTestParameters {
-    expectation: string,
-    font?: string,
-  }
+  abstract class LineBreakTest {
 
-  abstract class LineBreakTest<P extends LineBreakTestParameters> {
-
-    private static readonly DEFAULT_FONT = "18pt Minion";
-
-    public constructor(protected params: P) {}
+    protected constructor(
+        protected style: Style,
+        protected text: string,
+        protected expectation: string,
+    ) {}
 
     public execute() {
 
@@ -25,19 +22,16 @@ describe('Card Back template', () => {
 
       const fake = sinon.replace(context, "fillText", sinon.fake(context.fillText));
 
-      context.font = this.params.font ?? LineBreakTest.DEFAULT_FONT;
-      this.print(context);
+      new DefaultTemplate().print(context, this.style, this.text, 0, 0);
 
       const printed: string[] = []
       for (const invocation of fake.getCalls()) {
         printed.push(invocation.args[0]);
       }
 
-      expect(printed.join('\n')).to.equal(this.params.expectation);
+      expect(printed.join('\n')).to.equal(this.expectation);
 
     }
-
-    protected abstract print(context: NodeCanvasRenderingContext2D): void;
 
   }
 
@@ -45,41 +39,25 @@ describe('Card Back template', () => {
     DefaultTemplate.registerFonts();
   })
 
-  describe('wrapText(...) method', () => {
+  describe('print(...) method', () => {
 
-    interface WrapTextTestParameters extends LineBreakTestParameters {
-      text: string,
-      width?: number // pixels
-    }
-
-    /**
-     * Defines an executable unit test for the wrapText(...) method in Card Back Template.
-     */
-    class WrapTextTest extends LineBreakTest<WrapTextTestParameters> {
-
-      private static readonly DEFAULT_WIDTH = 340; // pixels
-
-      protected print(context: NodeCanvasRenderingContext2D): void {
-        new DefaultTemplate().wrapText(context, this.params.text, 0, 0, this.params.width ?? WrapTextTest.DEFAULT_WIDTH, 0);
+    class DescriptionTest extends LineBreakTest {
+      constructor(text: string, expectation: string) {
+        super(DefaultTemplate.DESCRIPTION_STYLE, text, expectation);
       }
-
     }
 
     it('writes descriptions for Legacy SKU', () => {
 
-      const tests: WrapTextTest[] = [
-        new WrapTextTest({
-          text:
+      const tests: DescriptionTest[] = [
+        new DescriptionTest(
               "Sculpted from the finest digital Marquina marble and accented with gold.",
-          expectation:
               "Sculpted from the finest digital \n" +
               "Marquina marble and accented with \n" +
               "gold. "
-        }),
-        new WrapTextTest({
-          text:
+        ),
+        new DescriptionTest(
               "The Dao-Disk gloves are the key to unlocking Cybermonk's inner journey. They provide insulation and protection from the elements. However, the most important function is the Dao-Disk, which serves as a digital prayer wheel.",
-          expectation:
               "The Dao-Disk gloves are the key to \n" +
               "unlocking Cybermonk's inner \n" +
               "journey. They provide insulation \n" +
@@ -87,17 +65,15 @@ describe('Card Back template', () => {
               "However, the most important \n" +
               "function is the Dao-Disk, which \n" +
               "serves as a digital prayer wheel. "
-        }),
-        new WrapTextTest({
-          text:
+        ),
+        new DescriptionTest(
               "Feel the faux fur fuzz. This Fuzz Dome hat in Fuchsia colourway is one of six designs for Benny Andallo's first-ever digital collection.",
-          expectation:
               "Feel the faux fur fuzz. This Fuzz \n" +
               "Dome hat in Fuchsia colourway is \n" +
               "one of six designs for Benny \n" +
               "Andallo's first-ever digital \n" +
               "collection. "
-        })
+        )
       ];
 
       for (const test of tests) {
@@ -107,245 +83,171 @@ describe('Card Back template', () => {
     });
 
     it('allows a large word on the first line to exceed maximum width', () => {
-      new WrapTextTest({
-        width: 10, // pixels
-        text:
+      new DescriptionTest(
             "supercalifragilisticexpialidocious",
-        expectation:
             "supercalifragilisticexpialidocious "
-      }).execute();
+      ).execute();
     });
 
     it('allows a large word on a subsequent line to exceed maximum width', () => {
-      new WrapTextTest({
-        width: 280, // pixels
-        text:
+      new DescriptionTest(
             "If you say it loud enough you'll always sound precocious, supercalifragilisticexpialidocious",
-        expectation:
-            "If you say it loud enough \n" +
-            "you'll always sound \n" +
-            "precocious, \n" +
-            "supercalifragilisticexpialidocious "
-      }).execute();
+            "If you say it loud enough you'll \n" +
+          "always sound precocious, \n" +
+          "supercalifragilisticexpialidocious "
+      ).execute();
     });
 
   });
 
   describe('writeText(...) method', () => {
 
-    interface WriteTextTestParameters extends LineBreakTestParameters {
-      title?: string,
-      body: string,
-    }
-
-    class WriteTextTest extends LineBreakTest<WriteTextTestParameters> {
-
-      private static readonly DEFAULT_TITLE = "ITEM";
-
-      protected print(context: NodeCanvasRenderingContext2D): void {
-        new DefaultTemplate().writeText(context, this.params.title ?? WriteTextTest.DEFAULT_TITLE, this.params.body, 0, 0, 0);
+    class ValueTest extends LineBreakTest {
+      constructor(text: string, expectation: string) {
+        super(DefaultTemplate.VALUE_STYLE, text, expectation);
       }
-
     }
 
     it('writes names for Legacy SKU', () => {
 
-      const tests: WriteTextTest[] = [
-        new WriteTextTest({
-          body:
+      const tests: ValueTest[] = [
+        new ValueTest(
               "Baker Crown Juicy",
-          expectation: "ITEM:\n" +
               "Baker Crown \n" +
               "Juicy ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "Baker Crown Leopard",
-          expectation: "ITEM:\n" +
               "Baker Crown \n" +
               "Leopard ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "Boiling Point | Scenic",
-          expectation: "ITEM:\n" +
               "Boiling Point | \n" +
               "Scenic ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "Boiling Point",
-          expectation: "ITEM:\n" +
               "Boiling Point ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "DAPHNE DRESS: THE ESCAPE",
-          expectation: "ITEM:\n" +
               "DAPHNE DRESS: \n" +
               "THE ESCAPE ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "DEEPS BACKPACK: DEEP COVER",
-          expectation: "ITEM:\n" +
               "DEEPS BACKPACK: \n" +
               "DEEP COVER ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "DEEPS BACKPACK: DEEP OCEAN",
-          expectation: "ITEM:\n" +
               "DEEPS BACKPACK: \n" +
               "DEEP OCEAN ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "DG Welcome",
-          expectation: "ITEM:\n" +
               "DG Welcome ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "Dao-Disk Gloves",
-          expectation: "ITEM:\n" +
               "Dao-Disk Gloves ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "Daphne Silver Dress",
-          expectation: "ITEM:\n" +
               "Daphne Silver \n" +
               "Dress ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "Fuzz Dome Fuchsia",
-          expectation: "ITEM:\n" +
               "Fuzz Dome \n" +
               "Fuchsia ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "Fuzz Dome Purple",
-          expectation: "ITEM:\n" +
               "Fuzz Dome \n" +
               "Purple ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "Geode Marble Jacket",
-          expectation: "ITEM:\n" +
               "Geode Marble \n" +
               "Jacket ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "Kap-Tec Helmet",
-          expectation: "ITEM:\n" +
               "Kap-Tec Helmet ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "Luna Geta-boots",
-          expectation: "ITEM:\n" +
               "Luna Geta-boots ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "OLYMPUS SNEAKER: HADES",
-          expectation: "ITEM:\n" +
               "OLYMPUS \n" +
               "SNEAKER: HADES ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "OLYMPUS SNEAKER: HERA",
-          expectation: "ITEM:\n" +
               "OLYMPUS \n" +
               "SNEAKER: HERA ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "OLYMPUS SNEAKER: KHRONOS",
-          expectation: "ITEM:\n" +
               "OLYMPUS \n" +
               "SNEAKER: \n" +
               "KHRONOS ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "Olympus Black Gloss",
-          expectation: "ITEM:\n" +
               "Olympus Black \n" +
               "Gloss ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "Olympus Black Matte",
-          expectation: "ITEM:\n" +
               "Olympus Black \n" +
               "Matte ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "Olympus White Matte",
-          expectation: "ITEM:\n" +
               "Olympus White \n" +
               "Matte ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "SCRAPS | Scenic",
-          expectation: "ITEM:\n" +
               "SCRAPS | Scenic ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "SCRAPS",
-          expectation: "ITEM:\n" +
               "SCRAPS ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "Tactiquilt Robe",
-          expectation: "ITEM:\n" +
               "Tactiquilt Robe ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "Timo Rusall Hoodie",
-          expectation: "ITEM:\n" +
               "Timo Rusall \n" +
               "Hoodie ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "What's In Your Bag | Scenic",
-          expectation: "ITEM:\n" +
               "What's In Your \n" +
               "Bag | Scenic ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "What's In Your Bag",
-          expectation: "ITEM:\n" +
               "What's In Your \n" +
               "Bag ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "Wonky Dome Moo Moo",
-          expectation: "ITEM:\n" +
               "Wonky Dome Moo \n" +
               "Moo ",
-        }),
-        new WriteTextTest({
-          body:
+        ),
+        new ValueTest(
               "Wonky Dome Acid",
-          expectation: "ITEM:\n" +
               "Wonky Dome Acid ",
-        }),
+        ),
       ];
 
       for (const test of tests) {
@@ -355,31 +257,25 @@ describe('Card Back template', () => {
     });
 
     it('writes a single line of fewer than 15 characters', () => {
-      new WriteTextTest({
-        body:
+      new ValueTest(
             "foo",
-        expectation: "ITEM:\n" +
             "foo "
-      }).execute();
+      ).execute();
     });
 
     it('allows a large word on the first line to exceed maximum width', () => {
-      new WriteTextTest({
-        body:
+      new ValueTest(
             "LongerThanFifteen",
-        expectation: "ITEM:\n" +
             "LongerThanFifteen "
-      }).execute();
+      ).execute();
     });
 
     it('allows a large word on a subsequent line to exceed maximum width', () => {
-      new WriteTextTest({
-        body:
+      new ValueTest(
             "next word is LongerThanFifteen",
-        expectation: "ITEM:\n" +
             "next word is \n" +
             "LongerThanFifteen "
-      }).execute();
+      ).execute();
     });
 
   });

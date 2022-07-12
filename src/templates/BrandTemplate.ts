@@ -7,10 +7,11 @@ export abstract class BrandTemplate<T> {
 
     private readonly imagesService: ImagesService = new ImagesService();
 
-    getItemNumberText(maximum: number, issue: number, rarity: number) {
+    getItemNumberText(maximum: number, issue: number, rarity: number): string {
         if (rarity === 0) return ''
-        if (rarity === 1) return issue
-        if (rarity > 1) return issue + '/' + maximum
+        if (rarity === 1) return `${issue}`
+        if (rarity > 1) return `${issue}/${maximum}`
+        return ''
     }
 
     // this is invoked "reflectively" from ImagesService.generateCanvasImage
