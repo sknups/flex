@@ -5,10 +5,7 @@ import { ImagesService } from "../images/services/images.service";
 import { ImagesConfigs } from "../images/images.configs";
 export abstract class BrandTemplate<T> {
 
-    private readonly imagesService: ImagesService;
-    constructor() {
-        this.imagesService = new ImagesService();
-    }
+    private readonly imagesService: ImagesService = new ImagesService();
 
     getItemNumberText(maximum: number, issue: number, rarity: number) {
         if (rarity === 0) return ''

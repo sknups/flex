@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 
 import {DefaultTemplate} from '../src/templates/v1/default/Back';
-import {createCanvas} from 'canvas';
+import {createCanvas, NodeCanvasRenderingContext2D} from 'canvas';
 
 const sinon = require("sinon");
 
@@ -37,7 +37,7 @@ describe('Card Back template', () => {
 
     }
 
-    protected abstract print(context: CanvasRenderingContext2D): void;
+    protected abstract print(context: NodeCanvasRenderingContext2D): void;
 
   }
 
@@ -59,7 +59,7 @@ describe('Card Back template', () => {
 
       private static readonly DEFAULT_WIDTH = 340; // pixels
 
-      protected print(context: CanvasRenderingContext2D): void {
+      protected print(context: NodeCanvasRenderingContext2D): void {
         new DefaultTemplate().wrapText(context, this.params.text, 0, 0, this.params.width ?? WrapTextTest.DEFAULT_WIDTH, 0);
       }
 
@@ -142,7 +142,7 @@ describe('Card Back template', () => {
 
       private static readonly DEFAULT_TITLE = "ITEM";
 
-      protected print(context: CanvasRenderingContext2D): void {
+      protected print(context: NodeCanvasRenderingContext2D): void {
         new DefaultTemplate().writeText(context, this.params.title ?? WriteTextTest.DEFAULT_TITLE, this.params.body, 0, 0, 0);
       }
 
