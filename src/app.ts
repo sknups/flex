@@ -5,7 +5,7 @@ const isProfilerEnabled = process.env.PROFILER_ENABLED === 'true'
 if (isProductionMode) {
   require('@google-cloud/trace-agent').start({
     serviceContext: {
-        service: 'flex-ui'
+        service: 'flex'
     }
   });
 }
@@ -13,7 +13,7 @@ if (isProductionMode) {
 if (isProfilerEnabled) {
 require('@google-cloud/profiler').start({
     serviceContext: {
-      service: 'flex-ui'
+      service: 'flex'
     },
   });
 }
