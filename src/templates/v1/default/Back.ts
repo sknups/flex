@@ -8,83 +8,6 @@ import {Context} from "node:vm";
 // noinspection JSUnusedGlobalSymbols
 export class DefaultTemplate extends BrandTemplate<ItemDTO> {
 
-    /**
-     * @returns {number} additional vertical pixels consumed due to multiline
-     */
-    writeText(context: Context, key: String, value: String, label_x: number, value_x: number, y: number) {
-
-        context.textAlign = 'left';
-        context.fillStyle = ImagesConfigs.TEXT_COLOR;
-
-        context.font = DefaultTemplate.LABEL_FONT;
-        context.fillText(key + ':', label_x, y);
-
-        context.font = DefaultTemplate.VALUE_FONT;
-
-        let buffer = '';
-        let first = true;
-
-        let lineNumber = 0;
-
-        for (const word of value.split(' ')) {
-
-            const proposed = buffer + word + ' ';
-            const width = proposed.length; // monospaced characters
-
-            if (width > 16 && !first) {
-                // buffer would overflow
-                // print buffer contents
-                context.fillText(buffer, value_x, y + (lineNumber * DefaultTemplate.LINE_HEIGHT));
-                // carriage return
-                lineNumber += 1;
-                buffer = word + ' ';
-            } else {
-                // buffer would not overflow
-                // (or it's the very first word)
-                buffer = proposed;
-            }
-
-            first = false;
-
-        }
-
-        context.fillText(buffer, value_x, y + (lineNumber * DefaultTemplate.LINE_HEIGHT));
-        return (lineNumber * DefaultTemplate.LINE_HEIGHT);
-
-    }
-
-    public wrapText(context: NodeCanvasRenderingContext2D, input: string, x: number, y: number, maxWidth: number, lineHeight: number) {
-
-        let buffer = '';
-        let first = true;
-
-        let lineNumber = 0;
-
-        for (const word of input.split(' ')) {
-
-            const proposed = buffer + word + ' ';
-            const width = context.measureText(proposed).width; // pixels
-
-            if (width > maxWidth && !first) {
-                // buffer would overflow
-                // print buffer contents
-                context.fillText(buffer, x, y + (lineNumber * lineHeight));
-                // carriage return
-                lineNumber += 1;
-                buffer = word + ' ';
-            } else {
-                // buffer would not overflow
-                // (or it's the very first word)
-                buffer = proposed;
-            }
-
-            first = false;
-
-        }
-
-        context.fillText(buffer, x, y + (lineNumber * lineHeight));
-    }
-
     private static readonly WIDTH = 900;
     private static readonly HEIGHT = 1350;
 
@@ -144,6 +67,95 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
             logger.error(`Failed to load ${filename}`);
         }
 
+    }
+
+    /**
+     * @returns {number} additional vertical pixels consumed due to multiline
+     */
+    writeText(context: Context, key: String, value: String, label_x: number, value_x: number, y: number) {
+        this.printLabel(context, key, label_x, y);
+        return this.printValue(context, value, value_x, y);
+    }
+
+    printLabel(context: Context, key: String, label_x: number, y: number) {
+        context.textAlign = 'left';
+        context.font = DefaultTemplate.LABEL_FONT;
+        context.fillStyle = ImagesConfigs.TEXT_COLOR;
+        context.fillText(key + ':', label_x, y);
+    }
+
+    // It looks like printValue and wrapText are essentially the same function, however:
+    // - printValue originally did not contain the bugfix for "large first word"
+    // - printValue assumes it's drawing with a monospaced font
+    // - wrapText assumes it's drawing the final piece of information
+
+    printValue(context: Context, value: String, value_x: number, y: number) {
+
+        context.textAlign = 'left';
+        context.font = DefaultTemplate.VALUE_FONT;
+        context.fillStyle = ImagesConfigs.TEXT_COLOR;
+
+        let buffer = '';
+        let first = true;
+
+        let lineNumber = 0;
+
+        for (const word of value.split(' ')) {
+
+            const proposed = buffer + word + ' ';
+            const width = proposed.length; // monospaced characters
+
+            if (width > 16 && !first) {
+                // buffer would overflow
+                // print buffer contents
+                context.fillText(buffer, value_x, y + (lineNumber * DefaultTemplate.LINE_HEIGHT));
+                // carriage return
+                lineNumber += 1;
+                buffer = word + ' ';
+            } else {
+                // buffer would not overflow
+                // (or it's the very first word)
+                buffer = proposed;
+            }
+
+            first = false;
+
+        }
+
+        context.fillText(buffer, value_x, y + (lineNumber * DefaultTemplate.LINE_HEIGHT));
+        return (lineNumber * DefaultTemplate.LINE_HEIGHT);
+    }
+
+    wrapText(context: NodeCanvasRenderingContext2D, input: string, x: number, y: number, maxWidth: number, lineHeight: number) {
+
+        let buffer = '';
+        let first = true;
+
+        let lineNumber = 0;
+
+        for (const word of input.split(' ')) {
+
+            const proposed = buffer + word + ' ';
+            const width = context.measureText(proposed).width; // pixels
+
+            if (width > maxWidth && !first) {
+                // buffer would overflow
+                // print buffer contents
+                context.fillText(buffer, x, y + (lineNumber * lineHeight));
+                // carriage return
+                lineNumber += 1;
+                buffer = word + ' ';
+            } else {
+                // buffer would not overflow
+                // (or it's the very first word)
+                buffer = proposed;
+            }
+
+            first = false;
+
+        }
+
+        context.fillText(buffer, x, y + (lineNumber * lineHeight));
     }
 
 }
