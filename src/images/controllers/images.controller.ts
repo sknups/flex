@@ -1,10 +1,10 @@
 import express from "express";
-import querystring from "querystring";
-import { StatusCodes } from "http-status-codes";
-import { logger } from '../../logger'
-import { ImagesService } from "../services/images.service";
-import {ItemDTO, EntitiesService, SkuDTO} from "../../entities/services/entities.service";
-import { ImagesConfigs } from "../images.configs";
+import {StatusCodes} from "http-status-codes";
+import {logger} from '../../logger'
+import {ImagesService} from "../services/images.service";
+import {EntitiesService, ItemDTO, SkuDTO} from "../../entities/services/entities.service";
+import {ImagesConfigs} from "../images.configs";
+import {ImageType, Template} from "../model";
 
 export class ImagesController {
 
@@ -16,53 +16,41 @@ export class ImagesController {
         this.entitiesService = new EntitiesService();
     }
 
-    index(request: express.Request, response: express.Response) {
-
-        logger.info(`ImagesController.index`);
-
-        response.status(StatusCodes.OK).render('index', {
-            title: 'ImagesController',
-            message: 'Hello World from ImagesController'
-        });
+    async getSkuImage(request: express.Request, response: express.Response) {
+        return this.getImage(request, response, 'sku')
     }
 
-    getTemplate(kind: string, type: string): string {
-        if (kind === 'sku') {
-            return kind;
-        } else {
-            return type;
-        }
+    async getItemImage(request: express.Request, response: express.Response) {
+        const type: ImageType = <'card'|'back'> request.params.type;
+        return this.getImage(request, response, type)
     }
 
-    async getImage(request: express.Request, response: express.Response, kind: string) {
+    async getImage(request: express.Request, response: express.Response, template: Template) {
         try {
             const code = request.params.code;
             const use = request.params.use;
-            const tpl = this.getTemplate(kind, request.params.type);
 
-            let dto;
-            let brandCode = '';
+            let dto: SkuDTO | ItemDTO;
 
-            if (tpl === 'sku') {
-                dto = await this.getSku(code);
-                brandCode = dto.brandCode;
+            if (template === 'sku') {
+                dto = await this.entitiesService.getSku(code);
             } else {
-                dto = await this.getItem(code);
-                brandCode = dto.brandCode;
+                dto = await this.entitiesService.getItem(code);
             }
 
             const version = request.params.version;
             const format = request.params.format;
             let q = Number(request.query.q);
             if (isNaN(q) || q <= 0 || q > 1) {
-                q = ImagesConfigs.QUALITY;
+                q = ImagesConfigs.DEFAULT_IMAGE_QUALITY;
             }
 
-            logger.info(`ImagesController.getImage version: ${version} tpl: ${tpl} purpose: ${use} from brand: ${brandCode} with id: ${code}`);
+            logger.info(`ImagesController.getImage version: ${version} tpl: ${template} purpose: ${use} with id: ${code}`);
 
-            this.imagesService.generateCanvasImage(version, tpl, use, dto, brandCode).then(canvas => {
+            this.imagesService.generateCanvasImage(version, template, use, dto).then(canvas => {
+                let buffer: Buffer;
                 if (format == 'png') {
-                    var buffer = canvas.toBuffer();
+                    buffer = canvas.toBuffer();
                     logger.info(`ImagesController.getImage png with buffer.length=${buffer.length}`);
                     response.writeHead(StatusCodes.OK, {
                         'Content-Type': 'image/png',
@@ -72,7 +60,7 @@ export class ImagesController {
                     response.write(buffer);
                     response.end(null, 'binary');
                 } else {
-                    var buffer = canvas.toBuffer('image/jpeg', { quality: q });
+                    buffer = canvas.toBuffer('image/jpeg', {quality: q});
                     logger.info(`ImagesController.getImage jpeg with quality ${q} buffer.length=${buffer.length}`);
                     response.writeHead(StatusCodes.OK, {
                         'Content-Type': 'image/jpeg',
@@ -117,7 +105,7 @@ export class ImagesController {
                         contentType = 'model/gltf-binary';
                     }
                     logger.debug(`ImagesController.getEntityImage with buffer.length=${buffer.length} and format ${format} and contentType ${contentType}`);
-                  
+
                     response.writeHead(StatusCodes.OK, {
                         'Content-Type': contentType,
                         'Content-Length': buffer.length,
@@ -137,16 +125,6 @@ export class ImagesController {
             logger.info(`ImagesController.getEntityImage ERROR. Failed to get. ${err}`);
             response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR).send('Error drawing image');
         }
-    }
-
-    async getItem(withId: string): Promise<ItemDTO> {
-        const response = await this.entitiesService.getItem(withId);
-        return response.data;
-    }
-
-    async getSku(withId: string): Promise<SkuDTO> {
-        const response = await this.entitiesService.getSku(withId);
-        return response.data;
     }
 
 }

@@ -1,46 +1,25 @@
-import {ItemDTO, SkuDTO} from "../entities/services/entities.service";
-import { logger } from '../logger'
-import { Canvas, Image, registerFont, createCanvas } from "canvas";
-import { IFont } from "../models/IFont";
-import { IFlexImage } from "../models/IFlexImage";
-import { ImagesService } from "../images/services/images.service";
-import { ImagesConfigs } from "../images/images.configs";
+import {logger} from '../logger'
+import {Canvas, createCanvas, Image, registerFont} from "canvas";
+import {ImagesService} from "../images/services/images.service";
+import {ImagesConfigs} from "../images/images.configs";
 
 export abstract class BrandTemplate<T> {
 
-    private readonly imagesService: ImagesService;
-    constructor() {
-        this.imagesService = new ImagesService();
-    }
+    private readonly imagesService: ImagesService = new ImagesService();
 
-    /**
-     * Checks that rarity is an int and returns 1 if it isn't
-     * @param dto
-     * @returns int 0 - 5
-     */
-    getRarity(dto: ItemDTO){
-        return this.getSkuRarity(dto.stockKeepingUnitRarity, dto.stockKeepingUnitCode);
-    }
-
-    getSkuRarity(rarity: number, code: string){
-        if(Number.isInteger(rarity) && 0 <= rarity && rarity <= 5){
-            return rarity;
-        } else {
-            logger.warn(`${code} has invalid rarity: returning 1`);
-            return 1;
-        }
-    }
-
-    getItemNumberText(maximum: number, issue: number, rarity: number) {
+    getItemNumberText(maximum: number, issue: number, rarity: number): string {
         if (rarity === 0) return ''
-        if (rarity === 1) return issue
-        if (rarity > 1) return issue + '/' + maximum
+        if (rarity === 1) return `${issue}`
+        if (rarity > 1) return `${issue}/${maximum}`
+        return ''
     }
 
+    // this is invoked "reflectively" from ImagesService.generateCanvasImage
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Function responsible for render the template according to the requirements of each brand
      * @param dto The DTO for the entity
-     * @param use The use intended for the image: handed in as part of the URL. default/any=full size: og=small square:
+     * @param purpose The use intended for the image: handed in as part of the URL. default/any=full size: og=small square:
      */
     abstract renderTemplate(dto: T, purpose: string): Promise<Canvas>;
 
@@ -60,15 +39,10 @@ export abstract class BrandTemplate<T> {
         return Promise.allSettled(imagesPromises);
     }
 
-    /**
-     *
-     * @param canvas
-     * @returns
-     */
     writeTestWatermark(context: CanvasRenderingContext2D) {
         if (process.env.SHOW_TEST_ONLY_WATERMARK === 'true') {
             context.save();
-            context.fillStyle = ImagesConfigs.TEXT_TEST;
+            context.fillStyle = ImagesConfigs.WATERMARK_COLOR;
             context.font = '32pt ShareTechMono-Regular';
             context.textAlign = 'center';
             context.rotate(-Math.PI / 4);
@@ -78,71 +52,61 @@ export abstract class BrandTemplate<T> {
     }
 
     /**
-     * This will convert the image to a ImagesConfigs.SIZES.OG px square with the a transparent background and the image vertically centered
-     * @param context
+     * Convert the image to a 383px square.
      */
     convertToOg(canvas: Canvas): Canvas {
         return this.convertToSquare(canvas, ImagesConfigs.SIZES.OG);
     }
 
      /**
-     * This will convert the image to a ImagesConfigs.SIZES.SNAP px square
-     * @param context
+     * Convert the image to a 400px square.
      */
     convertToSnapchatSticker(canvas: Canvas): Canvas {
       return this.convertToSquare(canvas, ImagesConfigs.SIZES.SNAP_STICKER);
     }
 
      /**
-     * This will convert the image to a square of size
-     * @param context
-     * @param size
+     * Convert the image to square with specified edge length.
      */
-    convertToSquare(canvas: Canvas, size: number): Canvas {
+    convertToSquare(canvas: Canvas, length: number): Canvas {
         try {
-            const tempCanvas = createCanvas(size, size);
-            var scaled = this.scaleToMax(size,size, canvas);
-            tempCanvas.getContext("2d").drawImage(canvas, (size - scaled[0]) / 2, 0, scaled[0], scaled[1]);
-            logger.info(`Converted to square ${size}`);
+            const tempCanvas = createCanvas(length, length);
+            const scaled = this.scaleToMax(length, length, canvas);
+            tempCanvas.getContext("2d").drawImage(canvas, (length - scaled[0]) / 2, 0, scaled[0], scaled[1]);
+            logger.debug(`Converted to square ${length}×${length}`);
             return tempCanvas;
         } catch (error) {
-            logger.error("Failed to convert canvas to SNAP_STICKER: " + error);
+            logger.error("Failed to convert canvas to square! " + error);
             return canvas;
         }
     }
 
     /**
-     * This will scale the image by ImagesConfigs.SIZES.THUMB
-     * @param context
+     * Reduce size of specified image by factor 10×
      */
     convertToThumb(canvas: Canvas): Canvas {
-        return this.scale(canvas, ImagesConfigs.SIZES.THUMB);
+        return this.reduce(canvas, ImagesConfigs.SIZES.THUMB);
     }
 
     /**
-     * This will scale the image by ImagesConfigs.SIZES.THUMB
-     * @param context
+     * Reduce size of specified image by specified factor
      */
-    scale(canvas: Canvas, scale: number): Canvas {
+    reduce(canvas: Canvas, factor: number): Canvas {
         try {
-            const w = canvas.width / scale;
-            const h = canvas.height / scale;
+            const w = canvas.width / factor;
+            const h = canvas.height / factor;
             const tempCanvas = createCanvas(w, h);
             tempCanvas.getContext("2d").drawImage(canvas, 0, 0, w, h);
-            logger.info("Converted to thumb");
+            logger.info(`Converted to thumb ${w}×${h}`);
             return tempCanvas;
         } catch (error) {
-            logger.error("Failed to convert canvas to thumb: " + error);
+            logger.error("Failed to convert canvas to thumb! " + error);
             return canvas;
         }
     }
 
     /**
      * Utility method to work out the maximum size of an image we are scaling
-     * @param maxWidth
-     * @param maxHeight
-     * @param image
-     * @returns
      */
     scaleToMax(maxWidth: number, maxHeight: number, image: any): number[] {
         const boxAspectRatio: number = maxWidth / maxHeight;
@@ -152,79 +116,27 @@ export abstract class BrandTemplate<T> {
         return [image.width * scaleFactor, image.height * scaleFactor];
     }
 
-    loadDefaultFontsIntoCanvas() {
-        this.loadFontsIntoCanvas([
-            { path: './static/fonts/Jost-Regular-400.ttf', fontFace: { family: "Jost" } },
-            { path: './static/fonts/Jost-SemiBold-600.ttf', fontFace: { family: "JostSemi" } },
-            { path: './static/fonts/ShareTechMono-Regular.ttf', fontFace: { family: "ShareTechMono-Regular" } },
-            { path: './static/fonts/CrimsonText-Regular.ttf', fontFace: { family: "Minion" } },
-        ]);
-    }
-    /**
-     *
-     * Will load the desired fonts into canvas
-     */
-    loadFontsIntoCanvas(fontsPaths: IFont[]): void {
-        fontsPaths.forEach((font) => {
-            try {
-                registerFont(font.path, font.fontFace);
-            } catch (err) {
-                logger.info(`Font error: ${font.path} ${err}`);
-            }
-        });
-    }
-
-
-
-    wrapTextCentered(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) {
-      return this.wrapText(context, text, x, y, maxWidth, lineHeight, true);
-    }
+    private static FONTS_REGISTERED = false;
 
     /**
-     * Will try to wrap the text
-     * @param context
-     * @param text
-     * @param x
-     * @param y
-     * @param maxWidth
-     * @param lineHeight
+     * Register (non-system) fonts for subsequent use in canvas drawing.
      */
-    wrapText(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number, center: boolean = false) {
-        const words = text.split(' ');
-        let line = '';
-
-        for (let n = 0; n < words.length; n++) {
-            const testLine = line + words[n] + ' ';
-            const metrics = context.measureText(testLine);
-            const testWidth = metrics.width;
-
-            if (testWidth > maxWidth && n > 0) {
-                if (center) {
-                  context.textAlign = "center";
+    public static registerFonts() {
+        if (!BrandTemplate.FONTS_REGISTERED) {
+            for (const font of [
+                {path: './static/fonts/Jost-Regular-400.ttf', family: 'Jost'},
+                {path: './static/fonts/Jost-SemiBold-600.ttf', family: 'JostSemi'},
+                {path: './static/fonts/ShareTechMono-Regular.ttf', family: 'ShareTechMono-Regular'},
+                {path: './static/fonts/CrimsonText-Regular.ttf', family: 'Minion'},
+            ]) {
+                try {
+                    registerFont(font.path, {family: font.family});
+                } catch (err) {
+                    logger.error(`Cannot register font! ${font.path} ${err}`);
                 }
-                context.fillText(line, x, y);
-                line = words[n] + ' ';
-                y += lineHeight;
-            } else {
-                line = testLine;
             }
+            BrandTemplate.FONTS_REGISTERED = true
         }
-
-        const oldtextAlign = context.textAlign
-        if (center) {
-          context.textAlign = "center";
-        }
-
-        context.fillText(line, x, y);
-        context.textAlign = oldtextAlign;
     }
 
-    /**
-     *
-     * @param object key value pair where key and value are strings
-     * @param value the string value
-     */
-    getKeyByValue(object: { [key: string]: string }, value: string) {
-        return Object.keys(object).find(key => object[key] === value);
-    }
 }

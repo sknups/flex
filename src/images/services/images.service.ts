@@ -1,17 +1,15 @@
-import { ItemDTO } from "../../entities/services/entities.service";
-import { StringUtils } from "../../utils/string.utils";
 import {logger } from '../../logger'
-import { BrandTemplate } from "../../templates/BrandTemplate";
 import { Storage } from "@google-cloud/storage";
 import { Canvas, Image, loadImage } from "canvas";
+import {Template} from "../model";
+import {ItemDTO, SkuDTO} from "../../entities/services/entities.service";
 
 export class ImagesService {
 
-    private bucket;
+    private readonly bucket;
 
     constructor() {
-        let srv: String;
-        switch (process.env.ENVIRONMENT) {
+      switch (process.env.ENVIRONMENT) {
             case null:
                 logger.warn("Warn - no env var ENVIRONMENT - defaulting to DEV");
                 this.bucket = new Storage().bucket('assets-dev.sknups.gg');
@@ -22,24 +20,19 @@ export class ImagesService {
             default:
                 this.bucket = new Storage().bucket(`assets-${process.env.ENVIRONMENT}.sknups.gg`);
                 break;
-
         }
     }
 
+    private static capitalize(str: string): string {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+
     // This will return a promise wrapping a canvas on which the image is drawn,  The code to draw the canvas is selected according to the parameters passed.
-    async generateCanvasImage(version: string, tpl: string, use: string, dto: any, brandCode: string): Promise<Canvas> {
+    async generateCanvasImage(version: string, template: Template, use: string, dto: SkuDTO | ItemDTO): Promise<Canvas> {
 
-        const className = StringUtils.classify(tpl);
+        const className = ImagesService.capitalize(template);
 
-        //If you add brand templates you will need to uncomment this lot :-) but for speed and clearer logging:
-        //logger.info(`ImagesService.generateCanvasImage Will try to load version ${version} type ${typeToClassName} for brandCode: ${brandCode} template with name ${brandCodeToClassName}`)
-        //try {
-        //    const brandModule = await import(`../../templates/${version}/${brandCodeToClassName}/${typeToClassName}`);
-        //    const brandTemplateController: BrandTemplate = new brandModule[brandCodeToClassName];
-
-        //    return brandTemplateController.renderTemplate(fromCertificate, use);
-        //} catch (error) {
-            //logger.info(`ImagesService.generateCanvasImage Unable to get the ${typeToClassName} Template for ${brandCode}:${brandCodeToClassName}`);
             try {
                 const defaultTemplateModule = await import(`../../templates/${version}/default/${className}`);
                 const templateController = new defaultTemplateModule.DefaultTemplate();
@@ -48,10 +41,9 @@ export class ImagesService {
                 logger.error(`ImagesService.generateCanvasImage failed to load ../../templates/${version}/default/${className}: ${error}`);
                 throw new Error(`Failed to load ../../templates/${className}/default/DefaultTemplate`);
             }
-        //}
+
     }
     async getBucketImage(name: string): Promise<Buffer> {
-        const bucket = await this.bucket;
         const getRawBody = require('raw-body');
         const file = this.bucket.file(name);
         return getRawBody(file.createReadStream());

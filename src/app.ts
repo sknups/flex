@@ -2,18 +2,18 @@ const isProductionMode = process.env.NODE_ENV === 'production'
 const isProfilerEnabled = process.env.PROFILER_ENABLED === 'true'
 
 //Start GCP trace agent if running in production mode
-if (isProductionMode) {  
+if (isProductionMode) {
   require('@google-cloud/trace-agent').start({
     serviceContext: {
-        service: 'flex-ui'      
+        service: 'flex'
     }
   });
 }
 
-if (isProfilerEnabled) { 
+if (isProfilerEnabled) {
 require('@google-cloud/profiler').start({
     serviceContext: {
-      service: 'flex-ui' 
+      service: 'flex'
     },
   });
 }
@@ -27,13 +27,12 @@ import express from "express";
 import http from "http";
 import {ImagesRoutesConfig} from "./images/routes/images.routes.config";
 import cors from "cors";
-import {AssetsRoutesConfig} from "./assets/routes/assets.routes.config";
 import { logger } from './logger'
 import { FlexRoutesConfig } from "./flex/routes/flex.routes.config";
 import path from 'path';
 import cons from "consolidate";
 
-// Load into ENV Variables from dotenv if not running 
+// Load into ENV Variables from dotenv if not running
 //in production mode
 if (!isProductionMode) {
   require('dotenv').config();
@@ -49,14 +48,14 @@ const favicon = require('serve-favicon');
 // Tell the app if it will talk with GCP, and
 // compress the response in case we are in prod mode
 export const app: express.Application = ServerUtils.configureApp(
-    express(),    
+    express(),
     isProductionMode
 );
 
 app.engine('handlebars', cons.handlebars);
 app.set('view engine', 'handlebars');
 // view engine setup
-app.set('views', [    
+app.set('views', [
     // Flex
     path.join(__dirname, './', 'flex', 'views')
 ]);
@@ -71,21 +70,20 @@ const debugLog: debug.IDebugger = debug('flex-server-app');
 
 const routes: Array<CommonRoutesConfig> = [
     // here we are adding the UserRoutes to our array,
-    // after sending the Express.js application object to have the routes added to our app!    
+    // after sending the Express.js application object to have the routes added to our app!
     new ImagesRoutesConfig(app),
-    new AssetsRoutesConfig(app),
     new FlexRoutesConfig(app)
 ];
 
-// Return empty OK response, used check app is up when deployed 
-app.get('/', (req: express.Request, res: express.Response) => {    
+// Return empty OK response, used check app is up when deployed
+app.get('/', (req: express.Request, res: express.Response) => {
     res.send('');
 });
 
 // Start server and listen on port
 server.listen(port, () => {
     const taken = Intl.NumberFormat().format(new Date().getTime() - startTime);
-    logger.info(`Server started in ${taken}ms, running on port ${port}`);    
+    logger.info(`Server started in ${taken}ms, running on port ${port}`);
     routes.forEach((route: CommonRoutesConfig) => {
         debugLog(`Routes configured for ${route.getName()}`);
     });
