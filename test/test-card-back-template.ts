@@ -1,6 +1,7 @@
 const expect = require('chai').expect
 
-import {Style, DefaultTemplate} from '../src/templates/v1/default/Back';
+import {Style} from '../src/templates/BrandTemplate';
+import {DefaultTemplate} from '../src/templates/v1/default/Back';
 import {createCanvas} from 'canvas';
 
 const sinon = require("sinon");
