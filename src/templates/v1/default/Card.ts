@@ -1,61 +1,70 @@
-import { BrandTemplate } from "../../BrandTemplate";
-import { ImagesConfigs } from "../../../images/images.configs";
-import { Canvas, createCanvas } from "canvas";
-import { logger } from '../../../logger'
-import { ItemDTO } from "../../../entities/services/entities.service";
+import {BrandTemplate} from "../../BrandTemplate";
+import {ImagesConfigs} from "../../../images/images.configs";
+import {Canvas, createCanvas} from "canvas";
+import {ItemDTO} from "../../../entities/services/entities.service";
 
 // noinspection JSUnusedGlobalSymbols
 export class DefaultTemplate extends BrandTemplate<ItemDTO> {
+
+    private static readonly WIDTH = 900;
+    private static readonly HEIGHT = 1350;
+
+    private static readonly TEXT_X = 100;
+
+    private static readonly SKU_NAME_BASELINE = 1040;
+    private static readonly ENUMERATION_BASELINE = 1100;
+
+    static readonly SKU_NAME_STYLE = {
+        color: ImagesConfigs.TEXT_COLOR,
+        font: '35pt Jost',
+        lineHeight: 0,
+        maximumWidth: Infinity, // wrapping disabled
+    };
+
+    static readonly ENUMERATION_STYLE = {
+        color: ImagesConfigs.TEXT_COLOR,
+        font: '35pt ShareTechMono-Regular',
+        lineHeight: 0,
+        maximumWidth: Infinity, // wrapping disabled
+    };
 
     async renderTemplate(dto: ItemDTO, purpose: string): Promise<Canvas> {
 
         BrandTemplate.registerFonts();
 
-        logger.debug(`Drawing card ${dto.thumbprint} purpose ${purpose}`);
-        const height = 1350;
-        let canvas = createCanvas(900, height);
-
+        const canvas = createCanvas(DefaultTemplate.WIDTH, DefaultTemplate.HEIGHT);
         const context = canvas.getContext('2d');
+
         context.patternQuality = 'good';
         context.quality = 'good';
 
-        let images = await this.loadImages([
-            `sku.${dto.certVersion}.cardFront.${dto.stockKeepingUnitCode}.png`
-        ]);
+        const name = dto.stockKeepingUnitName;
+        const issue = dto.saleQty;
+        const maximum = dto.maxQty;
+        const rarity = dto.stockKeepingUnitRarity;
 
-        const skuImage = images[0];
-        if (skuImage.status == 'fulfilled') {
-            const imageDimensions = this.scaleToMax(900, 1350, skuImage.value);
-            context.drawImage(skuImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
-        } else {
-            logger.info('Failed to load sku image: ' + dto.stockKeepingUnitCode);
-        }
+        const filename = `sku.v1.cardFront.${dto.stockKeepingUnitCode}.png`;
+        await this.draw(context, filename, DefaultTemplate.WIDTH, DefaultTemplate.HEIGHT);
 
-        context.fillStyle = ImagesConfigs.TEXT_COLOR;
-        context.font = '35pt Jost';
-        context.textAlign = 'left';
-        context.fillText(dto.stockKeepingUnitName, 100, 1040);
+        // print SKU name (original case preserved)
+        this.print(context, DefaultTemplate.SKU_NAME_STYLE, name, DefaultTemplate.TEXT_X, DefaultTemplate.SKU_NAME_BASELINE);
 
-        context.font = '35pt ShareTechMono-Regular';
-        const qty = this.getItemNumberText(dto.maxQty, dto.saleQty, dto.stockKeepingUnitRarity);
-        context.fillText('' + qty, 100, 1100);
+        // print enumeration
+        this.print(context, DefaultTemplate.ENUMERATION_STYLE, this.enumeration(issue, maximum, rarity), DefaultTemplate.TEXT_X, DefaultTemplate.ENUMERATION_BASELINE);
 
         this.writeTestWatermark(context);
 
-
-        if (purpose == 'og') {
-            canvas = this.convertToOg(canvas);
+        switch (purpose) {
+            case 'og':
+                return this.convertToOg(canvas);
+            case 'snapsticker':
+                return this.convertToSnapchatSticker(canvas);
+            case 'thumb':
+                return this.convertToThumb(canvas);
+            default:
+                return canvas;
         }
-
-        if (purpose == 'snapsticker') {
-            canvas = this.convertToSnapchatSticker(canvas);
-        }
-
-        if (purpose == 'thumb') {
-            canvas = this.convertToThumb(canvas);
-        }
-
-        return canvas;
 
     }
+
 }

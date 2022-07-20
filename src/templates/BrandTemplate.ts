@@ -1,13 +1,23 @@
 import {logger} from '../logger'
-import {Canvas, createCanvas, Image, registerFont} from "canvas";
+import {Canvas, createCanvas, Image, NodeCanvasRenderingContext2D, registerFont} from "canvas";
 import {ImagesService} from "../images/services/images.service";
 import {ImagesConfigs} from "../images/images.configs";
+
+/**
+ * How text should be printed.
+ */
+export interface Style {
+    color: string,
+    font: string,
+    lineHeight: number,
+    maximumWidth: number,
+}
 
 export abstract class BrandTemplate<T> {
 
     private readonly imagesService: ImagesService = new ImagesService();
 
-    getItemNumberText(maximum: number, issue: number, rarity: number): string {
+    enumeration(issue: number, maximum: number, rarity: number): string {
         if (rarity === 0) return ''
         if (rarity === 1) return `${issue}`
         if (rarity > 1) return `${issue}/${maximum}`
@@ -37,6 +47,61 @@ export abstract class BrandTemplate<T> {
             return this.imagesService.getCanvasImage(imagePath);
         });
         return Promise.allSettled(imagesPromises);
+    }
+
+    async draw(context: NodeCanvasRenderingContext2D, filename: string, width: number, height: number) {
+
+        const image = (await this.loadImages([filename]))[0];
+
+        if (image.status === 'fulfilled') {
+            const dimensions = this.scaleToMax(width, height, image.value);
+            context.drawImage(image.value, 0, 0, dimensions[0], dimensions[1]);
+        } else {
+            logger.error(`Failed to load ${filename}`);
+        }
+
+    }
+
+    // BEWARE
+    // This method prints a trailing whitespace character on each line.
+    // This is visually benign, but it means that width calculations are incorrect.
+    // There is almost no incentive to fix this, as word wrap calculations only affect Legacy SKU.
+
+    print(context: NodeCanvasRenderingContext2D, style: Style, text: string, x: number, y: number): number {
+
+        context.textAlign = 'left';
+        context.font = style.font;
+        context.fillStyle = style.color;
+
+        let buffer = '';
+        let first = true;
+
+        let lineNumber = 0;
+
+        for (const word of text.split(' ')) {
+
+            const proposed = buffer + word + ' ';
+            const width = context.measureText(proposed).width; // pixels
+
+            if (width > style.maximumWidth && !first) {
+                // buffer would overflow
+                // print buffer contents
+                context.fillText(buffer, x, y + (lineNumber * style.lineHeight));
+                // carriage return
+                lineNumber += 1;
+                buffer = word + ' ';
+            } else {
+                // buffer would not overflow
+                // (or it's the very first word)
+                buffer = proposed;
+            }
+
+            first = false;
+
+        }
+
+        context.fillText(buffer, x, y + (lineNumber * style.lineHeight));
+        return (lineNumber * style.lineHeight);
     }
 
     writeTestWatermark(context: CanvasRenderingContext2D) {

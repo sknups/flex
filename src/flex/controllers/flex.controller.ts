@@ -2,7 +2,7 @@ import express from "express";
 import axios from 'axios';
 import {StatusCodes} from "http-status-codes";
 import {logger} from "../../logger";
-import {EntitiesService, ItemDTO,} from "../../entities/services/entities.service";
+import {EntitiesService} from "../../entities/services/entities.service";
 
 export class FlexController {
   private readonly entitiesService: EntitiesService;
@@ -34,7 +34,7 @@ export class FlexController {
       const optimizeId = process.env.OPTIMIZE_ID;
       const optimizeEnabled = optimizeId && optimizeId.length > 0;
 
-      const {sknappHost,flexHost,certVersion,thumbprint, stockKeepingUnitName, description } = dto;
+      const {sknappHost,flexHost,thumbprint, stockKeepingUnitName, description } = dto;
       const {claimCode,stockKeepingUnitCode } = dto;
 
       response.status(StatusCodes.OK).render(`flex_${version}`, {
@@ -51,18 +51,18 @@ export class FlexController {
         title: `${stockKeepingUnitName} | SKNUPS`,
         layout: false,
         appURL: `${sknappHost}/?utm_source=flex`,
-        cardImgUrl: `${flexHost}/skn/${certVersion}/card/default/${thumbprint}.jpg`,
-        cardThumbnailImgUrl: `${flexHost}/skn/${certVersion}/card/thumb/${thumbprint}.jpg?q=0.1`,
-        backImgUrl: `${flexHost}/skn/${certVersion}/back/default/${thumbprint}.jpg`,
+        cardImgUrl: `${flexHost}/skn/v1/card/default/${thumbprint}.jpg`,
+        cardThumbnailImgUrl: `${flexHost}/skn/v1/card/thumb/${thumbprint}.jpg?q=0.1`,
+        backImgUrl: `${flexHost}/skn/v1/back/default/${thumbprint}.jpg`,
         stockKeepingUnitName: stockKeepingUnitName,
-        ogImageUrl: `${flexHost}/skn/${certVersion}/card/og/${thumbprint}.png`,
+        ogImageUrl: `${flexHost}/skn/v1/card/og/${thumbprint}.png`,
         ogUrl: `${flexHost}/flex/v1/${thumbprint}.html`,
-        twitterImageUrl: `${flexHost}/skn/${certVersion}/card/og/${thumbprint}.png`,
+        twitterImageUrl: `${flexHost}/skn/v1/card/og/${thumbprint}.png`,
         twitterUrl: `${flexHost}/flex/v1/${thumbprint}.html`,
         description : description,
         copyrightYear: new Date().getFullYear(),
         legalUrl: `${sknappHost}/skn/legal/use-sknapp`,
-        snapStickerImageUrl: `${flexHost}/skn/${certVersion}/card/snapsticker/${thumbprint}.png`
+        snapStickerImageUrl: `${flexHost}/skn/v1/card/snapsticker/${thumbprint}.png`
     });
 
     } catch (err) {
