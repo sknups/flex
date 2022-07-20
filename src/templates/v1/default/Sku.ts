@@ -1,42 +1,44 @@
 import { BrandTemplate } from "../../BrandTemplate";
 import { ImagesConfigs } from "../../../images/images.configs";
 import { Canvas, createCanvas } from "canvas";
-import { logger } from '../../../logger'
 import { SkuDTO } from "../../../entities/services/entities.service";
 
 // noinspection JSUnusedGlobalSymbols
 export class DefaultTemplate extends BrandTemplate<SkuDTO> {
 
-    async renderTemplate(sku: SkuDTO, purpose: string): Promise<Canvas> {
+    private static readonly WIDTH = 900;
+    private static readonly HEIGHT = 1350;
+
+    private static readonly TEXT_X = 100;
+
+    private static readonly SKU_NAME_BASELINE = 1040;
+
+    static readonly SKU_NAME_STYLE = {
+        color: ImagesConfigs.TEXT_COLOR,
+        font: '35pt JostSemi',
+        lineHeight: 0,
+        maximumWidth: Infinity, // wrapping disabled
+    };
+
+    async renderTemplate(sku: SkuDTO, _ignored: string): Promise<Canvas> {
 
         BrandTemplate.registerFonts();
 
-        logger.debug(`Drawing card of SKU ${sku.code} purpose ${purpose}`);
-        let canvas = createCanvas(900, 1350);
-
+        const canvas = createCanvas(DefaultTemplate.WIDTH, DefaultTemplate.HEIGHT);
         const context = canvas.getContext('2d');
+
         context.patternQuality = 'good';
         context.quality = 'good';
 
-        let images = await this.loadImages([
-            `sku.v1.cardFront.${sku.code}.png`
-        ]);
+        const filename = `sku.v1.cardFront.${sku.code}.png`;
+        await this.draw(context, filename, DefaultTemplate.WIDTH, DefaultTemplate.HEIGHT);
 
-        const skuImage = images[0];
-        if (skuImage.status === 'fulfilled') {
-            const imageDimensions = this.scaleToMax(900, 1350, skuImage.value);
-            context.drawImage(skuImage.value, 0, 0, imageDimensions[0], imageDimensions[1]);
-        } else {
-            logger.info('Failed to load sku image: ' + sku.code);
-        }
-
-        context.fillStyle = ImagesConfigs.TEXT_COLOR;
-        context.font = '35pt JostSemi';
-        context.textAlign = 'left';
-        context.fillText(sku.name, 100, 1040);
+        // print SKU name (original case preserved)
+        this.print(context, DefaultTemplate.SKU_NAME_STYLE, sku.name, DefaultTemplate.TEXT_X, DefaultTemplate.SKU_NAME_BASELINE);
 
         this.writeTestWatermark(context);
 
         return canvas;
+
     }
 }

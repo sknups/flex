@@ -4,7 +4,6 @@ import {AuthenticationUtils} from "../../utils/authentication.utils";
 
 export interface ItemDTO {
     brandCode: string;
-    certVersion: string;
     claimCode: string;
     description: string;
     flexHost: string;
@@ -20,9 +19,6 @@ export interface ItemDTO {
 export interface SkuDTO {
     code: string;
     name: string;
-    rarity: number;
-    brandCode: string;
-    brandName: string;
 }
 
 export class EntitiesService {
