@@ -16,14 +16,14 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
 
     static readonly SKU_NAME_STYLE = {
         color: ImagesConfigs.TEXT_COLOR,
-        font: '35pt Jost',
+        font: '35pt Jost Regular',
         lineHeight: 0,
         maximumWidth: Infinity, // wrapping disabled
     };
 
     static readonly ENUMERATION_STYLE = {
         color: ImagesConfigs.TEXT_COLOR,
-        font: '35pt ShareTechMono-Regular',
+        font: '35pt "Share Tech Mono" Regular',
         lineHeight: 0,
         maximumWidth: Infinity, // wrapping disabled
     };

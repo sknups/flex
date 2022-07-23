@@ -16,20 +16,20 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
 
     static readonly LABEL_STYLE = {
         color: ImagesConfigs.TEXT_COLOR,
-        font: '23.5pt Jost',
+        font: '23.5pt Jost Regular',
         lineHeight: 0,
         maximumWidth: Infinity, // wrapping disabled
     };
 
     static readonly VALUE_STYLE = {
         color: ImagesConfigs.TEXT_COLOR,
-        font: '25pt ShareTechMono-Regular',
+        font: '25pt "Share Tech Mono" Regular',
         lineHeight: 34,
         /**
          * The maximum width of each line of a monospaced value, e.g. SKU Name.
          * BEWARE! This width assumes a trailing space character.
          *
-         * This value is sixteen characters of 25pt ShareTechMono-Regular.
+         * This value is sixteen characters of 25pt Share Tech Mono.
          * If this needed reducing to fifteen characters, the value should be 270px.
          */
         maximumWidth: 288, // pixels
@@ -37,7 +37,7 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
 
     static readonly DESCRIPTION_STYLE = {
         color: ImagesConfigs.TEXT_COLOR,
-        font: '18pt Minion',
+        font: '18pt "Crimson Text" Regular',
         lineHeight: 35,
         /**
          * The maximum width of each line of a SKU description.
