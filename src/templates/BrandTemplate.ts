@@ -109,7 +109,7 @@ export abstract class BrandTemplate<T> {
         if (process.env.SHOW_TEST_ONLY_WATERMARK === 'true') {
             context.save();
             context.fillStyle = ImagesConfigs.WATERMARK_COLOR;
-            context.font = '32pt ShareTechMono-Regular';
+            context.font = '32pt "Share Tech Mono"';
             context.textAlign = 'center';
             context.rotate(-Math.PI / 4);
             context.fillText('TEST ONLY', -4, 140);
@@ -190,13 +190,13 @@ export abstract class BrandTemplate<T> {
     public static registerFonts() {
         if (!BrandTemplate.FONTS_REGISTERED) {
             for (const font of [
-                {path: './static/fonts/Jost-Regular-400.ttf', family: 'Jost'},
-                {path: './static/fonts/Jost-SemiBold-600.ttf', family: 'JostSemi'},
-                {path: './static/fonts/ShareTechMono-Regular.ttf', family: 'ShareTechMono-Regular'},
-                {path: './static/fonts/CrimsonText-Regular.ttf', family: 'Minion'},
+                {path: './static/fonts/Jost-Regular-400.ttf', family: 'Jost', weight: 'Regular'},
+                {path: './static/fonts/Jost-SemiBold-600.ttf', family: 'Jost', weight: 'Semibold'},
+                {path: './static/fonts/ShareTechMono-Regular.ttf', family: 'Share Tech Mono', weight: 'Regular'},
+                {path: './static/fonts/CrimsonText-Regular.ttf', family: 'Crimson Text', weight: 'Regular'},
             ]) {
                 try {
-                    registerFont(font.path, {family: font.family});
+                    registerFont(font.path, {family: font.family, weight: font.weight});
                 } catch (err) {
                     logger.error(`Cannot register font! ${font.path} ${err}`);
                 }
