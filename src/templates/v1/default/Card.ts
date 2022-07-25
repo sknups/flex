@@ -16,7 +16,7 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
 
     static readonly SKU_NAME_STYLE = {
         color: ImagesConfigs.TEXT_COLOR,
-        font: '35pt Jost Regular',
+        font: '35pt "Jost" Regular',
         lineHeight: 0,
         maximumWidth: Infinity, // wrapping disabled
     };

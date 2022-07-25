@@ -16,7 +16,7 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
 
     static readonly LABEL_STYLE = {
         color: ImagesConfigs.TEXT_COLOR,
-        font: '23.5pt Jost Regular',
+        font: '23.5pt "Jost" Regular',
         lineHeight: 0,
         maximumWidth: Infinity, // wrapping disabled
     };
