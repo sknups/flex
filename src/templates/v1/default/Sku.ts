@@ -33,9 +33,11 @@ export class DefaultTemplate extends BrandTemplate<SkuDTO> {
         const filename = `sku.v1.cardFront.${sku.code}.png`;
         await this.draw(context, filename, DefaultTemplate.WIDTH, DefaultTemplate.HEIGHT);
 
-        // print SKU name (original case preserved)
-        this.print(context, DefaultTemplate.SKU_NAME_STYLE, sku.name, DefaultTemplate.TEXT_X, DefaultTemplate.SKU_NAME_BASELINE);
-
+        if (sku.version === "1") {
+          // print SKU name (original case preserved)
+          this.print(context, DefaultTemplate.SKU_NAME_STYLE, sku.name, DefaultTemplate.TEXT_X, DefaultTemplate.SKU_NAME_BASELINE);
+        }
+        
         this.writeTestWatermark(context);
 
         return canvas;
