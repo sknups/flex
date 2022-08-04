@@ -11,14 +11,15 @@ export interface Style {
     font: string,
     lineHeight: number,
     maximumWidth: number,
+    align: string,
 }
 
 export abstract class BrandTemplate<T> {
 
     private readonly imagesService: ImagesService = new ImagesService();
 
-    enumeration(issue: number, maximum: number, rarity: number): string {
-        if (rarity === 0) return ''
+    enumeration(issue: number, maximum: number, rarity: number | null): string {
+        if (rarity === null || rarity === 0) return ''
         if (rarity === 1) return `${issue}`
         if (rarity > 1) return `${issue}/${maximum}`
         return ''
@@ -30,8 +31,9 @@ export abstract class BrandTemplate<T> {
      * Function responsible for render the template according to the requirements of each brand
      * @param dto The DTO for the entity
      * @param purpose The use intended for the image: handed in as part of the URL. default/any=full size: og=small square:
+     * @param type The type being rendered not always required as types usually have separate templates e.g card and back
      */
-    abstract renderTemplate(dto: T, purpose: string): Promise<Canvas>;
+    abstract renderTemplate(dto: T, purpose: string, type?: string): Promise<Canvas>;
 
      /**
      * Try to load a "bunch" of images from a given design
@@ -69,7 +71,7 @@ export abstract class BrandTemplate<T> {
 
     print(context: NodeCanvasRenderingContext2D, style: Style, text: string, x: number, y: number): number {
 
-        context.textAlign = 'left';
+        context.textAlign = style.align as CanvasTextAlign;
         context.font = style.font;
         context.fillStyle = style.color;
 
