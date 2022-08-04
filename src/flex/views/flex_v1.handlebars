@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title> {{title}} </title>
     <link rel="shortcut icon" type="image/jpg" href="/static/favicon.ico"/>
-    <meta name="title" content="{{stockKeepingUnitName}}" />
-    <meta property="og:title" content="{{stockKeepingUnitName}}" />
+    <meta name="title" content="{{name}}" />
+    <meta property="og:title" content="{{name}}" />
     <meta property="og:site_name" content="SKNUPS" />
     <meta property="og:description" content="{{description}}" />
     <meta property="og:image" content="{{ogImageUrl}}" />
@@ -17,9 +17,9 @@
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:image" content="{{twitterImageUrl}}" />
     <meta name="twitter:url" content="{{twitterUrl}}" />
-    <meta name="twitter:text:title" content="{{stockKeepingUnitName}}" />
+    <meta name="twitter:text:title" content="{{name}}" />
     <meta name="twitter:site" content="@sknupsgg" />
-    <meta name="twitter:title" content="{{stockKeepingUnitName}}" />
+    <meta name="twitter:title" content="{{name}}" />
     <meta property="snap:sticker" content="{{snapStickerImageUrl}}" />
     {{#if gaEnabled }}
     <script async src="https://www.googletagmanager.com/gtag/js?id={{gaMeasurementId}}"></script>
@@ -34,10 +34,10 @@
          gtag('event', 'flx_view', {
             'event_label': 'Asset has been viewed',
             'event_category': 'flx',
-            'asset': '{{ thumbprint }}',
-            'sku': '{{ stockKeepingUnitCode }}',
-            'brand': '{{ brandCode }}',
-            'claim': '{{ claimCode}}'
+            'asset': '{{ token }}',
+            'sku': '{{ sku }}',
+            'brand': '{{ brand }}',
+            'claim': '{{ giveaway }}'
          });
     </script>
     {{/if}}
