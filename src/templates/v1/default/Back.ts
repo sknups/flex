@@ -2,6 +2,7 @@ import {BrandTemplate} from "../../BrandTemplate";
 import {ImagesConfigs} from "../../../images/images.configs";
 import {Canvas, createCanvas} from "canvas";
 import {ItemDTO} from "../../../entities/services/entities.service";
+import { ItemTemplate } from "./Item";
 
 // noinspection JSUnusedGlobalSymbols
 export class DefaultTemplate extends BrandTemplate<ItemDTO> {
@@ -19,6 +20,7 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         font: '23.5pt "Jost" Regular',
         lineHeight: 0,
         maximumWidth: Infinity, // wrapping disabled
+        align: 'left',
     };
 
     static readonly VALUE_STYLE = {
@@ -33,6 +35,7 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
          * If this needed reducing to fifteen characters, the value should be 270px.
          */
         maximumWidth: 288, // pixels
+        align: 'left',
     };
 
     static readonly DESCRIPTION_STYLE = {
@@ -44,9 +47,18 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
          * BEWARE! This width assumes a trailing space character.
          */
         maximumWidth: 340, // pixels
+        align: 'left',
     }
 
-    async renderTemplate(dto: ItemDTO, purpose: string): Promise<Canvas> {
+    async renderTemplate(item: ItemDTO, purpose: string): Promise<Canvas> {
+        if (item.version === "1") {
+            return this._renderTemplateV1(item, purpose);
+        }
+
+        return await new ItemTemplate().renderTemplate(item, purpose, 'back');
+    }
+
+    private async _renderTemplateV1(dto: ItemDTO, purpose: string): Promise<Canvas> {
 
         BrandTemplate.registerFonts();
 
@@ -56,13 +68,13 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         context.patternQuality = 'good';
         context.quality = 'good';
 
-        const token = dto.thumbprint;
-        const code = dto.stockKeepingUnitCode;
-        const name = dto.stockKeepingUnitName;
+        const token = dto.token;
+        const code = dto.sku;
+        const name = dto.name;
         const description = dto.description;
-        const issue = dto.saleQty;
-        const maximum = dto.maxQty;
-        const rarity = dto.stockKeepingUnitRarity;
+        const issue = dto.issue;
+        const maximum = dto.maximum;
+        const rarity = dto.rarity;
 
         const filename = `sku.v1.cardBack.${code}.png`;
         await this.draw(context, filename, DefaultTemplate.WIDTH, DefaultTemplate.HEIGHT);
@@ -73,7 +85,7 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         y += this.print(context, DefaultTemplate.VALUE_STYLE, name.toLocaleUpperCase(), DefaultTemplate.VALUE_X, y);
 
         // print enumeration
-        if (rarity >= 1) {
+        if (rarity != null && rarity >= 1) {
             y += 70;
             y += this.print(context, DefaultTemplate.LABEL_STYLE, 'ITEM NUMBER:', DefaultTemplate.LABEL_X, y);
             y += this.print(context, DefaultTemplate.VALUE_STYLE, this.enumeration(issue, maximum, rarity), DefaultTemplate.VALUE_X, y);
@@ -99,5 +111,4 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         }
 
     }
-
 }

@@ -18,6 +18,7 @@ export class DefaultTemplate extends BrandTemplate<SkuDTO> {
         font: '35pt "Jost" Semibold',
         lineHeight: 0,
         maximumWidth: Infinity, // wrapping disabled
+        align: 'left'
     };
 
     async renderTemplate(sku: SkuDTO, _ignored: string): Promise<Canvas> {

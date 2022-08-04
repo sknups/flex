@@ -18,11 +18,11 @@ export class FlexController {
 
     try {
       const dto = await this.entitiesService.getItem(itemId);
-      const brandCode = dto.brandCode;
+      const brand = dto.brand;
       const version = request.params.version;
 
       logger.info(
-        `FlexController.getPage version: ${version} type: ${type} from brand: ${brandCode} with itemId: ${itemId}`
+        `FlexController.getPage version: ${version} type: ${type} from brand: ${brand} with itemId: ${itemId}`
       );
 
       const gaMeasurementId = process.env.GA_MEASUREMENT_ID;
@@ -34,8 +34,8 @@ export class FlexController {
       const optimizeId = process.env.OPTIMIZE_ID;
       const optimizeEnabled = optimizeId && optimizeId.length > 0;
 
-      const {sknappHost,flexHost,thumbprint, stockKeepingUnitName, description } = dto;
-      const {claimCode,stockKeepingUnitCode } = dto;
+      const {sknappHost,flexHost,token, name, description } = dto;
+      const {giveaway,sku } = dto;
 
       response.status(StatusCodes.OK).render(`flex_${version}`, {
         optimizeId: optimizeId,
@@ -44,25 +44,25 @@ export class FlexController {
         gaMeasurementId: gaMeasurementId,
         gaLegacyEnabled: gaLegacyEnabled,
         gaLegacyMeasurementId: gaLegacyMeasurementId,
-        thumbprint: thumbprint,
-        claimCode: claimCode,
-        brandCode: brandCode,
-        stockKeepingUnitCode: stockKeepingUnitCode,
-        title: `${stockKeepingUnitName} | SKNUPS`,
+        token: token,
+        giveaway: giveaway,
+        brand: brand,
+        sku: sku,
+        title: `${name} | SKNUPS`,
         layout: false,
         appURL: `${sknappHost}/?utm_source=flex`,
-        cardImgUrl: `${flexHost}/skn/v1/card/default/${thumbprint}.jpg`,
-        cardThumbnailImgUrl: `${flexHost}/skn/v1/card/thumb/${thumbprint}.jpg?q=0.1`,
-        backImgUrl: `${flexHost}/skn/v1/back/default/${thumbprint}.jpg`,
-        stockKeepingUnitName: stockKeepingUnitName,
-        ogImageUrl: `${flexHost}/skn/v1/card/og/${thumbprint}.png`,
-        ogUrl: `${flexHost}/flex/v1/${thumbprint}.html`,
-        twitterImageUrl: `${flexHost}/skn/v1/card/og/${thumbprint}.png`,
-        twitterUrl: `${flexHost}/flex/v1/${thumbprint}.html`,
+        cardImgUrl: `${flexHost}/skn/v1/card/default/${token}.jpg`,
+        cardThumbnailImgUrl: `${flexHost}/skn/v1/card/thumb/${token}.jpg?q=0.1`,
+        backImgUrl: `${flexHost}/skn/v1/back/default/${token}.jpg`,
+        name: name,
+        ogImageUrl: `${flexHost}/skn/v1/card/og/${token}.png`,
+        ogUrl: `${flexHost}/flex/v1/${token}.html`,
+        twitterImageUrl: `${flexHost}/skn/v1/card/og/${token}.png`,
+        twitterUrl: `${flexHost}/flex/v1/${token}.html`,
         description : description,
         copyrightYear: new Date().getFullYear(),
         legalUrl: `${sknappHost}/skn/legal/use-sknapp`,
-        snapStickerImageUrl: `${flexHost}/skn/v1/card/snapsticker/${thumbprint}.png`
+        snapStickerImageUrl: `${flexHost}/skn/v1/card/snapsticker/${token}.png`
     });
 
     } catch (err) {
