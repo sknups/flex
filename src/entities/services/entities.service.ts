@@ -19,13 +19,16 @@ export interface ItemDTO {
 export interface SkuDTO {
     code: string;
     name: string;
+    version: string;
 }
 
 export class EntitiesService {
     private readonly drmServerUrl: string = 'https://drm-service-dev.sknups.gg';
+    private readonly getSKUCloudFunctionURL: string = 'https://europe-west1-drm-apps-01-43b0.cloudfunctions.net/get-sku';
 
     constructor() {
-        if (process.env.DRM_SERVER) this.drmServerUrl = [process.env.DRM_SERVER].join('/');
+        if (process.env.DRM_SERVER) this.drmServerUrl = process.env.DRM_SERVER;
+        if (process.env.GET_SKU_CLOUD_FUNCTION) this.getSKUCloudFunctionURL = process.env.GET_SKU_CLOUD_FUNCTION;
     }
 
     /**
@@ -46,7 +49,7 @@ export class EntitiesService {
         logger.debug(`EntitiesService.getSku ${id}`);
         const token = await AuthenticationUtils.getServiceBearerToken(this.drmServerUrl);
         const response = await axios.get<SkuDTO>(
-            `${this.drmServerUrl}/api/v1/skus/${id}`,
+            `${this.getSKUCloudFunctionURL}/${id}`,
             { headers: { Authorization: `Bearer ${token}` } }
         );
         return response.data

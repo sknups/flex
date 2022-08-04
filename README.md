@@ -63,7 +63,7 @@ npm install
 If you want to execute flex locally, but have it interact with drm-service in development environment (recommended):
 
 ```shell
-DRM_SERVER="https://drm-service-dev.sknups.gg" ENVIRONMENT="dev" GOOGLE_AUTH_TOKEN=$(gcloud auth print-identity-token) npm run dev2
+ENVIRONMENT="dev" GOOGLE_AUTH_TOKEN=$(gcloud auth print-identity-token) npm run dev2
 ```
 
 ### Build
@@ -89,6 +89,9 @@ GCP_LOG=0
 
 # Link to be used to communicate with DRM server
 DRM_SERVER=
+
+# HTTP endpoint for get SKU cloud function
+GET_SKU_CLOUD_FUNCTION=
 
 #Optional: set the Goggle Analytics Id.
 #if not set Goggle Analytics is not loaded 
