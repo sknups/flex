@@ -47,7 +47,7 @@ export class EntitiesService {
 
     async getSku(id: any): Promise<SkuDTO> {
         logger.debug(`EntitiesService.getSku ${id}`);
-        const token = await AuthenticationUtils.getServiceBearerToken(this.drmServerUrl);
+        const token = await AuthenticationUtils.getServiceBearerToken(this.getSKUCloudFunctionURL);
         const response = await axios.get<SkuDTO>(
             `${this.getSKUCloudFunctionURL}/${id}`,
             { headers: { Authorization: `Bearer ${token}` } }
