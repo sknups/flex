@@ -2,6 +2,7 @@ import {BrandTemplate} from "../../BrandTemplate";
 import {ImagesConfigs} from "../../../images/images.configs";
 import {Canvas, createCanvas} from "canvas";
 import {ItemDTO} from "../../../entities/services/entities.service";
+import { ItemTemplate } from "./Item";
 
 // noinspection JSUnusedGlobalSymbols
 export class DefaultTemplate extends BrandTemplate<ItemDTO> {
@@ -19,6 +20,7 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         font: '35pt "Jost" Regular',
         lineHeight: 0,
         maximumWidth: Infinity, // wrapping disabled
+        align: 'left'
     };
 
     static readonly ENUMERATION_STYLE = {
@@ -26,9 +28,18 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         font: '35pt "Share Tech Mono" Regular',
         lineHeight: 0,
         maximumWidth: Infinity, // wrapping disabled
+        align: 'left'
     };
 
-    async renderTemplate(dto: ItemDTO, purpose: string): Promise<Canvas> {
+    async renderTemplate(item: ItemDTO, purpose: string): Promise<Canvas> {
+        if (item.version === "1") {
+            return this._renderTemplateV1(item, purpose);
+        }
+
+        return await new ItemTemplate().renderTemplate(item, purpose, 'card');
+    }
+
+    private async _renderTemplateV1(dto: ItemDTO, purpose: string): Promise<Canvas> {
 
         BrandTemplate.registerFonts();
 
@@ -38,18 +49,19 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         context.patternQuality = 'good';
         context.quality = 'good';
 
-        const name = dto.stockKeepingUnitName;
-        const issue = dto.saleQty;
-        const maximum = dto.maxQty;
-        const rarity = dto.stockKeepingUnitRarity;
+        const name = dto.name;
+        const issue = dto.issue;
+        const maximum = dto.maximum;
+        const rarity = dto.rarity;
 
-        const filename = `sku.v1.cardFront.${dto.stockKeepingUnitCode}.png`;
+        const filename = `sku.v1.cardFront.${dto.sku}.png`;
         await this.draw(context, filename, DefaultTemplate.WIDTH, DefaultTemplate.HEIGHT);
 
         // print SKU name (original case preserved)
         this.print(context, DefaultTemplate.SKU_NAME_STYLE, name, DefaultTemplate.TEXT_X, DefaultTemplate.SKU_NAME_BASELINE);
 
         // print enumeration
+        
         this.print(context, DefaultTemplate.ENUMERATION_STYLE, this.enumeration(issue, maximum, rarity), DefaultTemplate.TEXT_X, DefaultTemplate.ENUMERATION_BASELINE);
 
         this.writeTestWatermark(context);
@@ -66,5 +78,4 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         }
 
     }
-
 }
