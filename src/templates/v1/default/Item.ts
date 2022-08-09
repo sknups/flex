@@ -27,6 +27,10 @@ export class ItemTemplate extends BrandTemplate<ItemDTO> {
           card = type === 'card' ? item.card.front : item.card.back
         }
 
+        if (!card){
+            card = []
+        }
+
         await this.draw(context, filename, ItemTemplate.WIDTH, ItemTemplate.HEIGHT);
 
         for (let label of card) {
