@@ -1,6 +1,6 @@
 import {BrandTemplate} from "../../BrandTemplate";
 import {Canvas, createCanvas} from "canvas";
-import {CardDTO, CardLabelDTO, ItemDTO} from "../../../entities/services/entities.service";
+import {CardLabelDTO, ItemDTO} from "../../../entities/services/entities.service";
 
 // noinspection JSUnusedGlobalSymbols
 export class ItemTemplate extends BrandTemplate<ItemDTO> {
@@ -18,34 +18,38 @@ export class ItemTemplate extends BrandTemplate<ItemDTO> {
         context.patternQuality = 'good';
         context.quality = 'good';
 
-        const sku = item.sku;
-        
-        const filename = type === 'card' ? `sku.v1.cardFront.${sku}.png` : `sku.v1.cardBack.${sku}.png`;
-       
-        let card : CardLabelDTO[] = []
-        if (item.card !== null) {
-          card = type === 'card' ? item.card.front : item.card.back
-        }
-
-        if (!card){
-            card = []
-        }
-
+        const filename = type === 'card' ? `sku.v1.cardFront.${(item.sku)}.png` : `sku.v1.cardBack.${(item.sku)}.png`;
         await this.draw(context, filename, ItemTemplate.WIDTH, ItemTemplate.HEIGHT);
 
-        for (let label of card) {
+        let labels : CardLabelDTO[] = []
+
+        if (item.card !== null) {
+            switch (type) {
+                case 'card':
+                    if (item.card.front !== null) {
+                        Array.prototype.push.apply(labels, item.card.front);
+                    }
+                    break;
+                case 'back':
+                    if (item.card.back !== null) {
+                        Array.prototype.push.apply(labels, item.card.back);
+                    }
+                    break;
+            }
+        }
+
+        for (let label of labels) {
+
             const style  = {
                 color: label.color,
                 font: `${label.size} "${label.font}" ${label.weight}`,
-                lineHeight: 0,
-                maximumWidth: Infinity, // wrapping disabled
                 align: label.align,
             };
 
-            const text = this.parseTemplateString(label.text,item);
-
+            const text = this.parseTemplateString(label.text, item);
             this.print(context, style, text, label.x, label.y);
-        } 
+
+        }
 
         this.writeTestWatermark(context);
 
