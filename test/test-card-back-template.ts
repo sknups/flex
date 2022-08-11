@@ -1,6 +1,6 @@
 const expect = require('chai').expect
 
-import {Style} from '../src/templates/BrandTemplate';
+import {WrappingStyle} from '../src/templates/BrandTemplate';
 import {DefaultTemplate} from '../src/templates/v1/default/Back';
 import {createCanvas} from 'canvas';
 
@@ -11,7 +11,7 @@ describe('Card Back template', () => {
   abstract class LineBreakTest {
 
     protected constructor(
-        protected style: Style,
+        protected style: WrappingStyle,
         protected text: string,
         protected expectation: string,
     ) {}
@@ -23,7 +23,7 @@ describe('Card Back template', () => {
 
       const fake = sinon.replace(context, "fillText", sinon.fake(context.fillText));
 
-      new DefaultTemplate().print(context, this.style, this.text, 0, 0);
+      new DefaultTemplate().wrap(context, this.style, this.text, 0, 0);
 
       const printed: string[] = []
       for (const invocation of fake.getCalls()) {

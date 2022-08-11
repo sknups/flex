@@ -18,16 +18,12 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
     static readonly SKU_NAME_STYLE = {
         color: ImagesConfigs.TEXT_COLOR,
         font: '35pt "Jost" Regular',
-        lineHeight: 0,
-        maximumWidth: Infinity, // wrapping disabled
         align: 'left'
     };
 
     static readonly ENUMERATION_STYLE = {
         color: ImagesConfigs.TEXT_COLOR,
         font: '35pt "Share Tech Mono" Regular',
-        lineHeight: 0,
-        maximumWidth: Infinity, // wrapping disabled
         align: 'left'
     };
 
@@ -61,7 +57,6 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         this.print(context, DefaultTemplate.SKU_NAME_STYLE, name, DefaultTemplate.TEXT_X, DefaultTemplate.SKU_NAME_BASELINE);
 
         // print enumeration
-        
         this.print(context, DefaultTemplate.ENUMERATION_STYLE, this.enumeration(issue, maximum, rarity), DefaultTemplate.TEXT_X, DefaultTemplate.ENUMERATION_BASELINE);
 
         this.writeTestWatermark(context);
