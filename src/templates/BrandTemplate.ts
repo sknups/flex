@@ -10,9 +10,15 @@ import { ImagesConfigs } from "../images/images.configs";
 export interface Style {
     color: string,
     font: string,
+    align: string,
+}
+
+/**
+ * How text which spans multiple lines should be printed.
+ */
+export interface WrappingStyle extends Style {
     lineHeight: number,
     maximumWidth: number,
-    align: string,
 }
 
 export abstract class BrandTemplate<T> {
@@ -65,12 +71,25 @@ export abstract class BrandTemplate<T> {
 
     }
 
-    // BEWARE
-    // This method prints a trailing whitespace character on each line.
-    // This is visually benign, but it means that width calculations are incorrect.
-    // There is almost no incentive to fix this, as word wrap calculations only affect Legacy SKU.
+    /**
+     * Print text onto the canvas.
+     */
+    print(context: NodeCanvasRenderingContext2D, style: Style, text: string, x: number, y: number): void {
+        context.textAlign = style.align as CanvasTextAlign;
+        context.font = style.font;
+        context.fillStyle = style.color;
+        context.fillText(text, x, y);
+    }
 
-    print(context: NodeCanvasRenderingContext2D, style: Style, text: string, x: number, y: number): number {
+    /**
+     * Print multi-line text onto the canvas.
+     */
+    wrap(context: NodeCanvasRenderingContext2D, style: WrappingStyle, text: string, x: number, y: number): number {
+
+        // BEWARE
+        // This method prints a trailing whitespace character on each line.
+        // This is visually benign, but it means that width calculations are incorrect.
+        // There is almost no incentive to fix this, as word wrap calculations only affect Legacy SKU.
 
         context.textAlign = style.align as CanvasTextAlign;
         context.font = style.font;

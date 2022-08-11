@@ -18,8 +18,6 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
     static readonly LABEL_STYLE = {
         color: ImagesConfigs.TEXT_COLOR,
         font: '23.5pt "Jost" Regular',
-        lineHeight: 0,
-        maximumWidth: Infinity, // wrapping disabled
         align: 'left',
     };
 
@@ -79,27 +77,28 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         const filename = `sku.v1.cardBack.${code}.png`;
         await this.draw(context, filename, DefaultTemplate.WIDTH, DefaultTemplate.HEIGHT);
 
-        // print SKU name (upper case)
         let y = DefaultTemplate.FIRST_BASELINE;
-        y += this.print(context, DefaultTemplate.LABEL_STYLE, 'ITEM:', DefaultTemplate.LABEL_X, y);
-        y += this.print(context, DefaultTemplate.VALUE_STYLE, name.toLocaleUpperCase(), DefaultTemplate.VALUE_X, y);
+
+        // print SKU name (upper case)
+        this.print(context, DefaultTemplate.LABEL_STYLE, 'ITEM:', DefaultTemplate.LABEL_X, y);
+        y += this.wrap(context, DefaultTemplate.VALUE_STYLE, name.toLocaleUpperCase(), DefaultTemplate.VALUE_X, y);
 
         // print enumeration
         if (rarity != null && rarity >= 1) {
             y += 70;
-            y += this.print(context, DefaultTemplate.LABEL_STYLE, 'ITEM NUMBER:', DefaultTemplate.LABEL_X, y);
-            y += this.print(context, DefaultTemplate.VALUE_STYLE, this.enumeration(issue, maximum, rarity), DefaultTemplate.VALUE_X, y);
+            this.print(context, DefaultTemplate.LABEL_STYLE, 'ITEM NUMBER:', DefaultTemplate.LABEL_X, y);
+            y += this.wrap(context, DefaultTemplate.VALUE_STYLE, this.enumeration(issue, maximum, rarity), DefaultTemplate.VALUE_X, y);
         }
 
         // print ownership token
         y += 70;
-        y += this.print(context, DefaultTemplate.LABEL_STYLE, 'OWNERSHIP TOKEN:', DefaultTemplate.LABEL_X, y);
-        y += this.print(context, DefaultTemplate.VALUE_STYLE, token, DefaultTemplate.VALUE_X, y);
+        this.print(context, DefaultTemplate.LABEL_STYLE, 'OWNERSHIP TOKEN:', DefaultTemplate.LABEL_X, y);
+        y += this.wrap(context, DefaultTemplate.VALUE_STYLE, token, DefaultTemplate.VALUE_X, y);
 
         // print description
         y += 70;
-        y += this.print(context, DefaultTemplate.LABEL_STYLE, 'DESCRIPTION:', DefaultTemplate.LABEL_X, y);
-        y += this.print(context, DefaultTemplate.DESCRIPTION_STYLE, description, DefaultTemplate.VALUE_X, y);
+        this.print(context, DefaultTemplate.LABEL_STYLE, 'DESCRIPTION:', DefaultTemplate.LABEL_X, y);
+        this.wrap(context, DefaultTemplate.DESCRIPTION_STYLE, description, DefaultTemplate.VALUE_X, y);
 
         this.writeTestWatermark(context);
 
