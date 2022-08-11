@@ -16,8 +16,6 @@ export class DefaultTemplate extends BrandTemplate<SkuDTO> {
     static readonly SKU_NAME_STYLE = {
         color: ImagesConfigs.TEXT_COLOR,
         font: '35pt "Jost" Semibold',
-        lineHeight: 0,
-        maximumWidth: Infinity, // wrapping disabled
         align: 'left'
     };
 
@@ -38,7 +36,7 @@ export class DefaultTemplate extends BrandTemplate<SkuDTO> {
           // print SKU name (original case preserved)
           this.print(context, DefaultTemplate.SKU_NAME_STYLE, sku.name, DefaultTemplate.TEXT_X, DefaultTemplate.SKU_NAME_BASELINE);
         }
-        
+
         this.writeTestWatermark(context);
 
         return canvas;
