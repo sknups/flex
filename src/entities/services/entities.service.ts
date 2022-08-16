@@ -10,7 +10,6 @@ export interface ItemDTO {
     description: string,
     maximum: number,
     issue: number,
-    sknappHost: string,
     sku: string,
     name: string,
     rarity: number | null,
