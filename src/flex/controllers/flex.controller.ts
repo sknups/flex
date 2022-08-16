@@ -15,6 +15,7 @@ export class FlexController {
   async getPage(request: express.Request, response: express.Response) {
     const type = request.params.type;
     const itemId = request.params.id;
+    const host = `${request.protocol}://${request.headers.host}`;
 
     try {
       const dto = await this.entitiesService.getItem(itemId);
@@ -34,7 +35,7 @@ export class FlexController {
       const optimizeId = process.env.OPTIMIZE_ID;
       const optimizeEnabled = optimizeId && optimizeId.length > 0;
 
-      const {sknappHost,flexHost,token, name, description } = dto;
+      const {sknappHost,token, name, description } = dto;
       const {giveaway,sku } = dto;
 
       response.status(StatusCodes.OK).render(`flex_${version}`, {
@@ -51,18 +52,18 @@ export class FlexController {
         title: `${name} | SKNUPS`,
         layout: false,
         appURL: `${sknappHost}/?utm_source=flex`,
-        cardImgUrl: `${flexHost}/skn/v1/card/default/${token}.jpg`,
-        cardThumbnailImgUrl: `${flexHost}/skn/v1/card/thumb/${token}.jpg?q=0.1`,
-        backImgUrl: `${flexHost}/skn/v1/back/default/${token}.jpg`,
+        cardImgUrl: `${host}/skn/v1/card/default/${token}.jpg`,
+        cardThumbnailImgUrl: `${host}/skn/v1/card/thumb/${token}.jpg?q=0.1`,
+        backImgUrl: `${host}/skn/v1/back/default/${token}.jpg`,
         name: name,
-        ogImageUrl: `${flexHost}/skn/v1/card/og/${token}.png`,
-        ogUrl: `${flexHost}/flex/v1/${token}.html`,
-        twitterImageUrl: `${flexHost}/skn/v1/card/og/${token}.png`,
-        twitterUrl: `${flexHost}/flex/v1/${token}.html`,
+        ogImageUrl: `${host}/skn/v1/card/og/${token}.png`,
+        ogUrl: `${host}/flex/v1/${token}.html`,
+        twitterImageUrl: `${host}/skn/v1/card/og/${token}.png`,
+        twitterUrl: `${host}/flex/v1/${token}.html`,
         description : description,
         copyrightYear: new Date().getFullYear(),
         legalUrl: `${sknappHost}/skn/legal/use-sknapp`,
-        snapStickerImageUrl: `${flexHost}/skn/v1/card/snapsticker/${token}.png`
+        snapStickerImageUrl: `${host}/skn/v1/card/snapsticker/${token}.png`
     });
 
     } catch (err) {

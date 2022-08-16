@@ -8,7 +8,6 @@ export interface ItemDTO {
     card: CardDTO | null,
     giveaway: string,
     description: string,
-    flexHost: string,
     maximum: number,
     issue: number,
     sknappHost: string,
