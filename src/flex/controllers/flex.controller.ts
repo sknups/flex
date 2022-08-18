@@ -35,8 +35,9 @@ export class FlexController {
       const optimizeId = process.env.OPTIMIZE_ID;
       const optimizeEnabled = optimizeId && optimizeId.length > 0;
 
-      const {sknappHost,token, name, description } = dto;
-      const {giveaway,sku } = dto;
+      const sknappHost = process.env.SKNAPP_HOST || 'http://localhost:4200'
+
+      const {giveaway,sku, token, name, description  } = dto;
 
       response.status(StatusCodes.OK).render(`flex_${version}`, {
         optimizeId: optimizeId,

@@ -112,6 +112,9 @@ OPTIMIZE_ID=
 #Optional: defaults to not show watermark, if set to 'true' it will
 #show the Test Only watermark on generated item images
 SHOW_TEST_ONLY_WATERMARK=
+
+#Optional: defaults to 'http://localhost:4200'
+SKNAPP_HOST=
 ```
 
 Example on how to start a docker image with env variables from the command line or defining a file:
