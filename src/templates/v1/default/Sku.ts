@@ -37,8 +37,6 @@ export class DefaultTemplate extends BrandTemplate<SkuDTO> {
           this.print(context, DefaultTemplate.SKU_NAME_STYLE, sku.name, DefaultTemplate.TEXT_X, DefaultTemplate.SKU_NAME_BASELINE);
         }
 
-        this.writeTestWatermark(context);
-
         return canvas;
 
     }
