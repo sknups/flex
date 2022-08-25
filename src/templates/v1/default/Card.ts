@@ -59,8 +59,6 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         // print enumeration
         this.print(context, DefaultTemplate.ENUMERATION_STYLE, this.enumeration(issue, maximum, rarity), DefaultTemplate.TEXT_X, DefaultTemplate.ENUMERATION_BASELINE);
 
-        this.writeTestWatermark(context);
-
         switch (purpose) {
             case 'og':
                 return this.convertToOg(canvas);

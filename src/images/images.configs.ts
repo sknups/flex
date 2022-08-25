@@ -11,7 +11,6 @@ export class ImagesConfigs {
     static TTL = 604800;
 
     static TEXT_COLOR = 'rgb(255,255,255)';
-    static WATERMARK_COLOR = 'rgb(1,214,166)';
     static DEFAULT_IMAGE_QUALITY = 0.5;
 
 }

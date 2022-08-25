@@ -51,8 +51,6 @@ export class ItemTemplate extends BrandTemplate<ItemDTO> {
 
         }
 
-        this.writeTestWatermark(context);
-
         switch (purpose) {
             case 'og':
                 return this.convertToOg(canvas);
