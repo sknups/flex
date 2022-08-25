@@ -100,8 +100,6 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         this.print(context, DefaultTemplate.LABEL_STYLE, 'DESCRIPTION:', DefaultTemplate.LABEL_X, y);
         this.wrap(context, DefaultTemplate.DESCRIPTION_STYLE, description, DefaultTemplate.VALUE_X, y);
 
-        this.writeTestWatermark(context);
-
         switch (purpose) {
             case 'thumb':
                 return this.convertToThumb(canvas);
