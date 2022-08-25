@@ -126,18 +126,6 @@ export abstract class BrandTemplate<T> {
         return (lineNumber * style.lineHeight);
     }
 
-    writeTestWatermark(context: CanvasRenderingContext2D) {
-        if (process.env.SHOW_TEST_ONLY_WATERMARK === 'true') {
-            context.save();
-            context.fillStyle = ImagesConfigs.WATERMARK_COLOR;
-            context.font = '32pt "Share Tech Mono"';
-            context.textAlign = 'center';
-            context.rotate(-Math.PI / 4);
-            context.fillText('TEST ONLY', -4, 140);
-            context.restore();
-        }
-    }
-
     /**
      * Convert the image to a 383px square.
      */
