@@ -36,6 +36,5 @@ RUN npm ci --only=production &&\
 
 COPY --from=builder /usr/src/app/static ./static
 COPY --from=builder /usr/src/app/dist ./dist
-COPY --from=builder /usr/src/app/src/flex/views ./dist/flex/views
 
 ENTRYPOINT ["node", "./dist/app.js" ]
