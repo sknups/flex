@@ -52,15 +52,6 @@ export const app: express.Application = ServerUtils.configureApp(
     isProductionMode
 );
 
-app.engine('handlebars', cons.handlebars);
-app.set('view engine', 'handlebars');
-// view engine setup
-app.set('views', [
-    // Flex
-    path.join(__dirname, './', 'flex', 'views')
-]);
-
-
 app.use(cors());
 app.use(favicon(path.join(__dirname, '../static', 'favicon.ico')))
 
