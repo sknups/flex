@@ -1,7 +1,6 @@
 import { CommonRoutesConfig } from "../../common/common.routes.config";
 import express from "express";
 import { FlexController } from "../controllers/flex.controller";
-import { logger } from '../../logger'
 
 export class FlexRoutesConfig extends CommonRoutesConfig {
 
@@ -18,9 +17,7 @@ export class FlexRoutesConfig extends CommonRoutesConfig {
         this.getApp()
             .route('/flex/:version/:id.html')
             .get((req, res) => {                
-                this.flexController.getPage(req, res).catch((err) => {
-                    logger.error(`FlexRoutesConfig.getPage error: ${err}`);
-                });
+                this.flexController.redirectToSknapp(req, res);
             });
 
         
