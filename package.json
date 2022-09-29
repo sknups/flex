@@ -27,11 +27,13 @@
     "compression": "1.7.4",
     "consolidate": "^0.16.0",
     "cors": "2.8.5",
+    "dayjs": "^1.11.5",
     "debug": "4.3.2",
     "express": "4.17.1",
     "express-winston": "4.2.0",
     "helmet": "4.6.0",
     "http-status-codes": "2.1.4",
+    "jwt-decode": "^3.1.2",
     "raw-body": "2.4.2",
     "winston": "3.3.3"
   },
