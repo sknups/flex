@@ -2,7 +2,8 @@ import {logger } from '../../logger'
 import { Storage } from "@google-cloud/storage";
 import { Canvas, Image, loadImage } from "canvas";
 import {Template} from "../model";
-import {ItemDTO, SkuDTO} from "../../entities/services/entities.service";
+import {SkuDTO} from "../../entities/services/sku.service";
+import {ItemDTO} from "../../entities/services/item.service";
 
 export class ImagesService {
 

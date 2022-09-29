@@ -1,7 +1,7 @@
 import {BrandTemplate} from "../../BrandTemplate";
 import {ImagesConfigs} from "../../../images/images.configs";
 import {Canvas, createCanvas} from "canvas";
-import {ItemDTO} from "../../../entities/services/entities.service";
+import {ItemDTO} from "../../../entities/services/item.service";
 import { ItemTemplate } from "./Item";
 
 // noinspection JSUnusedGlobalSymbols

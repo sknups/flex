@@ -2,18 +2,22 @@ import express from "express";
 import {StatusCodes} from "http-status-codes";
 import {logger} from '../../logger'
 import {ImagesService} from "../services/images.service";
-import {EntitiesService, ItemDTO, SkuDTO} from "../../entities/services/entities.service";
+import {SKUService, SkuDTO} from "../../entities/services/sku.service";
+import {ItemService, ItemDTO } from "../../entities/services/item.service";
 import {ImagesConfigs} from "../images.configs";
 import {ImageType, Template} from "../model";
+import axios from "axios";
 
 export class ImagesController {
 
     private readonly imagesService: ImagesService;
-    private readonly entitiesService: EntitiesService;
+    private readonly skuService: SKUService;
+    private readonly itemService: ItemService;
 
     constructor() {
         this.imagesService = new ImagesService();
-        this.entitiesService = new EntitiesService();
+        this.itemService = new ItemService();
+        this.skuService = new SKUService();
     }
 
     async getSkuImage(request: express.Request, response: express.Response) {
@@ -33,9 +37,9 @@ export class ImagesController {
             let dto: SkuDTO | ItemDTO;
 
             if (template === 'sku') {
-                dto = await this.entitiesService.getSku(code);
+                dto = await this.skuService.get(code);
             } else {
-                dto = await this.entitiesService.getItem(code);
+                dto = await this.itemService.get(code);
             }
 
             const version = request.params.version;
@@ -78,7 +82,7 @@ export class ImagesController {
                 response.end();
             });
         } catch (err) {
-            logger.error(err);
+            logger.error(`ImagesController.getImage, Failed to get. ${err}`);
             response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR);
             response.write('Failed to draw image');
             response.end();
