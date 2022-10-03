@@ -1,6 +1,6 @@
 import {BrandTemplate} from "../../BrandTemplate";
 import {Canvas, createCanvas} from "canvas";
-import {CardLabelDTO, ItemDTO} from "../../../entities/services/entities.service";
+import {CardLabelDTO, ItemDTO} from "../../../entities/services/item.service";
 
 // noinspection JSUnusedGlobalSymbols
 export class ItemTemplate extends BrandTemplate<ItemDTO> {

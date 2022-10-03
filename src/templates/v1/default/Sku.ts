@@ -1,7 +1,7 @@
 import { BrandTemplate } from "../../BrandTemplate";
 import { ImagesConfigs } from "../../../images/images.configs";
 import { Canvas, createCanvas } from "canvas";
-import { SkuDTO } from "../../../entities/services/entities.service";
+import { SkuDTO } from "../../../entities/services/sku.service";
 
 // noinspection JSUnusedGlobalSymbols
 export class DefaultTemplate extends BrandTemplate<SkuDTO> {
