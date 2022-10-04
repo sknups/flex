@@ -2,8 +2,9 @@ const isProductionMode = process.env.NODE_ENV === 'production'
 const isProfilerEnabled = process.env.PROFILER_ENABLED === 'true'
 
 //Start GCP trace agent if running in production mode
+export let tracer: any = null;
 if (isProductionMode) {
-  require('@google-cloud/trace-agent').start({
+  tracer = require('@google-cloud/trace-agent').start({
     serviceContext: {
         service: 'flex'
     }
