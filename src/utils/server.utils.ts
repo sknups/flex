@@ -8,6 +8,16 @@ import {expressWinstonMiddleware } from '../logger'
 
 export class ServerUtils {
 
+    static tracer: any = null;
+
+    static getTracer(): any {
+        return ServerUtils.tracer;
+    }
+
+    static setTracer(tracer: any) {
+        ServerUtils.tracer = tracer;
+    }
+
     /**
      * Normalize a port into a number, string, or false.
      * @return number | string | boolean
