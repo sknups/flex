@@ -2,7 +2,7 @@ import winston from "winston";
 import * as Transport from "winston-transport";
 import {LoggingWinston} from "@google-cloud/logging-winston";
 import expressWinston from "express-winston";
-import {tracer} from '../app';
+import {ServerUtils} from '../utils/server.utils';
 
 const transports: Transport[] = [
     new winston.transports.Console()
@@ -18,8 +18,9 @@ const gcpLogFormat = winston.format(info => {
     if (info.level && !info.severity) {
         info.severity = info.level.toUpperCase();
     }
-    if (gcpProject && tracer?.getCurrentRootSpan()?.getTraceContext()) {
-        info['logging.googleapis.com/trace'] = `projects/${gcpProject}/traces/${tracer.getCurrentRootSpan().getTraceContext().traceId}`;
+    const traceContext = ServerUtils.getTracer()?.getCurrentRootSpan()?.getTraceContext();
+    if (gcpProject && traceContext) {
+        info['logging.googleapis.com/trace'] = `projects/${gcpProject}/traces/${traceContext.traceId}`;
     }
     return info;
 });
