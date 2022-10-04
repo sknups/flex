@@ -1,3 +1,5 @@
+import {ServerUtils} from "./utils/server.utils";
+
 const isProductionMode = process.env.NODE_ENV === 'production'
 const isProfilerEnabled = process.env.PROFILER_ENABLED === 'true'
 
@@ -23,7 +25,6 @@ const startTime = new Date().getTime();
 
 import {CommonRoutesConfig} from './common/common.routes.config';
 import debug from 'debug';
-import {ServerUtils} from "./utils/server.utils";
 import express from "express";
 import http from "http";
 import {ImagesRoutesConfig} from "./images/routes/images.routes.config";
