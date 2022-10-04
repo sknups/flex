@@ -20,7 +20,7 @@ export class SKUService extends EntityService {
 
     protected getBaseURL(): string {
         const defaultBaseURL = 'https://europe-west1-drm-apps-01-43b0.cloudfunctions.net/get-sku';
-        return process.env.GET_FLEX_ITEM_CLOUD_FUNCTION ? process.env.GET_FLEX_ITEM_CLOUD_FUNCTION : defaultBaseURL;
+        return process.env.GET_SKU_CLOUD_FUNCTION ? process.env.GET_SKU_CLOUD_FUNCTION : defaultBaseURL;
     }
 
     protected getName(): string {
