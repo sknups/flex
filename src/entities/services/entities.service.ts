@@ -3,6 +3,8 @@ import dayjs from "dayjs";
 import { logger } from '../../logger'
 import { IdentityToken } from "./identity-token";
 
+const MIN_TOKEN_EXPIRY_MIN = 2
+
 
 /**
  * An Axios interceptor which has no effect.
@@ -21,8 +23,7 @@ export abstract class EntityService {
         this.authenticateRequests(this._api);
         this.transformErrors(this._api);
 
-        this._authTokenAPI = axios.create({
-            baseURL: `http://metadata/computeMetadata`,
+        this._authTokenAPI = axios.create({            
             headers: {
                 'Metadata-Flavor': 'Google'
             }
@@ -55,7 +56,7 @@ export abstract class EntityService {
     }
 
     private async getBearerToken(): Promise<string> {
-        const minimumExpiry = EntityService.now().add(2, 'minutes')
+        const minimumExpiry = EntityService.now().add(MIN_TOKEN_EXPIRY_MIN, 'minutes')
 
         if (this._identityToken.valid() && this._identityToken.expiry.isAfter(minimumExpiry)) {
             return Promise.resolve(this._identityToken.value);
@@ -65,8 +66,8 @@ export abstract class EntityService {
             logger.warn(`Using process.env.GOOGLE_AUTH_TOKEN for auth token`)
             this.setIdentityToken(process.env.GOOGLE_AUTH_TOKEN);
         } else {                                    
-            const identityURL = `/v1/instance/service-accounts/default/identity?audience=${this.getBaseURL()}`;            
-            const token = (await  this._authTokenAPI.get(identityURL)).data;            
+            const identityURL = `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${this.getBaseURL()}`;                        
+            const token = (await  this._authTokenAPI.get(identityURL)).data;                        
             this.setIdentityToken(token);
         }
 
@@ -75,7 +76,7 @@ export abstract class EntityService {
 
     private setIdentityToken(token: string) {
         const identityToken = new IdentityToken(token);
-        const minimumExpiry = EntityService.now().add(1, 'minutes')
+        const minimumExpiry = EntityService.now().add(MIN_TOKEN_EXPIRY_MIN, 'minutes')
 
         if (!identityToken.valid()) {
             throw new Error('identity token is invalid')
