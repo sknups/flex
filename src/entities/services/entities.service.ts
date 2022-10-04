@@ -64,8 +64,9 @@ export abstract class EntityService {
         if (process.env.GOOGLE_AUTH_TOKEN) {
             logger.warn(`Using process.env.GOOGLE_AUTH_TOKEN for auth token`)
             this.setIdentityToken(process.env.GOOGLE_AUTH_TOKEN);
-        } else {
-            const token = (await axios.get(`/v1/instance/service-accounts/default/identity?audience=${this.getBaseURL()}`)).data;
+        } else {                                    
+            const identityURL = `/v1/instance/service-accounts/default/identity?audience=${this.getBaseURL()}`;            
+            const token = (await  this._authTokenAPI.get(identityURL)).data;            
             this.setIdentityToken(token);
         }
 
