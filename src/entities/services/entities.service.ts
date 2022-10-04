@@ -105,7 +105,7 @@ export abstract class EntityService {
                     default: {
                         // e.g. unrecoverable network errors, 5xx returned by server, etc..
                         const errorData = error.response.data ? error.response.data : '';
-                        throw new EntityApiError(`Received ${error.response.status} response from get-sku ${errorData}`);
+                        throw new EntityApiError(`Received ${error.response.status} response from ${this.getName()} ${errorData}`);
                     }
                 }
             } else if (error.request) {
