@@ -3,6 +3,7 @@ const expect = require('chai').expect
 import {WrappingStyle} from '../src/templates/BrandTemplate';
 import {DefaultTemplate} from '../src/templates/v1/default/Back';
 import {createCanvas} from 'canvas';
+import {ImagesService} from '../src/images/services/images.service';
 
 const sinon = require("sinon");
 
@@ -23,7 +24,7 @@ describe('Card Back template', () => {
 
       const fake = sinon.replace(context, "fillText", sinon.fake(context.fillText));
 
-      new DefaultTemplate().wrap(context, this.style, this.text, 0, 0);
+      new DefaultTemplate(new ImagesService()).wrap(context, this.style, this.text, 0, 0);
 
       const printed: string[] = []
       for (const invocation of fake.getCalls()) {

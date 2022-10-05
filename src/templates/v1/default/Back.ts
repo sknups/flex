@@ -53,7 +53,7 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
             return this._renderTemplateV1(item, purpose);
         }
 
-        return await new ItemTemplate().renderTemplate(item, purpose, 'back');
+        return await new ItemTemplate(this.imagesService).renderTemplate(item, purpose, 'back');
     }
 
     private async _renderTemplateV1(dto: ItemDTO, purpose: string): Promise<Canvas> {

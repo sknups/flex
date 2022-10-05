@@ -11,7 +11,7 @@ export class ImagesService {
 
     constructor() {
       switch (process.env.ENVIRONMENT) {
-            case null:
+            case null || undefined:
                 logger.warn("Warn - no env var ENVIRONMENT - defaulting to DEV");
                 this.bucket = new Storage().bucket('assets-dev.sknups.gg');
                 break;
@@ -36,7 +36,7 @@ export class ImagesService {
 
             try {
                 const defaultTemplateModule = await import(`../../templates/${version}/default/${className}`);
-                const templateController = new defaultTemplateModule.DefaultTemplate();
+                const templateController = new defaultTemplateModule.DefaultTemplate(this);
                 return templateController.renderTemplate(dto, use);
             } catch (error) {
                 logger.error(`ImagesService.generateCanvasImage failed to load ../../templates/${version}/default/${className}: ${error}`);
