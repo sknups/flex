@@ -99,7 +99,6 @@ export abstract class EntityService {
     private transformErrors(instance: AxiosInstance): void {
 
         instance.interceptors.response.use(NULL_INTERCEPTOR, (error: AxiosError) => {
-            logger.error(error.toJSON());
             if (error.response) {
                 const status = error.response.status;
                 switch (status) {
@@ -108,6 +107,7 @@ export abstract class EntityService {
                         throw new NotFoundError(`404 returned from ${this.getName()}`);
                     default: {
                         // e.g. unrecoverable network errors, 5xx returned by server, etc..
+                        logger.error(error.toJSON());
                         const errorData = error.response.data ? error.response.data : '';
                         throw new EntityApiError(`Received ${error.response.status} response from ${this.getName()} ${errorData}`);
                     }
