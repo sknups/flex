@@ -50,7 +50,7 @@ export abstract class BrandTemplate<T> {
      * @param imagesPaths
      */
     loadImages(imagesPaths: string[]): Promise<PromiseSettledResult<Image | void>[]> {
-        logger.info(`BrandTemplate.loadImages: Will load images with paths: ${imagesPaths}`);
+        logger.debug(`BrandTemplate.loadImages: Will load images with paths: ${imagesPaths}`);
 
         const imagesPromises = imagesPaths.map((imagePath) => {
             return this.imagesService.getCanvasImage(imagePath);
@@ -172,7 +172,7 @@ export abstract class BrandTemplate<T> {
             const h = canvas.height / factor;
             const tempCanvas = createCanvas(w, h);
             tempCanvas.getContext("2d").drawImage(canvas, 0, 0, w, h);
-            logger.info(`Converted to thumb ${w}×${h}`);
+            logger.debug(`Converted to thumb ${w}×${h}`);
             return tempCanvas;
         } catch (error) {
             logger.error("Failed to convert canvas to thumb! " + error);
