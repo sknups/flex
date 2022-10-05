@@ -49,13 +49,13 @@ export class ImagesController {
                 q = ImagesConfigs.DEFAULT_IMAGE_QUALITY;
             }
 
-            logger.info(`ImagesController.getImage version: ${version} tpl: ${template} purpose: ${use} with id: ${code}`);
+            logger.debug(`ImagesController.getImage version: ${version} tpl: ${template} purpose: ${use} with id: ${code}`);
 
             this.imagesService.generateCanvasImage(version, template, use, dto).then(canvas => {
                 let buffer: Buffer;
                 if (format == 'png') {
                     buffer = canvas.toBuffer();
-                    logger.info(`ImagesController.getImage png with buffer.length=${buffer.length}`);
+                    logger.debug(`ImagesController.getImage png with buffer.length=${buffer.length}`);
                     response.writeHead(StatusCodes.OK, {
                         'Content-Type': 'image/png',
                         'Content-Length': buffer.length,
@@ -65,7 +65,7 @@ export class ImagesController {
                     response.end(null, 'binary');
                 } else {
                     buffer = canvas.toBuffer('image/jpeg', {quality: q});
-                    logger.info(`ImagesController.getImage jpeg with quality ${q} buffer.length=${buffer.length}`);
+                    logger.debug(`ImagesController.getImage jpeg with quality ${q} buffer.length=${buffer.length}`);
                     response.writeHead(StatusCodes.OK, {
                         'Content-Type': 'image/jpeg',
                         'Content-Length': buffer.length,
