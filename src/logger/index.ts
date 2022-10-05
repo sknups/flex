@@ -27,7 +27,7 @@ const format = winston.format.combine(
 );
 
 export const logger = winston.createLogger({
-    level: 'info',
+    level: process.env.LOG_LEVEL || 'info',
     transports: transports,
     format: format
 });
