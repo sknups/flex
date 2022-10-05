@@ -1,9 +1,12 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, } from "axios";
 import dayjs from "dayjs";
+import axiosRetry, { isNetworkOrIdempotentRequestError } from 'axios-retry'
 import { logger } from '../../logger'
 import { IdentityToken } from "./identity-token";
 
 const MIN_TOKEN_EXPIRY_MIN = 2
+
+const RETRY_DELAY_MS = 50
 
 
 /**
@@ -22,8 +25,9 @@ export abstract class EntityService {
         })
         this.authenticateRequests(this._api);
         this.transformErrors(this._api);
+        this.addRetry(this._api);
 
-        this._authTokenAPI = axios.create({            
+        this._authTokenAPI = axios.create({
             headers: {
                 'Metadata-Flavor': 'Google'
             }
@@ -65,9 +69,9 @@ export abstract class EntityService {
         if (process.env.GOOGLE_AUTH_TOKEN) {
             logger.warn(`Using process.env.GOOGLE_AUTH_TOKEN for auth token`)
             this.setIdentityToken(process.env.GOOGLE_AUTH_TOKEN);
-        } else {                                    
-            const identityURL = `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${this.getBaseURL()}`;                        
-            const token = (await  this._authTokenAPI.get(identityURL)).data;                        
+        } else {
+            const identityURL = `http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=${this.getBaseURL()}`;
+            const token = (await this._authTokenAPI.get(identityURL)).data;
             this.setIdentityToken(token);
         }
 
@@ -129,6 +133,23 @@ export abstract class EntityService {
                 throw new EntityApiError(`Cannot send request to metadata service ${error.message}`);
             }
         });
+    }
+
+    private addRetry(instance: AxiosInstance): void {
+        axiosRetry(instance, {
+            retries: 3,
+            retryDelay: () => {
+                return RETRY_DELAY_MS;
+            },
+            onRetry(retryCount, error, requestConfig) {
+                const responseData = error.response?.data ? error.response.data : '';
+                const responseCode = error.response?.status
+                logger.warn(`Retrying request ${requestConfig.url} (retry count = ${retryCount}): response '${responseCode}' - '${responseData}'`)
+            },
+            retryCondition: (error) => {
+                return isNetworkOrIdempotentRequestError(error) || error.response?.status === 429;
+            }
+        })
     }
 
 }
