@@ -18,7 +18,6 @@
     "node": ">=16"
   },
   "dependencies": {
-    "@google-cloud/logging-winston": "4.1.1",
     "@google-cloud/profiler": "4.1.5",
     "@google-cloud/storage": "5.16.0",
     "@google-cloud/trace-agent": "5.1.6",
