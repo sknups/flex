@@ -23,7 +23,9 @@ export interface WrappingStyle extends Style {
 
 export abstract class BrandTemplate<T> {
 
-    private readonly imagesService: ImagesService = new ImagesService();
+    constructor(
+        protected readonly imagesService: ImagesService
+    ) {}
 
     enumeration(issue: number, maximum: number, rarity: number | null): string {
         if (rarity === null || rarity === 0) return ''

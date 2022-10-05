@@ -8,7 +8,7 @@
     "dev": "export DEBUG=* && nodemon src/app.ts",
     "dev2": "nodemon src/app.ts",
     "debug": "export DEBUG=* && npm run start",
-    "test": "mocha --bail --fail-zero --require ts-node/register 'test/**/*.ts'"
+    "test": "ENVIRONMENT=dev mocha --bail --fail-zero --require ts-node/register 'test/**/*.ts'"
   },
   "repository": {
     "type": "git",
