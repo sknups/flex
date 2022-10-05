@@ -13,12 +13,12 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
     }
 
     configureRoutes(): express.Application {
-        logger.info(`Images.routes.config`)
+        logger.debug(`Images.routes.config`)
 
         this.getApp()
             .route('/skn/:version/:type(card|back)/:use/:code.:format')
             .get((req, res) => {
-                logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)} and kind SKN`);
+                logger.debug(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)} and kind SKN`);
                 this.imagesController.getItemImage(req, res).catch((err) => {
                     logger.info(`imagesController.getSknImage error: ${err}`);
                 });
@@ -27,7 +27,7 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
         this.getApp()
             .route('/sku/:version/:type(card)/:use(metaplex)/:code.:format')
             .get((req, res) => {
-                logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)} and kind SKU`);
+                logger.debug(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)} and kind SKU`);
                 this.imagesController.getSkuImage(req, res).catch((err) => {
                     logger.info(`imagesController.getSkuImage error: ${err}`);
                 });
@@ -36,9 +36,9 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
         this.getApp()
             .route('/img/:entity/:version/:purpose/:entityCode.:format')
             .get((req, res) => {
-                logger.info(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)}`);
+                logger.debug(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)}`);
                 this.imagesController.getEntityImage(req, res).then(() => {
-                    logger.info(`imagesController.getEntityImage success`);
+                    logger.debug(`imagesController.getEntityImage success`);
                 }).catch((err) => {
                     logger.info(`imagesController.getEntityImage error: ${err}`);
                 });
