@@ -1,5 +1,20 @@
 import { logger } from '../../logger'
-import { EntityService } from "./entities.service";
+import { EntityApiError, EntityService } from "./entities.service";
+
+interface ItemDTOInternal {
+    token: string,
+    brand: string,
+    card: CardDTO | null,
+    cardJson: string | null
+    giveaway: string,
+    description: string,
+    maximum: number,
+    issue: number,
+    sku: string,
+    name: string,
+    rarity: number | null,
+    version: string,
+}
 
 export interface ItemDTO {
     token: string,
@@ -39,7 +54,15 @@ export class ItemService extends EntityService {
 
     async get(id: any): Promise<ItemDTO> {
         logger.debug(`ItemService.get ${id}`);
-        return (await this._api.get<ItemDTO>(id)).data;
+        const response = (await this._api.get<ItemDTOInternal>(id)).data;
+        try {
+            response.card = !response.cardJson ? null : JSON.parse(response.cardJson)
+        } catch (e) {
+            const message = `Failed to parse cardJson for item '${id}' of sku '${response.sku}'`
+            logger.error(`${message} - ${e}`)
+            throw new CardJsonError(message)
+        }
+        return response;
     }
 
     protected getBaseURL(): string {
@@ -52,3 +75,8 @@ export class ItemService extends EntityService {
     }
 }
 
+export class CardJsonError extends EntityApiError {
+    constructor(message: string) {
+        super(message);
+    }
+}
