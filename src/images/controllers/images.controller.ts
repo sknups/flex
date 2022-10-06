@@ -77,7 +77,7 @@ export class ImagesController {
 
             }).catch((err) => {
                 logger.error(`ImagesController.getImage ERROR. Failed to render canvas: ${err}.  Check AUTH_TOKEN.`);
-                response.writeHead(StatusCodes.NOT_FOUND);
+                response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR);
                 response.write('Failed to draw image');
                 response.end();
             });
