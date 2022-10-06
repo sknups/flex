@@ -6,7 +6,7 @@ import {SKUService, SkuDTO} from "../../entities/services/sku.service";
 import {ItemService, ItemDTO } from "../../entities/services/item.service";
 import {ImagesConfigs} from "../images.configs";
 import {ImageType, Template} from "../model";
-import axios from "axios";
+import {NotFoundError} from '../../entities/services/entities.service';
 
 export class ImagesController {
 
@@ -77,15 +77,21 @@ export class ImagesController {
 
             }).catch((err) => {
                 logger.error(`ImagesController.getImage ERROR. Failed to render canvas: ${err}.  Check AUTH_TOKEN.`);
-                response.writeHead(StatusCodes.NOT_FOUND);
+                response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR);
                 response.write('Failed to draw image');
                 response.end();
             });
         } catch (err) {
-            logger.error(`ImagesController.getImage, Failed to get. ${err}`);
-            response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR);
-            response.write('Failed to draw image');
-            response.end();
+            if (err instanceof NotFoundError) {
+                response.writeHead(StatusCodes.NOT_FOUND);
+                response.write('Failed to draw image (not found)');
+                response.end();
+            } else {
+                logger.error(`ImagesController.getImage, Failed to get. ${err}`);
+                response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR);
+                response.write('Failed to draw image');
+                response.end();
+            }
         }
 
     }
