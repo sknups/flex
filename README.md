@@ -111,6 +111,10 @@ OPTIMIZE_ID=
 
 #Optional: defaults to 'http://localhost:4200'
 SKNAPP_HOST=
+
+#The cloud function used to retrieve item data
+#Defaults to https://europe-west2-drm-apps-01-43b0.cloudfunctions.net/drm-get-item
+DRM_GET_ITEM_CLOUD_FUNCTION=
 ```
 
 Example on how to start a docker image with env variables from the command line or defining a file:
