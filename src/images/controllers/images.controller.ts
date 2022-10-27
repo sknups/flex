@@ -40,16 +40,6 @@ export class ImagesController {
                 dto = await this.skuService.get(code);
             } else {
                 dto = await this.itemService.get(code);
-
-                if (dto.skn !== "STATIC") {
-                    logger.error(`skn property of item '${code}' is '${dto.skn}'. Flex only supports 'STATIC' items`);
-                    response.writeHead(StatusCodes.BAD_REQUEST);
-                    response.write('Failed to draw image');
-                    response.end();
-                    return;
-                }
-
-
             }
 
             const version = request.params.version;

@@ -14,7 +14,6 @@ interface ItemDTOInternal {
     name: string,
     rarity: number | null,
     version: string,
-    skn: string,
 }
 
 export interface ItemDTO {
@@ -29,7 +28,6 @@ export interface ItemDTO {
     name: string,
     rarity: number | null,
     version: string,
-    skn: string,
 }
 
 export interface CardDTO {
