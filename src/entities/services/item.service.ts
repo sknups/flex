@@ -66,12 +66,12 @@ export class ItemService extends EntityService {
     }
 
     protected getBaseURL(): string {
-        const defaultBaseURL = 'https://europe-west1-drm-apps-01-43b0.cloudfunctions.net/get-flex-item';
-        return process.env.GET_FLEX_ITEM_CLOUD_FUNCTION ? process.env.GET_FLEX_ITEM_CLOUD_FUNCTION : defaultBaseURL;
+        const defaultBaseURL = 'https://europe-west2-drm-apps-01-43b0.cloudfunctions.net/drm-get-item';
+        return process.env.DRM_GET_ITEM_CLOUD_FUNCTION ? process.env.DRM_GET_ITEM_CLOUD_FUNCTION : defaultBaseURL;
     }
 
     protected getName(): string {
-        return 'get-flex-item'
+        return 'drm-get-item'
     }
 }
 
