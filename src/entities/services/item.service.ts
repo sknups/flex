@@ -54,7 +54,7 @@ export class ItemService extends EntityService {
 
     async get(id: any): Promise<ItemDTO> {
         logger.debug(`ItemService.get ${id}`);
-        const response = (await this._api.get<ItemDTOInternal>(id)).data;
+        const response = (await this._api.get<ItemDTOInternal>(`SKN/${id}`)).data;
         try {
             response.card = !response.cardJson ? null : JSON.parse(response.cardJson)
         } catch (e) {
