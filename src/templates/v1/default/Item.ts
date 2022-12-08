@@ -18,7 +18,7 @@ export class ItemTemplate extends BrandTemplate<ItemDTO> {
         context.patternQuality = 'good';
         context.quality = 'good';
 
-        const filename = type === 'card' ? `sku.v1.cardFront.${(item.sku)}.png` : `sku.v1.cardBack.${(item.sku)}.png`;
+        const filename = type === 'card' ? `sku.${item.sku}.skn.png` : `sku.${item.sku}.info.png`;
         await this.draw(context, filename, ItemTemplate.WIDTH, ItemTemplate.HEIGHT);
 
         let labels : CardLabelDTO[] = []
