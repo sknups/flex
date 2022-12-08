@@ -74,7 +74,7 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         const maximum = dto.maximum;
         const rarity = dto.rarity;
 
-        const filename = `sku.v1.cardBack.${code}.png`;
+        const filename = `sku.${code}.info.png`;
         await this.draw(context, filename, DefaultTemplate.WIDTH, DefaultTemplate.HEIGHT);
 
         let y = DefaultTemplate.FIRST_BASELINE;

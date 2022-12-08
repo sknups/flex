@@ -29,7 +29,7 @@ export class DefaultTemplate extends BrandTemplate<SkuDTO> {
         context.patternQuality = 'good';
         context.quality = 'good';
 
-        const filename = `sku.v1.cardFront.${sku.code}.png`;
+        const filename = `sku.${sku.code}.skn.png`;
         await this.draw(context, filename, DefaultTemplate.WIDTH, DefaultTemplate.HEIGHT);
 
         if (sku.version === "1") {
