@@ -93,25 +93,6 @@ DRM_SERVER=
 # HTTP endpoint for get SKU cloud function
 GET_SKU_CLOUD_FUNCTION=
 
-#Optional: set the Goggle Analytics Id.
-#if not set Goggle Analytics is not loaded 
-GA_MEASUREMENT_ID=
-
-#Optional: set the Legacy Goggle Analytics Id, 
-#
-#If not set data is not sent to the legacy Goggle Analytics property.
-#This requires GA_MEASUREMENT_ID to be set
-#This data is used by Optimize
-GA_LEGACY_MEASUREMENT_ID=
-
-#Optional: set the Goggle Optimize Id, 
-#
-#If not set Goggle Optimize is not loaded 
-OPTIMIZE_ID=
-
-#Optional: defaults to 'http://localhost:4200'
-SKNAPP_HOST=
-
 #The cloud function used to retrieve item data
 #Defaults to https://europe-west2-drm-apps-01-43b0.cloudfunctions.net/drm-get-item
 DRM_GET_ITEM_CLOUD_FUNCTION=
