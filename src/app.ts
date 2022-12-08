@@ -30,9 +30,7 @@ import http from "http";
 import {ImagesRoutesConfig} from "./images/routes/images.routes.config";
 import cors from "cors";
 import { logger } from './logger'
-import { FlexRoutesConfig } from "./flex/routes/flex.routes.config";
 import path from 'path';
-import cons from "consolidate";
 
 // Load into ENV Variables from dotenv if not running
 //in production mode
@@ -65,7 +63,6 @@ const routes: Array<CommonRoutesConfig> = [
     // here we are adding the UserRoutes to our array,
     // after sending the Express.js application object to have the routes added to our app!
     new ImagesRoutesConfig(app),
-    new FlexRoutesConfig(app)
 ];
 
 // Return empty OK response, used check app is up when deployed
