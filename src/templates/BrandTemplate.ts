@@ -1,5 +1,5 @@
 import {logger} from '../logger'
-import {Canvas, createCanvas, Image, NodeCanvasRenderingContext2D, registerFont} from "canvas";
+import {Canvas, createCanvas, Image, CanvasRenderingContext2D, registerFont} from "canvas";
 import {ImagesService} from "../images/services/images.service";
 import {ImagesConfigs} from "../images/images.configs";
 
@@ -59,7 +59,7 @@ export abstract class BrandTemplate<T> {
         return Promise.allSettled(imagesPromises);
     }
 
-    async draw(context: NodeCanvasRenderingContext2D, filename: string, width: number, height: number) {
+    async draw(context: CanvasRenderingContext2D, filename: string, width: number, height: number) {
 
         const image = (await this.loadImages([filename]))[0];
 
@@ -75,7 +75,7 @@ export abstract class BrandTemplate<T> {
     /**
      * Print text onto the canvas.
      */
-    print(context: NodeCanvasRenderingContext2D, style: Style, text: string, x: number, y: number): void {
+    print(context: CanvasRenderingContext2D, style: Style, text: string, x: number, y: number): void {
         context.textAlign = style.align as CanvasTextAlign;
         context.font = style.font;
         context.fillStyle = style.color;
@@ -85,7 +85,7 @@ export abstract class BrandTemplate<T> {
     /**
      * Print multi-line text onto the canvas.
      */
-    wrap(context: NodeCanvasRenderingContext2D, style: WrappingStyle, text: string, x: number, y: number): number {
+    wrap(context: CanvasRenderingContext2D, style: WrappingStyle, text: string, x: number, y: number): number {
 
         // BEWARE
         // This method prints a trailing whitespace character on each line.
