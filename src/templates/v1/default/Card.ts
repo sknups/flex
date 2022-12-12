@@ -50,7 +50,7 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         const maximum = dto.maximum;
         const rarity = dto.rarity;
 
-        const filename = `sku.v1.cardFront.${dto.sku}.png`;
+        const filename = `sku.${dto.sku}.skn.png`;
         await this.draw(context, filename, DefaultTemplate.WIDTH, DefaultTemplate.HEIGHT);
 
         // print SKU name (original case preserved)
