@@ -94,7 +94,7 @@ DRM_SERVER=
 GET_SKU_CLOUD_FUNCTION=
 
 #The cloud function used to retrieve item data
-#Defaults to https://europe-west2-drm-apps-01-43b0.cloudfunctions.net/drm-get-item
+#Defaults to https://europe-west2-drm-apps-01-43b0.cloudfunctions.net/item-get
 DRM_GET_ITEM_CLOUD_FUNCTION=
 ```
 
