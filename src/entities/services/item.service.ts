@@ -66,12 +66,12 @@ export class ItemService extends EntityService {
     }
 
     protected getBaseURL(): string {
-        const defaultBaseURL = 'https://europe-west2-drm-apps-01-43b0.cloudfunctions.net/drm-get-item';
+        const defaultBaseURL = 'https://europe-west2-drm-apps-01-43b0.cloudfunctions.net/item-get';
         return process.env.DRM_GET_ITEM_CLOUD_FUNCTION ? process.env.DRM_GET_ITEM_CLOUD_FUNCTION : defaultBaseURL;
     }
 
     protected getName(): string {
-        return 'drm-get-item'
+        return 'item-get'
     }
 }
 

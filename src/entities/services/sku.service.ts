@@ -19,12 +19,12 @@ export class SKUService extends EntityService {
     }
 
     protected getBaseURL(): string {
-        const defaultBaseURL = 'https://europe-west1-drm-apps-01-43b0.cloudfunctions.net/get-sku';
+        const defaultBaseURL = 'https://europe-west2-drm-apps-01-43b0.cloudfunctions.net/catalog-get-sku';
         return process.env.GET_SKU_CLOUD_FUNCTION ? process.env.GET_SKU_CLOUD_FUNCTION : defaultBaseURL;
     }
 
     protected getName(): string {
-        return 'get-sku'
+        return 'catalog-get-sku'
     }
 }
 
