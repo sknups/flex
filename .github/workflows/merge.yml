@@ -1,13 +1,17 @@
-name: Merge to main
+name: Build and deploy
 
 on:
   push:
     branches:
-    - 'main'
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+  workflow_dispatch:
 
 env:
   GOOGLE_PROJECT: dev-drm-admin-5548
-  IMAGE: flex
+  COMPONENT: flex
 
 concurrency: ci-${{ github.ref }}
 
@@ -18,7 +22,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Authenticate GCloud
       id: 'auth'
@@ -33,20 +37,22 @@ jobs:
 
     - name: Build Docker image
       run: |-
-        docker build --tag "eu.gcr.io/$GOOGLE_PROJECT/$IMAGE:$GITHUB_SHA" .
+        docker build --tag "eu.gcr.io/$GOOGLE_PROJECT/$COMPONENT:$GITHUB_SHA" .
   
     - name: Authenticate Docker
       run: |-
         gcloud --quiet auth configure-docker
  
     - name: Push Docker image
+      if: github.event_name != 'pull_request'
       run: |-
-        docker push "eu.gcr.io/$GOOGLE_PROJECT/$IMAGE:$GITHUB_SHA"
+        docker push "eu.gcr.io/$GOOGLE_PROJECT/$COMPONENT:$GITHUB_SHA"
  
     - name: Deploy to dev environment
-      uses: sknups/deploy-action@v1.2
+      if: github.event_name == 'push'
+      uses: benc-uk/workflow-dispatch@v1
       with:
-        image: ${{ env.IMAGE }}
-        tag: ${{ github.sha }}
-        auth: ${{ secrets.DEPLOY_TOKEN }}
-        url: ${{ secrets.DEPLOY_API_URL }}
+        workflow: update_version.yml
+        repo: sknups/wholesale-terraform
+        token:  ${{ secrets.DEPLOY_TOKEN }}
+        inputs: '{ "component": "${{ env.COMPONENT }}", "version": "${{ github.sha }}" }'
