@@ -1,6 +1,6 @@
 import {BrandTemplate} from "../../BrandTemplate";
 import {Canvas, createCanvas} from "canvas";
-import {CardLabelDTO, ItemDTO} from "../../../entities/services/item.service";
+import {LabelDTO, ItemDTO} from '../../../entities/services/item.service';
 
 // noinspection JSUnusedGlobalSymbols
 export class ItemTemplate extends BrandTemplate<ItemDTO> {
@@ -8,7 +8,7 @@ export class ItemTemplate extends BrandTemplate<ItemDTO> {
     private static readonly WIDTH = 900;
     private static readonly HEIGHT = 1350;
 
-    async renderTemplate(item: ItemDTO, purpose: string, type: string): Promise<Canvas> {
+    async renderTemplate(item: ItemDTO, purpose: string, type: string, index?: string): Promise<Canvas> {
 
         BrandTemplate.registerFonts();
 
@@ -18,24 +18,22 @@ export class ItemTemplate extends BrandTemplate<ItemDTO> {
         context.patternQuality = 'good';
         context.quality = 'good';
 
-        const filename = type === 'card' ? `sku.${item.sku}.skn.png` : `sku.${item.sku}.info.png`;
+        const filename = type === 'primary' ? `sku.${item.sku}.primary.png` : `sku.${item.sku}.secondary.${index}.png`;
         await this.draw(context, filename, ItemTemplate.WIDTH, ItemTemplate.HEIGHT);
 
-        let labels : CardLabelDTO[] = []
+        let labels : LabelDTO[] = []
 
-        if (item.card !== null) {
-            switch (type) {
-                case 'card':
-                    if (item.card.front !== null) {
-                        Array.prototype.push.apply(labels, item.card.front);
-                    }
-                    break;
-                case 'back':
-                    if (item.card.back !== null) {
-                        Array.prototype.push.apply(labels, item.card.back);
-                    }
-                    break;
-            }
+        switch (type) {
+            case 'primary':
+                if (item.media?.primary?.labels) {
+                    Array.prototype.push.apply(labels, item.media.primary.labels);
+                }
+                break;
+            case 'secondary':
+                if (index && item.media?.secondary && item.media.secondary.length > +index && item.media.secondary[+index].labels) {
+                    Array.prototype.push.apply(labels, item.media.secondary[+index].labels);
+                }
+                break;
         }
 
         for (let label of labels) {
