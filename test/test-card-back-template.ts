@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 
 import {WrappingStyle} from '../src/templates/BrandTemplate';
-import {DefaultTemplate} from '../src/templates/v1/default/Back';
+import {DefaultTemplate} from '../src/templates/v1/default/Secondary';
 import {createCanvas} from 'canvas';
 import {ImagesService} from '../src/images/services/images.service';
 
