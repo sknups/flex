@@ -48,12 +48,12 @@ export class DefaultTemplate extends BrandTemplate<ItemDTO> {
         align: 'left',
     }
 
-    async renderTemplate(item: ItemDTO, purpose: string): Promise<Canvas> {
+    async renderTemplate(item: ItemDTO, purpose: string, index?: string): Promise<Canvas> {
         if (item.version === "1") {
             return this._renderTemplateV1(item, purpose);
         }
 
-        return await new ItemTemplate(this.imagesService).renderTemplate(item, purpose, 'back');
+        return await new ItemTemplate(this.imagesService).renderTemplate(item, purpose, 'secondary', index);
     }
 
     private async _renderTemplateV1(dto: ItemDTO, purpose: string): Promise<Canvas> {
