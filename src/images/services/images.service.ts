@@ -30,14 +30,14 @@ export class ImagesService {
 
 
     // This will return a promise wrapping a canvas on which the image is drawn,  The code to draw the canvas is selected according to the parameters passed.
-    async generateCanvasImage(version: string, template: Template, use: string, dto: SkuDTO | ItemDTO): Promise<Canvas> {
+    async generateCanvasImage(version: string, template: Template, use: string, dto: SkuDTO | ItemDTO, index?: string): Promise<Canvas> {
 
         const className = ImagesService.capitalize(template);
 
             try {
                 const defaultTemplateModule = await import(`../../templates/${version}/default/${className}`);
                 const templateController = new defaultTemplateModule.DefaultTemplate(this);
-                return templateController.renderTemplate(dto, use);
+                return templateController.renderTemplate(dto, use, index);
             } catch (error) {
                 logger.error(`ImagesService.generateCanvasImage failed to load ../../templates/${version}/default/${className}: ${error}`);
                 throw new Error(`Failed to load ../../templates/${className}/default/DefaultTemplate`);

@@ -25,7 +25,14 @@ export class ImagesController {
     }
 
     async getItemImage(request: express.Request, response: express.Response) {
-        const type: ImageType = <'card'|'back'> request.params.type;
+        let type: ImageType;
+        if (request.params.type === 'card') {
+            type = 'primary';
+        } else if (request.params.type === 'back') {
+            type = 'secondary';
+        } else {
+            type = request.params.type as ImageType;
+        }
         return this.getImage(request, response, type)
     }
 
@@ -33,6 +40,7 @@ export class ImagesController {
         try {
             const code = request.params.code;
             const use = request.params.use;
+            const index = request.params.index;
 
             let dto: SkuDTO | ItemDTO;
 
@@ -51,7 +59,7 @@ export class ImagesController {
 
             logger.debug(`ImagesController.getImage version: ${version} tpl: ${template} purpose: ${use} with id: ${code}`);
 
-            this.imagesService.generateCanvasImage(version, template, use, dto).then(canvas => {
+            this.imagesService.generateCanvasImage(version, template, use, dto, index).then(canvas => {
                 let buffer: Buffer;
                 if (format == 'png') {
                     buffer = canvas.toBuffer();
