@@ -30,6 +30,9 @@ export class ImagesController {
             type = 'primary';
         } else if (request.params.type === 'back') {
             type = 'secondary';
+            if (!request.params.index) {
+                request.params.index = '0';
+            }
         } else {
             type = request.params.type as ImageType;
         }
