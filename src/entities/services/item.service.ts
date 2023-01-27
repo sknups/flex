@@ -1,25 +1,9 @@
 import { logger } from '../../logger'
 import { EntityApiError, EntityService } from "./entities.service";
 
-interface ItemDTOInternal {
-    token: string,
-    brand: string,
-    card: CardDTO | null,
-    cardJson: string | null
-    giveaway: string,
-    description: string,
-    maximum: number,
-    issue: number,
-    sku: string,
-    name: string,
-    rarity: number | null,
-    version: string,
-}
-
 export interface ItemDTO {
     token: string,
     brand: string,
-    card: CardDTO | null,
     giveaway: string,
     description: string,
     maximum: number,
@@ -28,14 +12,19 @@ export interface ItemDTO {
     name: string,
     rarity: number | null,
     version: string,
+    media: MediaDTO | null;
 }
 
-export interface CardDTO {
-    front: CardLabelDTO[];
-    back: CardLabelDTO[];
+export interface MediaDTO {
+    primary: MediaLabelsDTO;
+    secondary: MediaLabelsDTO[];
 }
 
-export interface CardLabelDTO {
+export interface MediaLabelsDTO {
+    labels: LabelDTO[];
+}
+
+export interface LabelDTO {
     text: string;
     color: string;
     size: string;
@@ -54,15 +43,7 @@ export class ItemService extends EntityService {
 
     async get(id: any): Promise<ItemDTO> {
         logger.debug(`ItemService.get ${id}`);
-        const response = (await this._api.get<ItemDTOInternal>(`SKN/${id}`)).data;
-        try {
-            response.card = !response.cardJson ? null : JSON.parse(response.cardJson)
-        } catch (e) {
-            const message = `Failed to parse cardJson for item '${id}' of sku '${response.sku}'`
-            logger.error(`${message} - ${e}`)
-            throw new CardJsonError(message)
-        }
-        return response;
+        return (await this._api.get<ItemDTO>(`SKN/${id}`)).data;
     }
 
     protected getBaseURL(): string {

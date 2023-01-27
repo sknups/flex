@@ -1,2 +1,2 @@
-export type ImageType = 'card' | 'back'
+export type ImageType = 'primary' | 'secondary'
 export type Template = 'sku' | ImageType;

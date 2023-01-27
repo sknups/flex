@@ -16,11 +16,20 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
         logger.debug(`Images.routes.config`)
 
         this.getApp()
-            .route('/skn/:version/:type(card|back)/:use/:code.:format')
+            .route('/skn/:version/:type(primary|card|back)/:use/:code.:format')
             .get((req, res) => {
                 logger.debug(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)} and kind SKN`);
                 this.imagesController.getItemImage(req, res).catch((err) => {
-                    logger.info(`imagesController.getSknImage error: ${err}`);
+                    logger.info(`imagesController.getItemImage error: ${err}`);
+                });
+            });
+
+        this.getApp()
+            .route('/skn/:version/:type(secondary)/:index/:use/:code.:format')
+            .get((req, res) => {
+                logger.debug(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)} and kind SKN`);
+                this.imagesController.getItemImage(req, res).catch((err) => {
+                    logger.info(`imagesController.getItemImage error: ${err}`);
                 });
             });
 
