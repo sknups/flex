@@ -34,7 +34,7 @@ export class ImagesRoutesConfig extends CommonRoutesConfig {
             });
 
         this.getApp()
-            .route('/sku/:version/:type(card)/:use(metaplex)/:code.:format')
+            .route('/sku/:version/:type(card)/:use(metaplex|og|snapsticker)/:code.:format')
             .get((req, res) => {
                 logger.debug(`ImagesRoutesConfig.handleImageRequest for: ${JSON.stringify(req.params)} and kind SKU`);
                 this.imagesController.getSkuImage(req, res).catch((err) => {
