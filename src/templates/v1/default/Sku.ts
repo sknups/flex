@@ -42,6 +42,7 @@ export class DefaultTemplate extends BrandTemplate<SkuDTO> {
                 return this.convertToOg(canvas);
             case 'snapsticker':
                 return this.convertToSnapchatSticker(canvas);
+            case 'metaplex': // fall through
             default:
                 return canvas;
         }
