@@ -19,7 +19,7 @@ export class DefaultTemplate extends BrandTemplate<SkuDTO> {
         align: 'left'
     };
 
-    async renderTemplate(sku: SkuDTO, _ignored: string): Promise<Canvas> {
+    async renderTemplate(sku: SkuDTO, purpose: string): Promise<Canvas> {
 
         BrandTemplate.registerFonts();
 
@@ -37,7 +37,15 @@ export class DefaultTemplate extends BrandTemplate<SkuDTO> {
           this.print(context, DefaultTemplate.SKU_NAME_STYLE, sku.name, DefaultTemplate.TEXT_X, DefaultTemplate.SKU_NAME_BASELINE);
         }
 
-        return canvas;
+        switch (purpose) {
+            case 'og':
+                return this.convertToOg(canvas);
+            case 'snapsticker':
+                return this.convertToSnapchatSticker(canvas);
+            case 'metaplex': // fall through
+            default:
+                return canvas;
+        }
 
     }
 }
