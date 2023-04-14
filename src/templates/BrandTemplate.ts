@@ -12,26 +12,11 @@ export interface Style {
     align: string,
 }
 
-/**
- * How text which spans multiple lines should be printed.
- */
-export interface WrappingStyle extends Style {
-    lineHeight: number,
-    maximumWidth: number,
-}
-
 export abstract class BrandTemplate<T> {
 
     constructor(
         protected readonly imagesService: ImagesService
     ) {}
-
-    enumeration(issue: number, maximum: number, rarity: number | null): string {
-        if (rarity === null || rarity === 0) return ''
-        if (rarity === 1) return `${issue}`
-        if (rarity > 1) return `${issue}/${maximum}`
-        return ''
-    }
 
     // this is invoked "reflectively" from ImagesService.generateCanvasImage
     // noinspection JSUnusedGlobalSymbols
@@ -80,51 +65,6 @@ export abstract class BrandTemplate<T> {
         context.font = style.font;
         context.fillStyle = style.color;
         context.fillText(text, x, y);
-    }
-
-    /**
-     * Print multi-line text onto the canvas.
-     */
-    wrap(context: CanvasRenderingContext2D, style: WrappingStyle, text: string, x: number, y: number): number {
-
-        // BEWARE
-        // This method prints a trailing whitespace character on each line.
-        // This is visually benign, but it means that width calculations are incorrect.
-        // There is almost no incentive to fix this, as word wrap calculations only affect Legacy SKU.
-
-        context.textAlign = style.align as CanvasTextAlign;
-        context.font = style.font;
-        context.fillStyle = style.color;
-
-        let buffer = '';
-        let first = true;
-
-        let lineNumber = 0;
-
-        for (const word of text.split(' ')) {
-
-            const proposed = buffer + word + ' ';
-            const width = context.measureText(proposed).width; // pixels
-
-            if (width > style.maximumWidth && !first) {
-                // buffer would overflow
-                // print buffer contents
-                context.fillText(buffer, x, y + (lineNumber * style.lineHeight));
-                // carriage return
-                lineNumber += 1;
-                buffer = word + ' ';
-            } else {
-                // buffer would not overflow
-                // (or it's the very first word)
-                buffer = proposed;
-            }
-
-            first = false;
-
-        }
-
-        context.fillText(buffer, x, y + (lineNumber * style.lineHeight));
-        return (lineNumber * style.lineHeight);
     }
 
     /**
