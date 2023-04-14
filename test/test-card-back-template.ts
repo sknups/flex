@@ -1,18 +1,40 @@
 const expect = require('chai').expect
 
-import {WrappingStyle} from '../src/templates/BrandTemplate';
 import {DefaultTemplate} from '../src/templates/v1/default/Secondary';
 import {createCanvas} from 'canvas';
-import {ImagesService} from '../src/images/services/images.service';
+import { wrap } from '../src/utils/legacy.utils';
+import { LabelDTO } from '../src/entities/services/item.service';
 
-const sinon = require("sinon");
+type WrapStyle = {
+      font: string,
+      size: string,
+      weight: string,
+      maximumWidth: number,
+      lineHeight: number,
+}
+
+const DESCRIPTION_STYLE: WrapStyle = {
+      font: 'Crimson Text',
+      size: '18pt',
+      weight: 'Regular',
+      lineHeight: 35,
+      maximumWidth: 340,
+  }
+
+  const VALUE_STYLE: WrapStyle = {
+      font: 'Share Tech Mono',
+      size: '25pt',
+      weight: 'Regular',
+      lineHeight: 34,
+      maximumWidth: 288,
+  };
 
 describe('Card Back template', () => {
 
   abstract class LineBreakTest {
 
     protected constructor(
-        protected style: WrappingStyle,
+        protected style: WrapStyle,
         protected text: string,
         protected expectation: string,
     ) {}
@@ -22,16 +44,18 @@ describe('Card Back template', () => {
       const canvas = createCanvas(0, 0);
       const context = canvas.getContext('2d');
 
-      const fake = sinon.replace(context, "fillText", sinon.fake(context.fillText));
-
-      new DefaultTemplate(new ImagesService()).wrap(context, this.style, this.text, 0, 0);
-
-      const printed: string[] = []
-      for (const invocation of fake.getCalls()) {
-        printed.push(invocation.args[0]);
+      const label: LabelDTO = {
+            ...this.style,
+            align: 'left',
+            color: '#000000',
+            text: this.text,
+            x: 0,
+            y: 0,
       }
+      const labels: LabelDTO[] = wrap(context, label, this.style.maximumWidth, this.style.lineHeight);
 
-      expect(printed.join('\n')).to.equal(this.expectation);
+      const printed: string = labels.map(l => l.text).join('\n');
+      expect(printed).to.equal(this.expectation);
 
     }
 
@@ -45,7 +69,7 @@ describe('Card Back template', () => {
 
     class DescriptionTest extends LineBreakTest {
       constructor(text: string, expectation: string) {
-        super(DefaultTemplate.DESCRIPTION_STYLE, text, expectation);
+        super(DESCRIPTION_STYLE, text, expectation);
       }
     }
 
@@ -106,7 +130,7 @@ describe('Card Back template', () => {
 
     class ValueTest extends LineBreakTest {
       constructor(text: string, expectation: string) {
-        super(DefaultTemplate.VALUE_STYLE, text, expectation);
+        super(VALUE_STYLE, text, expectation);
       }
     }
 
