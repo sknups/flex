@@ -7,6 +7,8 @@ import {ItemService, ItemDTO } from "../../entities/services/item.service";
 import {ImagesConfigs} from "../images.configs";
 import {ImageType, Template} from "../model";
 import {NotFoundError} from '../../entities/services/entities.service';
+import { OutgoingHttpHeaders } from "http";
+import sharp from "sharp";
 
 export class ImagesController {
 
@@ -60,36 +62,49 @@ export class ImagesController {
 
             logger.debug(`ImagesController.getImage version: ${version} tpl: ${template} purpose: ${use} with id: ${code}`);
 
-            this.imagesService.generateCanvasImage(version, template, use, dto, index).then(canvas => {
-                let buffer: Buffer;
-                if (format == 'png') {
-                    buffer = canvas.toBuffer();
-                    logger.debug(`ImagesController.getImage png with buffer.length=${buffer.length}`);
-                    response.writeHead(StatusCodes.OK, {
-                        'Content-Type': 'image/png',
-                        'Content-Length': buffer.length,
-                        'Cache-Control': `public, max-age=${ImagesConfigs.TTL}`
-                    });
-                    response.write(buffer);
-                    response.end(null, 'binary');
-                } else {
-                    buffer = canvas.toBuffer('image/jpeg', {quality: q});
-                    logger.debug(`ImagesController.getImage jpeg with quality ${q} buffer.length=${buffer.length}`);
-                    response.writeHead(StatusCodes.OK, {
-                        'Content-Type': 'image/jpeg',
-                        'Content-Length': buffer.length,
-                        'Cache-Control': `public, max-age=${ImagesConfigs.TTL}`
-                    });
-                    response.write(buffer);
-                    response.end(null, 'binary');
+            try {
+                const canvas = await this.imagesService.generateCanvasImage(version, template, use, dto, index)
+                let buffer: Buffer = Buffer.from('');
+                let headers = {} as OutgoingHttpHeaders;
+
+                switch (format) {
+                    case 'png':
+                        buffer = canvas.toBuffer();
+                        logger.debug(`ImagesController.getImage png with buffer.length=${buffer.length}`);
+                        headers = {'Content-Type': 'image/png'};
+                    break;
+                    case 'jpg':
+                    case 'jpeg':
+                        buffer = canvas.toBuffer('image/jpeg', {quality: q});
+                        logger.debug(`ImagesController.getImage jpeg with quality ${q} buffer.length=${buffer.length}`);
+                        headers = {'Content-Type': 'image/jpeg'};
+                    break;
+                    case 'webp':
+                        buffer = await sharp(canvas.toBuffer()).webp({
+                            quality: 72,
+                            effort: 6
+                        }).toBuffer();
+                        logger.debug(`ImagesController.getImage webp with quality 72 buffer.length=${buffer.length}`);
+                        headers = {'Content-Type': 'image/webp'};
+                    break;
+                    default: 
+                        throw new Error(`Request for unknown image format requested ${format}`)
                 }
 
-            }).catch((err) => {
-                logger.error(`ImagesController.getImage ERROR. Failed to render canvas: ${err}.  Check AUTH_TOKEN.`);
+                response.writeHead(StatusCodes.OK, {
+                    ...headers,
+                    'Cache-Control': `public, max-age=${ImagesConfigs.TTL}`,
+                    'Content-Length': buffer.length,
+                });
+                response.write(buffer);
+                response.end(null, 'binary');
+             
+            } catch(err) {
+                logger.error(`ImagesController.getImage ERROR. Failed to render canvas: ${err}.`);
                 response.writeHead(StatusCodes.INTERNAL_SERVER_ERROR);
                 response.write('Failed to draw image');
                 response.end();
-            });
+            };
         } catch (err) {
             if (err instanceof NotFoundError) {
                 response.writeHead(StatusCodes.NOT_FOUND);
