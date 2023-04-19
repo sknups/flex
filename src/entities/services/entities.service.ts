@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, } from "axios";
+import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig, } from "axios";
 import dayjs from "dayjs";
 import axiosRetry, { isNetworkOrIdempotentRequestError } from 'axios-retry'
 import { logger } from '../../logger'
@@ -41,7 +41,7 @@ export abstract class EntityService {
     protected abstract getName(): string;
 
     private authenticateRequests(instance: AxiosInstance): void {
-        instance.interceptors.request.use(async (config: AxiosRequestConfig) => {
+        instance.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
             let token = "";
             try {
                 token = await this.getBearerToken()
