@@ -36,7 +36,7 @@ export abstract class BrandTemplate<T> {
      *
      * @param imagesPaths
      */
-    loadImages(imagesPaths: string[]): Promise<PromiseSettledResult<Image | void>[]> {
+    loadImages(imagesPaths: string[]): Promise<PromiseSettledResult<Image>[]> {
         logger.debug(`BrandTemplate.loadImages: Will load images with paths: ${imagesPaths}`);
 
         const imagesPromises = imagesPaths.map((imagePath) => {

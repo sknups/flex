@@ -1,4 +1,4 @@
-FROM node:16.13.1@sha256:534004248435dea5cecf3667232f800fc6bd101768306aecf6b87d78067b0563 as builder
+FROM node:18.16.0 as builder
 
 WORKDIR /usr/src/app
 COPY . .
@@ -10,7 +10,7 @@ RUN npm install
 RUN npm test
 RUN npm run build
 
-FROM node:16.13.1-alpine3.14@sha256:8569c8f07454ec42501e5e40a680e49d3f9aabab91a6c149e309bac63a3c8d54
+FROM node:18.16.0-alpine3.17
 
 RUN apk add --no-cache --virtual .build-deps \
         build-base \
