@@ -11,7 +11,5 @@ export class ImagesConfigs {
     static TTL = 604800;
 
     static TEXT_COLOR = 'rgb(255,255,255)';
-    static DEFAULT_IMAGE_QUALITY = 0.5;
-
 }
 
