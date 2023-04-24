@@ -55,11 +55,7 @@ export class ImagesController {
 
             const version = request.params.version;
             const format = request.params.format;
-            let q = Number(request.query.q);
-            if (isNaN(q) || q <= 0 || q > 1) {
-                q = ImagesConfigs.DEFAULT_IMAGE_QUALITY;
-            }
-
+          
             logger.debug(`ImagesController.getImage version: ${version} tpl: ${template} purpose: ${use} with id: ${code}`);
 
             try {
@@ -75,8 +71,12 @@ export class ImagesController {
                     break;
                     case 'jpg':
                     case 'jpeg':
-                        buffer = canvas.toBuffer('image/jpeg', {quality: q});
-                        logger.debug(`ImagesController.getImage jpeg with quality ${q} buffer.length=${buffer.length}`);
+                        buffer = await sharp(canvas.toBuffer()).jpeg({
+                            quality: 90,
+                            chromaSubsampling: '4:4:4',
+                            mozjpeg: true
+                        }).toBuffer();
+                        logger.debug(`ImagesController.getImage jpeg buffer.length=${buffer.length}`);
                         headers = {'Content-Type': 'image/jpeg'};
                     break;
                     case 'webp':
