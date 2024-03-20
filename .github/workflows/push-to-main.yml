@@ -1,0 +1,20 @@
+---
+name: Push to main
+
+'on':
+  push:
+    branches:
+      - 'main'
+    paths-ignore:
+      - 'README.md'
+      - '.gitignore'
+
+jobs:
+
+  build:
+    name: Build
+    uses: ./.github/workflows/build.yml
+    with:
+      publish: true
+    secrets: inherit
+
