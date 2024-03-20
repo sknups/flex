@@ -1,0 +1,84 @@
+---
+name: Build
+
+'on':
+  workflow_call:
+    inputs:
+      publish:
+        description: 'If the image should be published to the registry'
+        type: boolean
+        required: false
+        default: false
+
+
+jobs:
+  build:
+
+    name: 'Build'
+    runs-on: ubuntu-22.04
+    env:
+      COMPONENT: flex
+      BASE_IMAGE: europe-west2-docker.pkg.dev/sknups/docker-internal/flex
+
+    timeout-minutes: 5
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Execute ShellCheck
+        uses: ludeeus/action-shellcheck@master
+
+      - name: Execute YAMLlint
+        run: |
+          yamllint .
+
+      - name: Extract Git Vars
+        id: git_vars
+        shell: bash
+        run: |
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Build Docker image
+        id: build
+        run: |-
+          IMAGE="$BASE_IMAGE:${{ steps.git_vars.outputs.sha_short }}"
+          docker build --tag "$IMAGE" .
+          echo "image=$IMAGE" >> $GITHUB_OUTPUT
+
+      - name: Authenticate Google Cloud
+        if: inputs.publish == true
+        id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          workload_identity_provider: projects/702125700768/locations/global/workloadIdentityPools/github-identity-pool/providers/github-identity-provider
+          service_account: docker-internal-writer-gh@sknups.iam.gserviceaccount.com
+
+      - name: Setup GCloud
+        if: inputs.publish == true
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Authenticate Docker
+        if: inputs.publish == true
+        run: |-
+          gcloud auth configure-docker europe-west2-docker.pkg.dev
+
+      - name: Push Docker image
+        if: inputs.publish == true
+        run: |-
+          docker push ${{ steps.build.outputs.image }}
+
+      - name: Deploy to dev environment
+        if: inputs.publish == true
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: update_version.yml
+          repo: sknups/wholesale-terraform
+          ref: main
+          token: ${{ secrets.DEPLOY_TOKEN }}
+          inputs: '{ "component": "${{ env.COMPONENT  }}", "version": "${{  steps.git_vars.outputs.sha_short }}" }'
