@@ -5,6 +5,6 @@ services:
     environment:
       GCLOUD_PROJECT: drm-apps-01-43b0
       GOOGLE_APPLICATION_CREDENTIALS: /gcloud.json
-      DRM_SERVER: https://drm-service-dev.sknups.gg
+      DRM_SERVER: https://drm-service-dev.sknups.com
       GOOGLE_AUTH_TOKEN: $GOOGLE_AUTH_TOKEN
       ENVIRONMENT: dev

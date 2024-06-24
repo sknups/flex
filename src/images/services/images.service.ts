@@ -13,13 +13,13 @@ export class ImagesService {
       switch (process.env.ENVIRONMENT) {
             case null || undefined:
                 logger.warn("Warn - no env var ENVIRONMENT - defaulting to DEV");
-                this.bucket = new Storage().bucket('assets-dev.sknups.gg');
+                this.bucket = new Storage().bucket('assets-dev.sknups.com');
                 break;
             case 'prd':
-                this.bucket = new Storage().bucket('assets.sknups.gg');
+                this.bucket = new Storage().bucket('assets.sknups.com');
                 break;
             default:
-                this.bucket = new Storage().bucket(`assets-${process.env.ENVIRONMENT}.sknups.gg`);
+                this.bucket = new Storage().bucket(`assets-${process.env.ENVIRONMENT}.sknups.com`);
                 break;
         }
     }
