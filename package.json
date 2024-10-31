@@ -19,7 +19,7 @@
     "@google-cloud/profiler": "5.0.4",
     "@google-cloud/storage": "6.9.5",
     "@google-cloud/trace-agent": "7.1.2",
-    "axios": "1.6.0",
+    "axios": "1.7.4",
     "axios-retry": "^3.3.1",
     "canvas": "2.10.2",
     "compression": "1.7.4",
